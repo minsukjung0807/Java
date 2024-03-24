@@ -14,15 +14,19 @@ import java.util.Base64;
 import javax.json.Json;
 import javax.json.JsonObject;
 
+import b2.BackBlazeHelper.models.B2Session;
+
 
 
 public class Authentication {
 
-    private static String appKeyId = "005e6f0ff38588b0000000009";
-    private static String appKey = "K005XCpRP+hm5xAupUxYI3xA0D8QwoQ";
+    private static String appKeyId = "005e6f0ff38588b000000000a";
+    private static String appKey = "K005k2tpcpfoqMY525/C9Pj5kHbDWXY";
+
+    private B2Session b2Session;
 
     public interface OnStateListener { 
-        abstract void onSuccess(String downloadUrl, String authToken);
+        abstract void onSuccess(B2Session b2Session);
         abstract void onFailed(String message);
     }
 
@@ -33,6 +37,7 @@ public class Authentication {
         try {
                 URL url = new URL("https://api.backblazeb2.com" + "/b2api/v2/" + "b2_authorize_account");
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                
                 String encodedAuth = encodeAuthorization(appKeyId + ":" + appKey);
                 connection.setRequestProperty("Authorization", encodedAuth);
                 connection.setConnectTimeout(5000);   
@@ -43,11 +48,13 @@ public class Authentication {
                         JsonObject response = Json.createReader(new StringReader(respStr)).readObject();
             
                         String authToken = response.getString("authorizationToken");
-                        // String apiUrl = response.getString("apiUrl");
-                        // String accountId = response.getString("accountId");
+                        String apiUrl = response.getString("apiUrl");
+                        String accountId = response.getString("accountId");
                         String downloadUrl = response.getString("downloadUrl");
 
-                        this.onStateListener.onSuccess(downloadUrl, authToken);
+                        b2Session = new B2Session(authToken, accountId, apiUrl, downloadUrl);
+
+                        this.onStateListener.onSuccess(b2Session);
                     }
             } 
 

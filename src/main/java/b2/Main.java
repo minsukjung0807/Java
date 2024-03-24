@@ -3,37 +3,49 @@
  */
 package b2;
 
-import javax.json.Json;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.io.IOException;
-import java.util.Base64;
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
-import java.nio.charset.Charset;
-import javax.json.JsonObject;
-
 import b2.BackBlazeHelper.Authentication;
-
-import java.io.StringReader;
-
+import b2.BackBlazeHelper.BucketCreation;
+import b2.BackBlazeHelper.models.B2Bucket;
+import b2.BackBlazeHelper.models.B2Session;
+import b2.BackBlazeHelper.models.B2UploadRequest;
+import b2.BackBlazeHelper.models.BucketType;
 
 public class Main {
-
-  
   
     public static void main(String[] args) {
 
       Authentication authentication = new Authentication();
+      B2UploadRequest b2UploadRequest;
 
       authentication.setOnStateListener(new Authentication.OnStateListener() {
 
         @Override
-        public void onSuccess(String downloadUrl, String authToken) {
-            System.out.println("Download URL: " + downloadUrl);
-            System.out.println("Authentication Token: " + authToken);
+        public void onSuccess(B2Session b2Session) {
+
+            System.out.println("Download URL: " + b2Session.getDownloadURL());
+            System.out.println("Authentication Token: " + b2Session.getAuthToken());
+            System.out.println("API URL: " + b2Session.getAPIURL());
+            System.out.println("Account Id: " + b2Session.getAccountID());
+            
+            //Create the Bucket
+            BucketCreation bucketCreation = new BucketCreation();
+
+            bucketCreation.setOnStateListener(new BucketCreation.OnStateListener() {
+              @Override
+              public void onSuccess(String message) {
+                System.out.println(message);
+              }
+
+              @Override
+              public void onFailed(String message) {
+                System.out.println(message);
+              }
+            });
+
+            bucketCreation.createBucket(b2Session, "BUCKET-0807-OI", BucketType.ALL_PRIVATE);
+
+            // b2UploadRequest = new B2UploadRequest(null, null, authToken);
+            
         }
 
         @Override
