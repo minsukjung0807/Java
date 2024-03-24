@@ -1,4 +1,4 @@
-package b2.BackBlazeHelper;
+package b2.BackBlaze;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -17,7 +17,7 @@ import javax.net.ssl.HttpsURLConnection;
 
 import org.json.JSONObject;
 
-import b2.BackBlazeHelper.models.B2UploadRequest;
+import b2.BackBlaze.models.B2UploadRequest;
 
 // File path = new File("");
       

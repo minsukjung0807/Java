@@ -1,4 +1,4 @@
-package b2.BackBlazeHelper.models;
+package b2.BackBlaze.models;
 
 public class B2UploadRequest {
 

@@ -1,4 +1,4 @@
-package b2.BackBlazeHelper;
+package b2.BackBlaze;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -14,23 +14,21 @@ import java.util.Base64;
 import javax.json.Json;
 import javax.json.JsonObject;
 
-import b2.BackBlazeHelper.models.B2Session;
+import b2.BackBlaze.models.B2Session;
 
-
-
-public class Authentication {
+public class B2Auth {
 
     private static String appKeyId = "005e6f0ff38588b000000000a";
     private static String appKey = "K005k2tpcpfoqMY525/C9Pj5kHbDWXY";
 
     private B2Session b2Session;
 
-    public interface OnStateListener { 
+    public interface OnAuthStateListener { 
         abstract void onSuccess(B2Session b2Session);
         abstract void onFailed(String message);
     }
 
-    public OnStateListener onStateListener;
+    public OnAuthStateListener onAuthStateListener;
 
     public void authenticate() {
 
@@ -54,13 +52,12 @@ public class Authentication {
 
                         b2Session = new B2Session(authToken, accountId, apiUrl, downloadUrl);
 
-                        this.onStateListener.onSuccess(b2Session);
+                        this.onAuthStateListener.onSuccess(b2Session);
                     }
             } 
 
             catch (Exception e) {
-                this.onStateListener.onFailed(e.getMessage());
-                // System.out.println("에러: " + e.getMessage());
+                this.onAuthStateListener.onFailed("에러: " + e.getMessage());
             }
     
             finally {
@@ -71,16 +68,15 @@ public class Authentication {
         } 
           
         catch (Exception e) {
-            this.onStateListener.onFailed(e.getMessage());
-            // System.out.println("에러: " + e.getMessage());
+            this.onAuthStateListener.onFailed("에러: " + e.getMessage());
         }
 
         
     }
 
     /* OnStateListener 설정 */
-    public void setOnStateListener(OnStateListener onStateListener){
-        this.onStateListener = onStateListener;
+    public void setOnAuthStateListener(OnAuthStateListener onAuthStateListener){
+        this.onAuthStateListener = onAuthStateListener;
     }
     
     private String encodeAuthorization(String input){
@@ -100,11 +96,9 @@ public class Authentication {
                 stringBuilder.append(line);
             }
         } catch (IOException e) {
-            // Handle IOException as needed
-            System.out.println("에러: " + e.getMessage());
+            this.onAuthStateListener.onFailed("에러: " + e.getMessage());
         }
 
         return stringBuilder.toString();
     }
-      
 }

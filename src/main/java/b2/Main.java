@@ -3,59 +3,65 @@
  */
 package b2;
 
-import b2.BackBlazeHelper.Authentication;
-import b2.BackBlazeHelper.BucketCreation;
-import b2.BackBlazeHelper.models.B2Bucket;
-import b2.BackBlazeHelper.models.B2Session;
-import b2.BackBlazeHelper.models.B2UploadRequest;
-import b2.BackBlazeHelper.models.BucketType;
+
+import b2.BackBlaze.B2Auth;
+import b2.BackBlaze.B2DataBase;
+import b2.BackBlaze.models.B2Bucket;
+import b2.BackBlaze.models.B2Session;
+import b2.BackBlaze.models.BucketType;
 
 public class Main {
   
     public static void main(String[] args) {
+      authenticate();
+    }
 
-      Authentication authentication = new Authentication();
-      B2UploadRequest b2UploadRequest;
+  // 인증 작업
+  private static void authenticate() {
+    B2Auth authentication = new B2Auth();
 
-      authentication.setOnStateListener(new Authentication.OnStateListener() {
+    authentication.setOnAuthStateListener(new B2Auth.OnAuthStateListener() {
 
-        @Override
-        public void onSuccess(B2Session b2Session) {
+      @Override
+      public void onSuccess(B2Session b2Session) {
 
-            System.out.println("Download URL: " + b2Session.getDownloadURL());
-            System.out.println("Authentication Token: " + b2Session.getAuthToken());
-            System.out.println("API URL: " + b2Session.getAPIURL());
-            System.out.println("Account Id: " + b2Session.getAccountID());
-            
-            //Create the Bucket
-            BucketCreation bucketCreation = new BucketCreation();
+          System.out.println("Download URL: " + b2Session.getDownloadURL());
+          System.out.println("Authentication Token: " + b2Session.getAuthToken());
+          System.out.println("API URL: " + b2Session.getAPIURL());
+          System.out.println("Account Id: " + b2Session.getAccountID());
 
-            bucketCreation.setOnStateListener(new BucketCreation.OnStateListener() {
-              @Override
-              public void onSuccess(String message) {
-                System.out.println(message);
-              }
+          createBucket(b2Session);
+          
+      }
 
-              @Override
-              public void onFailed(String message) {
-                System.out.println(message);
-              }
-            });
+      @Override
+      public void onFailed(String message) {
 
-            bucketCreation.createBucket(b2Session, "BUCKET-0807-OI", BucketType.ALL_PRIVATE);
+      }
+    });
 
-            // b2UploadRequest = new B2UploadRequest(null, null, authToken);
-            
-        }
+    authentication.authenticate();
+  }
 
-        @Override
-        public void onFailed(String message) {
+  // 버킷 생성
+  private static void createBucket(B2Session b2Session) {
+    B2DataBase bucketCreation = new B2DataBase();
 
-        }
-      });
+    bucketCreation.setOnBucketStateListener(new B2DataBase.OnCreateBucketStateListener() {
+      @Override
+      public void onSuccess(String message) {
+        System.out.println(message);
+      }
 
-      authentication.authenticate();
+      @Override
+      public void onFailed(String message) {
+        System.out.println(message);
+      }
+    });
 
+    B2Bucket b2Bucket = bucketCreation.createBucket(b2Session, "HelloBuc44ket3456", BucketType.ALL_PUBLIC);
+    System.out.println(b2Bucket.getID());
+    System.out.println(b2Bucket.getName());
   }
 
   

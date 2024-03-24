@@ -1,4 +1,4 @@
-package b2.BackBlazeHelper.models;
+package b2.BackBlaze.models;
 
 /**
  * Represents a session obtained using the b2_authorize_account method.

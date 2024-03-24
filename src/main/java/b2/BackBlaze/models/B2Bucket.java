@@ -1,4 +1,4 @@
-package b2.BackBlazeHelper.models;
+package b2.BackBlaze.models;
 
 /**
  * Represents a Bucket present in the B2 API.

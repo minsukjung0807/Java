@@ -1,4 +1,4 @@
-package b2.BackBlazeHelper.models;
+package b2.BackBlaze.models;
 
 public enum BucketType {
     ALL_PUBLIC("allPublic"),
