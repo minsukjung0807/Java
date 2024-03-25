@@ -9,6 +9,7 @@ import b2.BackBlaze.BackblazeB2Auth;
 import java.io.File;
 
 import b2.BackBlaze.BackblazeB2;
+import b2.BackBlaze.models.B2Bucket1;
 import b2.BackBlaze.models.B2File1;
 import b2.BackBlaze.models.B2Session1;
 import b2.BackBlaze.models.B2UploadRequest1;
@@ -28,7 +29,7 @@ public class Main {
 
 
       B2Bucket bucket = new B2Bucket();
-      bucket.setBucketName("musicmmm1121223xx2x"); //bucket names are unique
+      bucket.setBucketName("musicmmmTest10"); //bucket names are unique
       bucket.setBucketType(B2.BUCKET_TYPE_PUBLIC); //public or private
       B2Bucket bucket1 = b2.createBucket(bucket);
 
@@ -45,7 +46,7 @@ public class Main {
 
       File path = new File("");
      
-      File file = new File(path.getAbsolutePath()+"/src/image/test.jpg");
+      File file = new File(path.getAbsolutePath()+"/src/file/10MB.txt");
 
     if(file.exists()) {
       System.out.println("파일이 존재함!!");
@@ -64,88 +65,88 @@ public class Main {
   // 인증 작업
   private static void authenticate() {
     
-    // BackblazeB2Auth authentication = new BackblazeB2Auth();
+    BackblazeB2Auth authentication = new BackblazeB2Auth();
 
-    // authentication.setOnAuthStateListener(new BackblazeB2Auth.OnAuthStateListener() {
+    authentication.setOnAuthStateListener(new BackblazeB2Auth.OnAuthStateListener() {
 
-    //   @Override
-    //   public void onSuccess(B2Session1 b2Session) {
+      @Override
+      public void onSuccess(B2Session1 b2Session) {
 
-    //       System.out.println("Download URL: " + b2Session.getDownloadURL());
-    //       System.out.println("Authentication Token: " + b2Session.getAuthToken());
-    //       System.out.println("API URL: " + b2Session.getAPIURL());
-    //       System.out.println("Account Id: " + b2Session.getAccountID());
+          System.out.println("Download URL: " + b2Session.getDownloadURL());
+          System.out.println("Authentication Token: " + b2Session.getAuthToken());
+          System.out.println("API URL: " + b2Session.getAPIURL());
+          System.out.println("Account Id: " + b2Session.getAccountID());
 
-    //       createBucket(b2Session);
+          createBucket(b2Session);
           
-    //   }
+      }
 
-    //   @Override
-    //   public void onFailed(String message) {
+      @Override
+      public void onFailed(String message) {
 
-    //   }
-    // });
+      }
+    });
 
-    // authentication.authenticate();
+    authentication.authenticate();
   }
 
-  // // 버킷 생성
-  // private static void createBucket(B2Session1 b2Session) {
-  //   BackblazeB2 bucketCreation = new BackblazeB2();
+  // 버킷 생성
+  private static void createBucket(B2Session1 b2Session) {
+    BackblazeB2 bucketCreation = new BackblazeB2();
 
-  //   bucketCreation.setOnBucketStateListener(new BackblazeB2.OnCreateBucketStateListener() {
-  //     @Override
-  //     public void onSuccess(String message) {
-  //       System.out.println(message);
-  //     }
+    bucketCreation.setOnBucketStateListener(new BackblazeB2.OnCreateBucketStateListener() {
+      @Override
+      public void onSuccess(String message) {
+        System.out.println(message);
+      }
 
-  //     @Override
-  //     public void onFailed(String message) {
-  //       System.out.println(message);
-  //     }
-  //   });
+      @Override
+      public void onFailed(String message) {
+        System.out.println(message);
+      }
+    });
 
-  //   B2Bucket b2Bucket = bucketCreation.createBucket(b2Session, "Teaccbb6244384", BucketType.ALL_PUBLIC);
-  //   System.out.println(b2Bucket.getID());
-  //   System.out.println(b2Bucket.getName());
+    B2Bucket1 b2Bucket = bucketCreation.createBucket(b2Session, "Teac433484", BucketType1.ALL_PUBLIC);
+    System.out.println(b2Bucket.getID());
+    System.out.println(b2Bucket.getName());
 
-  //   getUploadUrl(bucketCreation, b2Session, b2Bucket);
-  // }
+    getUploadUrl(bucketCreation, b2Session, b2Bucket);
+  }
 
 
-  // private static void getUploadUrl(BackblazeB2 backblazeB2, B2Session1 b2Session, B2Bucket b2Bucket) {
-  //   B2UploadRequest b2UploadRequest = backblazeB2.getUploadURL(b2Session, b2Bucket);
-  //   System.out.println("업로드 URL: " + b2UploadRequest.getUploadURL());
+  private static void getUploadUrl(BackblazeB2 backblazeB2, B2Session1 b2Session, B2Bucket1 b2Bucket) {
+    B2UploadRequest1 b2UploadRequest = backblazeB2.getUploadURL(b2Session, b2Bucket);
+    System.out.println("업로드 URL: " + b2UploadRequest.getUploadURL());
 
-  //   File path = new File("");
-  //   File file = new File(path.getAbsolutePath()+"/src/file/testfile.mcworld");
+    File path = new File("");
+    File file = new File(path.getAbsolutePath()+"/src/file/hello_nice.mcworld");
     
-  //   if(file.exists()) {
-  //     uploadFile(backblazeB2, b2UploadRequest, file, "hello/nice.mcworld");
-  //   } else {
-  //     System.out.println("파일이 없음!!");
-  //   }
+    if(file.exists()) {
+      uploadFile(backblazeB2, b2UploadRequest, file, "hello/nice.mcworld");
+    } else {
+      System.out.println("파일이 없음!!");
+    }
     
     
-  // }
+  }
 
-  // private static void uploadFile(BackblazeB2 backblazeB2, B2UploadRequest b2UploadRequest, File file, String name) {
-  //   backblazeB2.setOnUploadFileStateListener(new BackblazeB2.OnUploadFileStateListener() {
-  //     @Override
-  //     public void onSuccess(String message) {
-  //       System.out.println(message);
-  //     }
+  private static void uploadFile(BackblazeB2 backblazeB2, B2UploadRequest1 b2UploadRequest, File file, String name) {
+    backblazeB2.setOnUploadFileStateListener(new BackblazeB2.OnUploadFileStateListener() {
+      @Override
+      public void onSuccess(String message) {
+        System.out.println(message);
+      }
 
-  //     @Override
-  //     public void onFailed(String message) {
-  //       System.out.println(message);
-  //     }
-  //   });
+      @Override
+      public void onFailed(String message) {
+        System.out.println(message);
+      }
+    });
 
-  //   B2File1 b2File = backblazeB2.uploadFile(b2UploadRequest, file, name);
+    B2File1 b2File = backblazeB2.uploadFile(b2UploadRequest, file, name);
 
-  //   System.out.println("업로드된 파일의 크기: " + b2File.getSize());
-  // }
+    System.out.println("업로드된 파일의 크기: " + b2File.getSize());
+  }
 
   
     

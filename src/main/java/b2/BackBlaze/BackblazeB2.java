@@ -135,21 +135,44 @@ public class BackblazeB2 {
             connection.setRequestProperty("X-Bz-Content-Sha1", getFileHash(file));
 
             connection.setDoOutput(true);
-        
-            
-            DataOutputStream outputStream = new DataOutputStream(connection.getOutputStream());
-            outputStream.write(Files.readAllBytes(Paths.get(file.getPath())));
 
-         // Get server response
-         BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-         String line = "";
-         StringBuilder builder = new StringBuilder();
-         while ((line = reader.readLine()) != null) {
-             builder.append(line);
-             System.out.println("연결결과: " + line);
-         }
+            // 파일 크기
+            long fileLength = file.length();
+            // 업로드 시작 시간
+            long startTime = System.currentTimeMillis();
+
+            DataOutputStream outputStream = new DataOutputStream(connection.getOutputStream());
+            InputStream fileInputStream = new FileInputStream(file);
+            byte[] buffer = new byte[4096]; // 4KB 버퍼
+
+            long totalBytesWritten = 0;
+            int bytesRead;
+
+            while ((bytesRead = fileInputStream.read(buffer)) != -1) {
+                
+                outputStream.write(buffer, 0, bytesRead);
+
+                if(outputStream.size() == bytesRead) {
+                    totalBytesWritten += bytesRead;
+                }
+                
+                // if (progressListener != null) {
+                    long currentTime = System.currentTimeMillis();
+                    long elapsedTime = currentTime - startTime;
+                    double speed = (double) totalBytesWritten / elapsedTime; // 업로드 속도
+                    double progress = (double) totalBytesWritten / fileLength; // 업로드 진행률
+
+                    System.out.println("진행률: " + progress);
+
+                    // progressListener.onProgress(totalBytesWritten, fileLength, progress, speed);
+                // }
+            }
+            
+            // DataOutputStream outputStream = new DataOutputStream(connection.getOutputStream());
+            // outputStream.write(Files.readAllBytes(Paths.get(file.getPath())));
 
             // outputStream.write(byteBuffer);
+            fileInputStream.close();
             outputStream.flush();
             outputStream.close();
 

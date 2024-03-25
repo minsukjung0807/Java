@@ -7,10 +7,12 @@ import com.google.gson.JsonObject;
 import com.squareup.okhttp.*;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import org.json.JSONObject;
 
@@ -293,6 +295,10 @@ public class B2 {
         B2File b2File = null;
         try {
 
+            OkHttpClient client = new OkHttpClient();
+            client.setConnectTimeout(1000, TimeUnit.SECONDS); // connect timeout
+            client.setReadTimeout(1000, TimeUnit.SECONDS);    // socket timeout
+            InputStream inputStream = new FileInputStream(file);
             Request request = new Request
                     .Builder()
                     .method("POST", new ProgressRequestBody(RequestBody.create(MediaType.parse(Files.probeContentType(file.toPath())), file), progressListener))

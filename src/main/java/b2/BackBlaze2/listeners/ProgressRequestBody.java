@@ -12,6 +12,8 @@ public class ProgressRequestBody extends RequestBody {
     private final ProgressListener progressListener;
     private BufferedSink bufferedSink;
 
+    private static final int DEFAULT_BUFFER_SIZE = 2048; // 버퍼 크기 조절
+
     public ProgressRequestBody(RequestBody requestBody, ProgressListener progressListener) {
         this.requestBody = requestBody;
         this.progressListener = progressListener;
@@ -33,8 +35,7 @@ public class ProgressRequestBody extends RequestBody {
             bufferedSink = Okio.buffer(sink(sink));
         }
         requestBody.writeTo(bufferedSink);
-        bufferedSink.flush();
-
+        // 플러시하지 않음 - 마지막에 한 번에 플러시
     }
 
     private Sink sink(Sink sink) {
@@ -59,5 +60,4 @@ public class ProgressRequestBody extends RequestBody {
     public interface ProgressListener {
         void onProgress(long bytesWritten, long contentLength, boolean done);
     }
-
 }
