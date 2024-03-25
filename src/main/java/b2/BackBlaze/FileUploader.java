@@ -12,12 +12,16 @@ import java.nio.file.Paths;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.net.URL;
-
+import com.google.gson.JsonObject;
+import com.google.gson.Gson;
 import javax.net.ssl.HttpsURLConnection;
+import com.squareup.okhttp.MediaType;
+import com.squareup.okhttp.RequestBody;
+import okio.*;
 
 import org.json.JSONObject;
 
-import b2.BackBlaze.models.B2UploadRequest;
+import b2.BackBlaze.models.B2UploadRequest1;
 
 // File path = new File("");
       

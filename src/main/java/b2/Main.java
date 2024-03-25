@@ -4,65 +4,148 @@
 package b2;
 
 
-import b2.BackBlaze.B2Auth;
-import b2.BackBlaze.B2DataBase;
-import b2.BackBlaze.models.B2Bucket;
-import b2.BackBlaze.models.B2Session;
-import b2.BackBlaze.models.BucketType;
+import b2.BackBlaze.BackblazeB2Auth;
+
+import java.io.File;
+
+import b2.BackBlaze.BackblazeB2;
+import b2.BackBlaze.models.B2File1;
+import b2.BackBlaze.models.B2Session1;
+import b2.BackBlaze.models.B2UploadRequest1;
+import b2.BackBlaze.models.BucketType1;
+import b2.BackBlaze2.*;
+import b2.BackBlaze2.listeners.ProgressRequestBody;
+import b2.BackBlaze2.models.B2Bucket;
+import b2.BackBlaze2.models.B2UploadInfo;
 
 public class Main {
   
+  private static String appKeyId = "005e6f0ff38588b000000000a";
+  private static String appKey = "K005k2tpcpfoqMY525/C9Pj5kHbDWXY";
     public static void main(String[] args) {
-      authenticate();
+
+      B2 b2 = new B2(appKeyId, appKey);
+
+
+      B2Bucket bucket = new B2Bucket();
+      bucket.setBucketName("musicmmm1121223xx2x"); //bucket names are unique
+      bucket.setBucketType(B2.BUCKET_TYPE_PUBLIC); //public or private
+      B2Bucket bucket1 = b2.createBucket(bucket);
+
+      System.out.println("벗킷 ID: "+ bucket1.getBucketId());
+      System.out.println("버킷 이름: " + bucket1.getBucketName());
+      System.out.println("버킷 타입: " + bucket1.getBucketType());
+      System.out.println("아이디: " + bucket1.getAccountId());
+
+      B2UploadInfo uploadInfo = b2.getUploadInfo(bucket1.getBucketId()); //Get upload info for specific bucket
+
+      System.out.println("인증 토큰: " + uploadInfo.getAuthorizationToken());
+      System.out.println("버킷 ID: " + uploadInfo.getBucketId());
+      System.out.println("업로드 URL: "+ uploadInfo.getUploadUrl());
+
+      File path = new File("");
+     
+      File file = new File(path.getAbsolutePath()+"/src/image/test.jpg");
+
+    if(file.exists()) {
+      System.out.println("파일이 존재함!!");
+      b2.uploadFile(file, uploadInfo, new ProgressRequestBody.ProgressListener() {
+    @Override
+    public void onProgress(long bytesWritten, long contentLength, boolean done) {
+        System.out.println("업로드 중..." + bytesWritten);
+    }
+});
+    } else {
+      System.out.println("파일이 없음!!");
+    }
+      // authenticate();
     }
 
   // 인증 작업
   private static void authenticate() {
-    B2Auth authentication = new B2Auth();
+    
+    // BackblazeB2Auth authentication = new BackblazeB2Auth();
 
-    authentication.setOnAuthStateListener(new B2Auth.OnAuthStateListener() {
+    // authentication.setOnAuthStateListener(new BackblazeB2Auth.OnAuthStateListener() {
 
-      @Override
-      public void onSuccess(B2Session b2Session) {
+    //   @Override
+    //   public void onSuccess(B2Session1 b2Session) {
 
-          System.out.println("Download URL: " + b2Session.getDownloadURL());
-          System.out.println("Authentication Token: " + b2Session.getAuthToken());
-          System.out.println("API URL: " + b2Session.getAPIURL());
-          System.out.println("Account Id: " + b2Session.getAccountID());
+    //       System.out.println("Download URL: " + b2Session.getDownloadURL());
+    //       System.out.println("Authentication Token: " + b2Session.getAuthToken());
+    //       System.out.println("API URL: " + b2Session.getAPIURL());
+    //       System.out.println("Account Id: " + b2Session.getAccountID());
 
-          createBucket(b2Session);
+    //       createBucket(b2Session);
           
-      }
+    //   }
 
-      @Override
-      public void onFailed(String message) {
+    //   @Override
+    //   public void onFailed(String message) {
 
-      }
-    });
+    //   }
+    // });
 
-    authentication.authenticate();
+    // authentication.authenticate();
   }
 
-  // 버킷 생성
-  private static void createBucket(B2Session b2Session) {
-    B2DataBase bucketCreation = new B2DataBase();
+  // // 버킷 생성
+  // private static void createBucket(B2Session1 b2Session) {
+  //   BackblazeB2 bucketCreation = new BackblazeB2();
 
-    bucketCreation.setOnBucketStateListener(new B2DataBase.OnCreateBucketStateListener() {
-      @Override
-      public void onSuccess(String message) {
-        System.out.println(message);
-      }
+  //   bucketCreation.setOnBucketStateListener(new BackblazeB2.OnCreateBucketStateListener() {
+  //     @Override
+  //     public void onSuccess(String message) {
+  //       System.out.println(message);
+  //     }
 
-      @Override
-      public void onFailed(String message) {
-        System.out.println(message);
-      }
-    });
+  //     @Override
+  //     public void onFailed(String message) {
+  //       System.out.println(message);
+  //     }
+  //   });
 
-    B2Bucket b2Bucket = bucketCreation.createBucket(b2Session, "HelloBuc44ket3456", BucketType.ALL_PUBLIC);
-    System.out.println(b2Bucket.getID());
-    System.out.println(b2Bucket.getName());
-  }
+  //   B2Bucket b2Bucket = bucketCreation.createBucket(b2Session, "Teaccbb6244384", BucketType.ALL_PUBLIC);
+  //   System.out.println(b2Bucket.getID());
+  //   System.out.println(b2Bucket.getName());
+
+  //   getUploadUrl(bucketCreation, b2Session, b2Bucket);
+  // }
+
+
+  // private static void getUploadUrl(BackblazeB2 backblazeB2, B2Session1 b2Session, B2Bucket b2Bucket) {
+  //   B2UploadRequest b2UploadRequest = backblazeB2.getUploadURL(b2Session, b2Bucket);
+  //   System.out.println("업로드 URL: " + b2UploadRequest.getUploadURL());
+
+  //   File path = new File("");
+  //   File file = new File(path.getAbsolutePath()+"/src/file/testfile.mcworld");
+    
+  //   if(file.exists()) {
+  //     uploadFile(backblazeB2, b2UploadRequest, file, "hello/nice.mcworld");
+  //   } else {
+  //     System.out.println("파일이 없음!!");
+  //   }
+    
+    
+  // }
+
+  // private static void uploadFile(BackblazeB2 backblazeB2, B2UploadRequest b2UploadRequest, File file, String name) {
+  //   backblazeB2.setOnUploadFileStateListener(new BackblazeB2.OnUploadFileStateListener() {
+  //     @Override
+  //     public void onSuccess(String message) {
+  //       System.out.println(message);
+  //     }
+
+  //     @Override
+  //     public void onFailed(String message) {
+  //       System.out.println(message);
+  //     }
+  //   });
+
+  //   B2File1 b2File = backblazeB2.uploadFile(b2UploadRequest, file, name);
+
+  //   System.out.println("업로드된 파일의 크기: " + b2File.getSize());
+  // }
 
   
     

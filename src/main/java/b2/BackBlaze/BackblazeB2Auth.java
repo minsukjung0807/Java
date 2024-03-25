@@ -14,17 +14,17 @@ import java.util.Base64;
 import javax.json.Json;
 import javax.json.JsonObject;
 
-import b2.BackBlaze.models.B2Session;
+import b2.BackBlaze.models.B2Session1;
 
-public class B2Auth {
+public class BackblazeB2Auth {
 
     private static String appKeyId = "005e6f0ff38588b000000000a";
     private static String appKey = "K005k2tpcpfoqMY525/C9Pj5kHbDWXY";
 
-    private B2Session b2Session;
+    private B2Session1 b2Session;
 
     public interface OnAuthStateListener { 
-        abstract void onSuccess(B2Session b2Session);
+        abstract void onSuccess(B2Session1 b2Session);
         abstract void onFailed(String message);
     }
 
@@ -50,7 +50,7 @@ public class B2Auth {
                         String accountId = response.getString("accountId");
                         String downloadUrl = response.getString("downloadUrl");
 
-                        b2Session = new B2Session(authToken, accountId, apiUrl, downloadUrl);
+                        b2Session = new B2Session1(authToken, accountId, apiUrl, downloadUrl);
 
                         this.onAuthStateListener.onSuccess(b2Session);
                     }

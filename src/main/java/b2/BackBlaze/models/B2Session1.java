@@ -3,7 +3,7 @@ package b2.BackBlaze.models;
 /**
  * Represents a session obtained using the b2_authorize_account method.
  */
-public class B2Session {
+public class B2Session1 {
 
     private String authorizationToken, accountID, APIURL, downloadURL;
 
@@ -15,7 +15,7 @@ public class B2Session {
      * @param APIURL Represents the api URI which should be used for further API calls
      * @param downloadURL Represents the download URL which should be used for retrieving files
      */
-    public B2Session(String authorizationToken, String accountID, String APIURL, String downloadURL){
+    public B2Session1(String authorizationToken, String accountID, String APIURL, String downloadURL){
         this.authorizationToken = authorizationToken;
         this.accountID = accountID;
         this.APIURL = APIURL;

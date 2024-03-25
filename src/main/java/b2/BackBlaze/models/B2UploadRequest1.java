@@ -1,8 +1,8 @@
 package b2.BackBlaze.models;
 
-public class B2UploadRequest {
+public class B2UploadRequest1 {
 
-    private B2Bucket bucket;
+    private B2Bucket1 bucket;
     private String uploadURL, authorizationToken;
 
     /**
@@ -12,7 +12,7 @@ public class B2UploadRequest {
      * @param uploadURL The URL which should be used for uploading the files
      * @param authorizationToken A token which will be used to authenticate the upload
      */
-    public B2UploadRequest(B2Bucket bucket, String uploadURL, String authorizationToken){
+    public B2UploadRequest1(B2Bucket1 bucket, String uploadURL, String authorizationToken){
         this.bucket = bucket;
         this.uploadURL = uploadURL;
         this.authorizationToken = authorizationToken;
@@ -23,7 +23,7 @@ public class B2UploadRequest {
      *
      * @return An instance of B2Bucket representing the upload destination
      */
-    public B2Bucket getBucket(){
+    public B2Bucket1 getBucket(){
         return bucket;
     }
 
