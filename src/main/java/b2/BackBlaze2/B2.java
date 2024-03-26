@@ -244,8 +244,11 @@ public class B2 {
                 JSONObject json = new JSONObject(response.body().string());
 
                 String uploadUrl = json.getString("uploadUrl");
-                b2UploadInfo.setUploadUrl(uploadUrl);
+                String uploadAuthorizationToken = json.getString("authorizationToken");
 
+                b2UploadInfo.setUploadUrl(uploadUrl);
+                b2UploadInfo.setAuthorizationToken(uploadAuthorizationToken);
+                
                 System.out.println("업로드 정보 가져오기 성공!!");
             }
 

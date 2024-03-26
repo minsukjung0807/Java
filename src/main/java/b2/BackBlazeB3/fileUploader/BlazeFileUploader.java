@@ -169,9 +169,9 @@ public class BlazeFileUploader {
 
             InputStream iStream = FileUtils.openInputStream(file);
             byte[] inputData = getBytes(iStream);
+
             if (uploadingListener != null)
                 uploadingListener.onUploadStarted();
-
 
             checkIfAuthed(file, fileName, inputData);
 
@@ -203,7 +203,6 @@ public class BlazeFileUploader {
 
         String baseUrl = url.getProtocol() + "://" + url.getHost();
 
-
         UploadInterface uploadInterface = ApiClient.getClient(baseUrl).create(UploadInterface.class);
 
         UploadProgressRequestBody requestBody = new UploadProgressRequestBody(
@@ -218,29 +217,30 @@ public class BlazeFileUploader {
 
                 }
         );
+
         requestBody.setContentType(contentType);
+        
 
 // Upload
         Call<UploadResponse> call = uploadInterface.uploadFile(path, requestBody, uploadAuthorizationToken,
                 SHAsum(inputData), fileName);
         call.enqueue(new Callback<UploadResponse>() {
             @Override
-            public void onResponse(Call<UploadResponse> call, Response<UploadResponse> response) {
+            public void onResponse(Call<UploadResponse> call1, Response<UploadResponse> response) {
 
-
+                
                 if (uploadingListener != null) {
                     uploadingListener.onUploadFinished(response.body(), !isMultiUpload);
-                    call.cancel();
-
-
                 }
-                if (onFinish != null) {
-                    try {
-                        onFinish.call();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
+
+            call.cancel();
+                // if (onFinish != null) {
+                //     try {
+                //         onFinish.call();
+                //     } catch (Exception e) {
+                //         e.printStackTrace();
+                //     }
+                // }
 
             }
 
@@ -248,9 +248,14 @@ public class BlazeFileUploader {
             public void onFailure(Call<UploadResponse> call, Throwable t) {
                 if (uploadingListener != null)
                     uploadingListener.onUploadFailed((Exception) t);
-
             }
         });
+
+        
+
+    }
+
+    public void finish() {
 
     }
 
@@ -276,7 +281,6 @@ public class BlazeFileUploader {
                 new UploadProgressRequestBody.UploadInfo(fileBytes, fileBytes.length),
                 (progress, total) -> {
 
-
                     int percentage = (int) ((progress * 100.0f) / total);
 
                     if (uploadingListener != null)
@@ -293,22 +297,23 @@ public class BlazeFileUploader {
         call.enqueue(new Callback<UploadResponse>() {
             @Override
             public void onResponse(Call<UploadResponse> call, Response<UploadResponse> response) {
+
                 System.out.println("whynull" + response.body().toString());
-
-
 
                 if (uploadingListener != null) {
                     uploadingListener.onUploadFinished(response.body(), !isMultiUpload);
-
-
+                    call.cancel();
                 }
-                if (onFinish != null) {
-                    try {
-                        onFinish.call();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
+
+                // if (onFinish != null) {
+                //     try {
+                //         onFinish.call();
+                //     } catch (Exception e) {
+                //         e.printStackTrace();
+                //     }
+                // }
+
+                
 
             }
 
@@ -316,9 +321,11 @@ public class BlazeFileUploader {
             public void onFailure(Call<UploadResponse> call, Throwable t) {
                 if (uploadingListener != null)
                     uploadingListener.onUploadFailed((Exception) t);
-
+                call.cancel();
             }
         });
+
+
 
     }
 

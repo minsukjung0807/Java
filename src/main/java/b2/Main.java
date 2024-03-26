@@ -6,7 +6,14 @@ package b2;
 
 import b2.BackBlaze.BackblazeB2Auth;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+
+import org.apache.commons.io.FileUtils;
 
 import b2.BackBlaze.BackblazeB2;
 import b2.BackBlaze.models.B2Bucket1;
@@ -18,21 +25,32 @@ import b2.BackBlaze2.*;
 import b2.BackBlaze2.listeners.ProgressRequestBody;
 import b2.BackBlaze2.models.B2Bucket;
 import b2.BackBlaze2.models.B2UploadInfo;
+import b2.BackBlazeB3.fileUploader.BlazeFileUploader;
+import b2.BackBlazeB3.fileUploader.MultiFile;
+import b2.BackBlazeB3.fileUploader.UploadListener;
+import b2.BackBlazeB3.uploadModel.UploadResponse;
 
 public class Main {
   
   private static String appKeyId = "005e6f0ff38588b000000000a";
   private static String appKey = "K005k2tpcpfoqMY525/C9Pj5kHbDWXY";
+
+  private static String authorizationToken, apiUrl, uploadUrl, uploadAuthorizationToken, bucketId;
+  
     public static void main(String[] args) {
 
       B2 b2 = new B2(appKeyId, appKey);
 
-
-      b2.getInfo().getAuthorizationToken();
       B2Bucket bucket = new B2Bucket();
-      bucket.setBucketName("musicmmmTest31"); //bucket names are unique
+      bucket.setBucketName("musicmmmTest50"); //bucket names are unique
       bucket.setBucketType(B2.BUCKET_TYPE_PUBLIC); //public or private
+
       B2Bucket bucket1 = b2.createBucket(bucket);
+
+      authorizationToken = b2.getInfo().getAuthorizationToken();
+      apiUrl = b2.getInfo().getApiUrl();
+      System.out.println("인증 토큰" + b2.getInfo().getAuthorizationToken());
+      System.out.println("API URL" + b2.getInfo().getApiUrl());
 
       System.out.println("벗킷 ID: "+ bucket1.getBucketId());
       System.out.println("버킷 이름: " + bucket1.getBucketName());
@@ -41,16 +59,66 @@ public class Main {
 
       B2UploadInfo uploadInfo = b2.getUploadInfo(bucket1.getBucketId()); //Get upload info for specific bucket
 
-      System.out.println("인증 토큰: " + uploadInfo.getAuthorizationToken());
+      uploadAuthorizationToken = uploadInfo.getAuthorizationToken();
+      bucketId = uploadInfo.getBucketId();
+      uploadUrl = uploadInfo.getUploadUrl();
+      System.out.println("업로드 인증 토큰: " + uploadInfo.getAuthorizationToken());
       System.out.println("버킷 ID: " + uploadInfo.getBucketId());
       System.out.println("업로드 URL: "+ uploadInfo.getUploadUrl());
 
       File path = new File("");
      
-      File file = new File(path.getAbsolutePath()+"/src/file/10MB.txt");
+      File file = new File(path.getAbsolutePath()+"/src/file/5MB.txt");
 
-    if(file.exists()) {
-      b2.uploadFile(file, uploadInfo);
+      if(file.exists()) {
+        System.out.println("파일 존재함!!");
+
+        BlazeFileUploader blazeFileUploader = new BlazeFileUploader(authorizationToken, apiUrl, uploadUrl, uploadAuthorizationToken, bucketId);
+
+
+        blazeFileUploader.setOnUploadingListener(new UploadListener() {
+          @Override
+          public void onUploadStarted() {
+  
+          }
+  
+  
+          @Override
+          public void onUploadProgress(int percentage, long progress, long total) {
+  
+              System.out.println("uplooooad: "+ percentage + "  " + progress + "   " + total);
+  
+          }
+  
+          @Override
+          public void onUploadFinished(UploadResponse response, boolean allFilesUploaded) {
+            System.out.println("끝");
+          }
+  
+          @Override
+          public void onUploadFailed(Exception e) {
+  
+          }
+      });
+
+        InputStream iStream = null;
+        try {
+            iStream = FileUtils.openInputStream(file);
+            byte[] inputData = getBytes(iStream);
+            blazeFileUploader.startUploading(inputData, "4MB.txt");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        
+    
+      } else {
+        System.out.println("파일 없음!!");
+      }
+    // if(file.exists()) {
+    //   b2.uploadFile(file, uploadInfo);
     //   System.out.println("파일이 존재함!!");
     //   b2.uploadFile(file, uploadInfo , new ProgressRequestBody.ProgressListener() {
     //     @Override
@@ -59,10 +127,10 @@ public class Main {
     //     }
     // });
 
-    }
-    else {
-      System.out.println("파일 없음");
-    }
+    // }
+    // else {
+    //   System.out.println("파일 없음");
+    // }
 //       b2.uploadFile(file, uploadInfo, new ProgressRequestBody.ProgressListener() {
 //     @Override
 //     public void onProgress(long bytesWritten, long contentLength, boolean done) {
@@ -75,6 +143,18 @@ public class Main {
       // authenticate();
     }
 
+    public static byte[] getBytes(InputStream inputStream) throws IOException {
+      ByteArrayOutputStream byteBuffer = new ByteArrayOutputStream();
+      int bufferSize = 1024;
+      byte[] buffer = new byte[bufferSize];
+
+      int len = 0;
+      while ((len = inputStream.read(buffer)) != -1) {
+          byteBuffer.write(buffer, 0, len);
+      }
+      return byteBuffer.toByteArray();
+  }
+  
   // 인증 작업
   private static void authenticate() {
     

@@ -8,7 +8,6 @@ public class ApiClient {
 
     public static Retrofit getClient(String baseUrl) {
 
-
             retrofit = new Retrofit.Builder()
                     .baseUrl(baseUrl)
                     .addConverterFactory(GsonConverterFactory.create())
