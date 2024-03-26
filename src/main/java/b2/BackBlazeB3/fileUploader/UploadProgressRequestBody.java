@@ -1,14 +1,12 @@
 package b2.BackBlazeB3.fileUploader;
 
-import android.content.ContentResolver;
-import android.content.Context;
-import android.net.Uri;
-import android.util.Log;
-
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
+
+import org.apache.commons.io.FileUtils;
 
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
@@ -24,15 +22,14 @@ public class UploadProgressRequestBody extends RequestBody {
     }
 
     public static class UploadInfo {
-        //Content uri for the file
-        public Uri contentUri;
+        public File file;
 
         public byte[] fileBytes;
         // File size in bytes
         public long contentLength;
 
-        public UploadInfo(Uri contentUri, long contentLength) {
-            this.contentUri = contentUri;
+        public UploadInfo(File file, long contentLength) {
+            this.file = file;
             this.contentLength = contentLength;
         }
 
@@ -96,23 +93,15 @@ public class UploadProgressRequestBody extends RequestBody {
     private InputStream in() throws IOException {
         InputStream stream = null;
         try {
-            if(mUploadInfo.contentUri!=null)
-            
-            stream = getContentResolver().openInputStream(mUploadInfo.contentUri);
+            if(mUploadInfo.file!=null)
+                stream = FileUtils.openInputStream(mUploadInfo.file);
             else
                 stream = new ByteArrayInputStream(mUploadInfo.fileBytes);
 
         } catch (Exception ex) {
-            Log.e(LOG_TAG, "Error getting input stream for upload", ex);
+            System.out.println("Error getting input stream for upload" + ex);
         }
 
         return stream;
-    }
-
-    private ContentResolver getContentResolver() {
-        if (mContextRef.get() != null) {
-            return mContextRef.get().getContentResolver();
-        }
-        return null;
     }
 }

@@ -1,17 +1,18 @@
 package b2.BackBlazeB3.fileUploader;
 
+import java.io.File;
 
 public class MultiFile {
 
-    public Uri fileUri;
+    public File file;
     public byte[] fileBytes;
     public String fileName;
     public String contentType;
     public MultiFile() {
     }
 
-    public MultiFile(Uri fileUri, String fileName, String contentType) {
-        this.fileUri = fileUri;
+    public MultiFile(File file, String fileName, String contentType) {
+        this.file = file;
         this.fileName = fileName;
         this.contentType = contentType;
     }
@@ -30,12 +31,12 @@ public class MultiFile {
         this.fileBytes = fileBytes;
     }
 
-    public Uri getFileUri() {
-        return fileUri;
+    public File getFile() {
+        return file;
     }
 
-    public void setFileUri(Uri fileUri) {
-        this.fileUri = fileUri;
+    public void setFileUri(File file) {
+        this.file = file;
     }
 
     public String getFileName() {
@@ -55,8 +56,8 @@ public class MultiFile {
     }
 
 
-    public void init(Uri fileUri, String fileName, String contentType) {
-        this.fileUri = fileUri;
+    public void init(File file, String fileName, String contentType) {
+        this.file = file;
         this.fileName = fileName;
         this.contentType = contentType;
     }

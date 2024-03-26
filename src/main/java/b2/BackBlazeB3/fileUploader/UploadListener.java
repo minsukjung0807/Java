@@ -1,5 +1,7 @@
 package b2.BackBlazeB3.fileUploader;
 
+import b2.BackBlazeB3.uploadModel.UploadResponse;
+
 public interface UploadListener {
     void onUploadStarted();
 

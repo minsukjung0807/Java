@@ -1,6 +1,6 @@
 package b2.BackBlazeB3.fileUploader;
 
-import okhttp3.MultipartBody;
+import b2.BackBlazeB3.uploadModel.UploadResponse;
 import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.Body;

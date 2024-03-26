@@ -28,6 +28,7 @@ public class Main {
       B2 b2 = new B2(appKeyId, appKey);
 
 
+      b2.getInfo().getAuthorizationToken();
       B2Bucket bucket = new B2Bucket();
       bucket.setBucketName("musicmmmTest31"); //bucket names are unique
       bucket.setBucketType(B2.BUCKET_TYPE_PUBLIC); //public or private
