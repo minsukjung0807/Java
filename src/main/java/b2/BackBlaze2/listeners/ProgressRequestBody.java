@@ -3,16 +3,13 @@ package b2.BackBlaze2.listeners;
 import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.RequestBody;
 import okio.*;
-
-import java.io.IOException;
+import java.io.*;
 
 public class ProgressRequestBody extends RequestBody {
 
     private final RequestBody requestBody;
     private final ProgressListener progressListener;
     private BufferedSink bufferedSink;
-
-    private static final int DEFAULT_BUFFER_SIZE = 2048; // 버퍼 크기 조절
 
     public ProgressRequestBody(RequestBody requestBody, ProgressListener progressListener) {
         this.requestBody = requestBody;
@@ -31,11 +28,33 @@ public class ProgressRequestBody extends RequestBody {
 
     @Override
     public void writeTo(BufferedSink sink) throws IOException {
-        if (bufferedSink == null) {
-            bufferedSink = Okio.buffer(sink(sink));
+        // if (bufferedSink == null) {
+        //     bufferedSink = Okio.buffer(sink(sink));
+        // }
+        
+
+        byte[] buffer = new byte[8192];
+        InputStream in = null;
+        long uploaded = 0;
+
+        try {
+            int read;
+            while ((read = in.read(buffer)) != -1) {
+                System.out.println("업로드 중.." + uploaded);
+                // mListener.onProgress(uploaded, contentLength());
+
+                uploaded += read;
+
+                sink.write(buffer, 0, read);
+            }
+        } finally {
+            in.close();
         }
-        requestBody.writeTo(bufferedSink);
-        // 플러시하지 않음 - 마지막에 한 번에 플러시
+
+        // requestBody.writeTo(bufferedSink);
+        // System.out.println("writeTo실행");
+        // bufferedSink.flush();
+
     }
 
     private Sink sink(Sink sink) {
@@ -50,6 +69,7 @@ public class ProgressRequestBody extends RequestBody {
                     contentLength = contentLength();
                 }
                 bytesWritten += byteCount;
+                
                 if (progressListener != null) {
                     progressListener.onProgress(bytesWritten, contentLength, bytesWritten == contentLength);
                 }
@@ -60,4 +80,21 @@ public class ProgressRequestBody extends RequestBody {
     public interface ProgressListener {
         void onProgress(long bytesWritten, long contentLength, boolean done);
     }
+
+    //  private InputStream in() throws IOException {
+    //     InputStream stream = null;
+    //     try {
+    //         if(mUploadInfo.contentUri!=null)
+    //         stream = getContentResolver().openInputStream(mUploadInfo.contentUri);
+    //         else
+    //             stream = new ByteArrayInputStream(mUploadInfo.fileBytes);
+
+    //     } catch (Exception ex) {
+    //         Log.e(LOG_TAG, "Error getting input stream for upload", ex);
+    //     }
+
+        // return stream;
+    // }
+
+
 }

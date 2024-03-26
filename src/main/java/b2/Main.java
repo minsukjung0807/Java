@@ -29,7 +29,7 @@ public class Main {
 
 
       B2Bucket bucket = new B2Bucket();
-      bucket.setBucketName("musicmmmTest10"); //bucket names are unique
+      bucket.setBucketName("musicmmmTest31"); //bucket names are unique
       bucket.setBucketType(B2.BUCKET_TYPE_PUBLIC); //public or private
       B2Bucket bucket1 = b2.createBucket(bucket);
 
@@ -49,16 +49,28 @@ public class Main {
       File file = new File(path.getAbsolutePath()+"/src/file/10MB.txt");
 
     if(file.exists()) {
-      System.out.println("파일이 존재함!!");
-      b2.uploadFile(file, uploadInfo, new ProgressRequestBody.ProgressListener() {
-    @Override
-    public void onProgress(long bytesWritten, long contentLength, boolean done) {
-        System.out.println("업로드 중..." + bytesWritten);
+      b2.uploadFile(file, uploadInfo);
+    //   System.out.println("파일이 존재함!!");
+    //   b2.uploadFile(file, uploadInfo , new ProgressRequestBody.ProgressListener() {
+    //     @Override
+    //     public void onProgress(long bytesWritten, long contentLength, boolean done) {
+    //         System.out.println("업로드 중..." + bytesWritten);
+    //     }
+    // });
+
     }
-});
-    } else {
-      System.out.println("파일이 없음!!");
+    else {
+      System.out.println("파일 없음");
     }
+//       b2.uploadFile(file, uploadInfo, new ProgressRequestBody.ProgressListener() {
+//     @Override
+//     public void onProgress(long bytesWritten, long contentLength, boolean done) {
+//         System.out.println("업로드 중..." + bytesWritten);
+//     }
+// });
+//     } else {
+//       System.out.println("파일이 없음!!");
+//     }
       // authenticate();
     }
 
@@ -106,7 +118,7 @@ public class Main {
       }
     });
 
-    B2Bucket1 b2Bucket = bucketCreation.createBucket(b2Session, "Teac433484", BucketType1.ALL_PUBLIC);
+    B2Bucket1 b2Bucket = bucketCreation.createBucket(b2Session, "Te1243984", BucketType1.ALL_PUBLIC);
     System.out.println(b2Bucket.getID());
     System.out.println(b2Bucket.getName());
 
@@ -119,10 +131,10 @@ public class Main {
     System.out.println("업로드 URL: " + b2UploadRequest.getUploadURL());
 
     File path = new File("");
-    File file = new File(path.getAbsolutePath()+"/src/file/hello_nice.mcworld");
+    File file = new File(path.getAbsolutePath()+"/src/file/10MB.txt");
     
     if(file.exists()) {
-      uploadFile(backblazeB2, b2UploadRequest, file, "hello/nice.mcworld");
+      uploadFile(backblazeB2, b2UploadRequest, file, "hello/10MB.txt");
     } else {
       System.out.println("파일이 없음!!");
     }

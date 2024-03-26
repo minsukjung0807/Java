@@ -5,12 +5,16 @@ import b2.BackBlaze2.models.*;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.squareup.okhttp.*;
+import b2.BackBlaze2.models.Callback;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.SocketException;
 import java.nio.file.Files;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -25,7 +29,7 @@ public class B2 {
     private B2Info info;
     private final OkHttpClient client;
     private final Gson gson;
-
+    private String USER_AGENT = "Mozilla/5.0 (Linux; Android 8.0.0; SAMSUNG-SM-G950N/KSU3CRJ1 Build/R16NW) AppleWebKit/537.36 (KHTML, like Gecko) SamsungBrowser/8.2 Chrome/63.0.3239.111 Mobile Safari/537.36";
     /**
      * Initialize B2.
      *
@@ -263,21 +267,57 @@ public class B2 {
      * @see <a href="hhttps://www.backblaze.com/b2/docs/b2_upload_file.html">Upload File</a>
      */
     public B2File uploadFile(File file, B2UploadInfo b2UploadInfo) {
+
         B2File b2File = null;
+
+        
+
         try {
+
+            RequestBody requestBody = new MultipartBuilder()
+        .type(MultipartBuilder.FORM)
+        .addFormDataPart("10MB", "10MB.txt", RequestBody.create(MediaType.parse(Files.probeContentType(file.toPath())), file))
+        .build();
+
             Request request = new Request
                     .Builder()
-                    .method("POST", RequestBody.create(MediaType.parse(Files.probeContentType(file.toPath())), file))
+                    .post(requestBody)
                     .url(b2UploadInfo.getUploadUrl())
                     .addHeader("Authorization", b2UploadInfo.getAuthorizationToken())
                     .addHeader("X-Bz-File-Name", file.getName())
-                    .addHeader("X-Bz-Content-Sha1", Utils.getFileSha1Hash(file)).build();
-            Response response = client.newCall(request).execute();
-            if (response.isSuccessful() && response.body() != null) {
-                b2File = gson.fromJson(response.body().string(), B2File.class);
-            }
-        } catch (IOException e) {
+                    .addHeader("User-Agent", USER_AGENT)
+                    .addHeader("X-Bz-Content-Sha1", getFileHash(file))
+                    .addHeader("Content-Type", "b2/x-auto")
+                    .build();
+
+                    try {
+                        Response response = client.newCall(request).execute();
+                    } catch(SocketException e) {
+                        System.out.println(e.getMessage());
+                    }
+            
+ 
+            //     @Override
+            //     public void onFailure(Call call, IOException e) {
+            //         System.err.println("Error Occurred");
+            //     }
+     
+            //     @Override
+            //     public void onResponse(Call call, Response response) throws IOException {
+            //         ResponseBody body = response.body();
+            //         if (body != null) {
+            //             System.out.println("Response:" + body.string());
+            //         }
+            //     }
+            // }););
+            // if (response.isSuccessful() && response.body() != null) {
+            //     System.out.println("성공!!");
+            //     b2File = gson.fromJson(response.body().string(), B2File.class);
+            // }
+        } catch (IOException e ) {
             e.printStackTrace();
+        } catch (NoSuchAlgorithmException error) {
+
         }
         return b2File;
     }
@@ -295,16 +335,22 @@ public class B2 {
         B2File b2File = null;
         try {
 
-            OkHttpClient client = new OkHttpClient();
-            client.setConnectTimeout(1000, TimeUnit.SECONDS); // connect timeout
-            client.setReadTimeout(1000, TimeUnit.SECONDS);    // socket timeout
-            InputStream inputStream = new FileInputStream(file);
+
+            RequestBody requestBody = new MultipartBuilder()
+            .type(MultipartBuilder.FORM)
+            .addFormDataPart("10MB", "10MB.txt",
+            RequestBody.create(MediaType.parse(Files.probeContentType(file.toPath())), file)).build();
+
             Request request = new Request
                     .Builder()
-                    .method("POST", new ProgressRequestBody(RequestBody.create(MediaType.parse(Files.probeContentType(file.toPath())), file), progressListener))
+                    
+                    .post(requestBody)
+                    // .method("POST", new ProgressRequestBody(RequestBody.create(MediaType.parse(Files.probeContentType(file.toPath())), file), progressListener, file.length()))
                     .url(b2UploadInfo.getUploadUrl())
                     .addHeader("Authorization", b2UploadInfo.getAuthorizationToken())
                     .addHeader("X-Bz-File-Name", file.getName())
+                    .addHeader("User-Agent", USER_AGENT)
+                  
                     // .addHeader("X-Bz-Content-Sha1", Utils.getFileSha1Hash(file))
                     .build();
 
@@ -582,6 +628,21 @@ public class B2 {
             e.printStackTrace();
         }
         return inputStream;
+    }
+
+    private String getFileHash(File file) throws NoSuchAlgorithmException, IOException {
+        MessageDigest md = MessageDigest.getInstance("SHA1");
+        FileInputStream fis = new FileInputStream(file);
+        byte[] dataBytes = new byte[1024];
+        int nread = 0;
+
+        while ((nread = fis.read(dataBytes)) != -1) md.update(dataBytes, 0, nread);
+
+        byte[] mdBytes = md.digest();
+        StringBuffer sb = new StringBuffer("");
+        for (int i = 0; i < mdBytes.length; i++) sb.append(Integer.toString((mdBytes[i] & 0xff) + 0x100, 16).substring(1));
+
+        return sb.toString();
     }
 
 }

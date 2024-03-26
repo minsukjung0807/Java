@@ -130,12 +130,13 @@ public class BackblazeB2 {
             connection.setRequestMethod("POST");
             connection.setRequestProperty("User-Agent", USER_AGENT);
             connection.setRequestProperty("Authorization", upload.getAuthorizationToken());
-            connection.setRequestProperty("Content-Type", "b2/x-auto");
+            
             connection.setRequestProperty("X-Bz-File-Name", name);
             connection.setRequestProperty("X-Bz-Content-Sha1", getFileHash(file));
-
+            connection.setRequestProperty("Content-Type", "b2/x-auto");
             connection.setDoOutput(true);
 
+           
             // 파일 크기
             long fileLength = file.length();
             // 업로드 시작 시간
@@ -145,15 +146,24 @@ public class BackblazeB2 {
             InputStream fileInputStream = new FileInputStream(file);
             byte[] buffer = new byte[4096]; // 4KB 버퍼
 
-            long totalBytesWritten = 0;
+            long totalBytesWritten = 100;
             int bytesRead;
 
             while ((bytesRead = fileInputStream.read(buffer)) != -1) {
                 
                 outputStream.write(buffer, 0, bytesRead);
-
+                
                 if(outputStream.size() == bytesRead) {
                     totalBytesWritten += bytesRead;
+
+                    if(connection.getResponseCode() < 400){
+                        InputStream inputStream =  connection.getInputStream();
+                        JSONObject requestResult; requestResult = inputToJSON(inputStream);
+
+                        System.out.println("크기: " + requestResult.getString("contentLength"));
+                    }
+                    // connection.setRequestProperty("Content-Length", totalBytesWritten+"");
+                    
                 }
                 
                 // if (progressListener != null) {
@@ -162,7 +172,7 @@ public class BackblazeB2 {
                     double speed = (double) totalBytesWritten / elapsedTime; // 업로드 속도
                     double progress = (double) totalBytesWritten / fileLength; // 업로드 진행률
 
-                    System.out.println("진행률: " + progress);
+                    // System.out.println("진행률: " + progress);
 
                     // progressListener.onProgress(totalBytesWritten, fileLength, progress, speed);
                 // }
