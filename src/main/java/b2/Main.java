@@ -4,31 +4,25 @@
 package b2;
 
 
-import b2.BackBlaze.BackblazeB2Auth;
+import b2.main.BackBlaze.BackblazeB2Auth;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 
 import org.apache.commons.io.FileUtils;
 
-import b2.BackBlaze.BackblazeB2;
-import b2.BackBlaze.models.B2Bucket1;
-import b2.BackBlaze.models.B2File1;
-import b2.BackBlaze.models.B2Session1;
-import b2.BackBlaze.models.B2UploadRequest1;
-import b2.BackBlaze.models.BucketType1;
-import b2.BackBlaze2.*;
-import b2.BackBlaze2.listeners.ProgressRequestBody;
-import b2.BackBlaze2.models.B2Bucket;
-import b2.BackBlaze2.models.B2UploadInfo;
-import b2.BackBlazeB3.fileUploader.BlazeFileUploader;
-import b2.BackBlazeB3.fileUploader.MultiFile;
-import b2.BackBlazeB3.fileUploader.UploadListener;
-import b2.BackBlazeB3.uploadModel.UploadResponse;
+import b2.main.BackBlaze.BackblazeB2;
+import b2.main.BackBlaze.models.B2Bucket1;
+import b2.main.BackBlaze.models.B2File1;
+import b2.main.BackBlaze.models.B2Session1;
+import b2.main.BackBlaze.models.B2UploadRequest1;
+import b2.main.BackBlaze.models.BucketType1;
+import b2.main.BackBlazeB3.fileUploader.BlazeFileUploader;
+import b2.main.BackBlazeB3.fileUploader.UploadListener;
+import b2.main.BackBlazeB3.uploadModel.UploadResponse;
 
 public class Main {
   
@@ -39,108 +33,11 @@ public class Main {
   
     public static void main(String[] args) {
 
-      B2 b2 = new B2(appKeyId, appKey);
+      
 
-      B2Bucket bucket = new B2Bucket();
-      bucket.setBucketName("musicmmmTest50"); //bucket names are unique
-      bucket.setBucketType(B2.BUCKET_TYPE_PUBLIC); //public or private
+      authenticate();
 
-      B2Bucket bucket1 = b2.createBucket(bucket);
-
-      authorizationToken = b2.getInfo().getAuthorizationToken();
-      apiUrl = b2.getInfo().getApiUrl();
-      System.out.println("인증 토큰" + b2.getInfo().getAuthorizationToken());
-      System.out.println("API URL" + b2.getInfo().getApiUrl());
-
-      System.out.println("벗킷 ID: "+ bucket1.getBucketId());
-      System.out.println("버킷 이름: " + bucket1.getBucketName());
-      System.out.println("버킷 타입: " + bucket1.getBucketType());
-      System.out.println("아이디: " + bucket1.getAccountId());
-
-      B2UploadInfo uploadInfo = b2.getUploadInfo(bucket1.getBucketId()); //Get upload info for specific bucket
-
-      uploadAuthorizationToken = uploadInfo.getAuthorizationToken();
-      bucketId = uploadInfo.getBucketId();
-      uploadUrl = uploadInfo.getUploadUrl();
-      System.out.println("업로드 인증 토큰: " + uploadInfo.getAuthorizationToken());
-      System.out.println("버킷 ID: " + uploadInfo.getBucketId());
-      System.out.println("업로드 URL: "+ uploadInfo.getUploadUrl());
-
-      File path = new File("");
-     
-      File file = new File(path.getAbsolutePath()+"/src/file/5MB.txt");
-
-      if(file.exists()) {
-        System.out.println("파일 존재함!!");
-
-        BlazeFileUploader blazeFileUploader = new BlazeFileUploader(authorizationToken, apiUrl, uploadUrl, uploadAuthorizationToken, bucketId);
-
-
-        blazeFileUploader.setOnUploadingListener(new UploadListener() {
-          @Override
-          public void onUploadStarted() {
-  
-          }
-  
-  
-          @Override
-          public void onUploadProgress(int percentage, long progress, long total) {
-  
-              System.out.println("uplooooad: "+ percentage + "  " + progress + "   " + total);
-  
-          }
-  
-          @Override
-          public void onUploadFinished(UploadResponse response, boolean allFilesUploaded) {
-            System.out.println("끝");
-          }
-  
-          @Override
-          public void onUploadFailed(Exception e) {
-  
-          }
-      });
-
-        InputStream iStream = null;
-        try {
-            iStream = FileUtils.openInputStream(file);
-            byte[] inputData = getBytes(iStream);
-            blazeFileUploader.startUploading(inputData, "4MB.txt");
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        
-    
-      } else {
-        System.out.println("파일 없음!!");
-      }
-    // if(file.exists()) {
-    //   b2.uploadFile(file, uploadInfo);
-    //   System.out.println("파일이 존재함!!");
-    //   b2.uploadFile(file, uploadInfo , new ProgressRequestBody.ProgressListener() {
-    //     @Override
-    //     public void onProgress(long bytesWritten, long contentLength, boolean done) {
-    //         System.out.println("업로드 중..." + bytesWritten);
-    //     }
-    // });
-
-    // }
-    // else {
-    //   System.out.println("파일 없음");
-    // }
-//       b2.uploadFile(file, uploadInfo, new ProgressRequestBody.ProgressListener() {
-//     @Override
-//     public void onProgress(long bytesWritten, long contentLength, boolean done) {
-//         System.out.println("업로드 중..." + bytesWritten);
-//     }
-// });
-//     } else {
-//       System.out.println("파일이 없음!!");
-//     }
-      // authenticate();
+      
     }
 
     public static byte[] getBytes(InputStream inputStream) throws IOException {
@@ -171,7 +68,6 @@ public class Main {
           System.out.println("Account Id: " + b2Session.getAccountID());
 
           createBucket(b2Session);
-          
       }
 
       @Override
@@ -199,7 +95,7 @@ public class Main {
       }
     });
 
-    B2Bucket1 b2Bucket = bucketCreation.createBucket(b2Session, "Te1243984", BucketType1.ALL_PUBLIC);
+    B2Bucket1 b2Bucket = bucketCreation.createBucket(b2Session, "A2d67hhgnn32804", BucketType1.ALL_PUBLIC);
     System.out.println(b2Bucket.getID());
     System.out.println(b2Bucket.getName());
 
@@ -208,14 +104,60 @@ public class Main {
 
 
   private static void getUploadUrl(BackblazeB2 backblazeB2, B2Session1 b2Session, B2Bucket1 b2Bucket) {
+
     B2UploadRequest1 b2UploadRequest = backblazeB2.getUploadURL(b2Session, b2Bucket);
+
+    apiUrl = b2Session.getAPIURL();
+    authorizationToken = b2Session.getAuthToken();
+    uploadUrl = b2UploadRequest.getUploadURL();
+    bucketId = b2Bucket.getID();
+    uploadAuthorizationToken = b2UploadRequest.getAuthorizationToken();
+
     System.out.println("업로드 URL: " + b2UploadRequest.getUploadURL());
 
     File path = new File("");
     File file = new File(path.getAbsolutePath()+"/src/file/10MB.txt");
     
     if(file.exists()) {
-      uploadFile(backblazeB2, b2UploadRequest, file, "hello/10MB.txt");
+      // uploadFile(backblazeB2, b2UploadRequest, file, "hello/10MB.txt");
+      BlazeFileUploader blazeFileUploader = new BlazeFileUploader(authorizationToken, apiUrl, uploadUrl, uploadAuthorizationToken, bucketId);
+      blazeFileUploader.setOnUploadingListener(new UploadListener() {
+        @Override
+        public void onUploadStarted() {
+          System.out.println("파일 업로드 시작...");
+        }
+
+
+        @Override
+        public void onUploadProgress(int percentage, long progress, long total) {
+
+            System.out.println("uplooooad: "+ percentage + "  " + progress + "   " + total);
+
+        }
+
+        @Override
+        public void onUploadFinished(UploadResponse response, boolean allFilesUploaded) {
+          
+          System.out.println("파일 업로드 완료...");
+          blazeFileUploader.finish();
+        }
+
+        @Override
+        public void onUploadFailed(Exception e) {
+
+        }
+    });
+
+      InputStream iStream = null;
+      try {
+          iStream = FileUtils.openInputStream(file);
+          byte[] inputData = getBytes(iStream);
+          blazeFileUploader.startUploading(inputData, "4MB.txt");
+      } catch (FileNotFoundException e) {
+          e.printStackTrace();
+      } catch (IOException e) {
+          e.printStackTrace();
+      }
     } else {
       System.out.println("파일이 없음!!");
     }
@@ -223,23 +165,6 @@ public class Main {
     
   }
 
-  private static void uploadFile(BackblazeB2 backblazeB2, B2UploadRequest1 b2UploadRequest, File file, String name) {
-    backblazeB2.setOnUploadFileStateListener(new BackblazeB2.OnUploadFileStateListener() {
-      @Override
-      public void onSuccess(String message) {
-        System.out.println(message);
-      }
-
-      @Override
-      public void onFailed(String message) {
-        System.out.println(message);
-      }
-    });
-
-    B2File1 b2File = backblazeB2.uploadFile(b2UploadRequest, file, name);
-
-    System.out.println("업로드된 파일의 크기: " + b2File.getSize());
-  }
 
   
     
