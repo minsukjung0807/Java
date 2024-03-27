@@ -11,13 +11,11 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.FileNotFoundException;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
 import java.util.Formatter;
 
 import retrofit2.Call;
@@ -28,7 +26,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class BlazeFileUploader {
 
-    private String bucketId;
     private UploadListener uploadingListener;
     private boolean isAuthed = false;
     private String accountAuthorizationToken, apiUrl;
@@ -37,7 +34,6 @@ public class BlazeFileUploader {
     
     // private ArrayList<MultiFile> files;
 
-    //Upload Auth
     private String uploadUrl;
     private String uploadAuthorizationToken;
 
@@ -48,9 +44,7 @@ public class BlazeFileUploader {
         this.apiUrl = apiUrl;
         this.uploadUrl = uploadUrl;
         this.uploadAuthorizationToken = uploadAuthorizationToken;
-        this.bucketId = bucketId;
         isAuthed = false;
-
     }
 
 

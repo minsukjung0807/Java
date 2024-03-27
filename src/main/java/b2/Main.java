@@ -8,15 +8,12 @@ import b2.main.BackBlaze.BackblazeB2Auth;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
+
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.apache.commons.io.FileUtils;
-
 import b2.main.BackBlaze.BackblazeB2;
 import b2.main.BackBlaze.models.B2Bucket1;
-import b2.main.BackBlaze.models.B2File1;
 import b2.main.BackBlaze.models.B2Session1;
 import b2.main.BackBlaze.models.B2UploadRequest1;
 import b2.main.BackBlaze.models.BucketType1;
@@ -81,8 +78,8 @@ public class Main {
 
   // 버킷 생성
   private static void createBucket(B2Session1 b2Session) {
-    BackblazeB2 bucketCreation = new BackblazeB2();
 
+    BackblazeB2 bucketCreation = new BackblazeB2();
     bucketCreation.setOnBucketStateListener(new BackblazeB2.OnCreateBucketStateListener() {
       @Override
       public void onSuccess(String message) {
@@ -130,9 +127,7 @@ public class Main {
 
         @Override
         public void onUploadProgress(int percentage, long progress, long total) {
-
             System.out.println("uplooooad: "+ percentage + "  " + progress + "   " + total);
-
         }
 
         @Override
@@ -142,7 +137,7 @@ public class Main {
 
         @Override
         public void onUploadFailed(Exception e) {
-
+          System.out.println(e.getMessage());
         }
     });
 
