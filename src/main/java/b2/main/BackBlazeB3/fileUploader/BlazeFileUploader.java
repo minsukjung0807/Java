@@ -338,7 +338,7 @@ public class BlazeFileUploader {
                 if (uploadingListener != null) {
                     uploadingListener.onUploadFinished(response.body(), !isMultiUpload);
 
-                    // 네트워크 닫기
+                    // 네트워크 닫기 (Okio watch dog 닫기)
                     client.connectionPool().evictAll();
                     ExecutorService executorService = client.dispatcher().executorService();
                     executorService.shutdown();
