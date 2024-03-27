@@ -137,9 +137,7 @@ public class Main {
 
         @Override
         public void onUploadFinished(UploadResponse response, boolean allFilesUploaded) {
-          
           System.out.println("파일 업로드 완료...");
-          blazeFileUploader.finish();
         }
 
         @Override
@@ -148,24 +146,11 @@ public class Main {
         }
     });
 
-      InputStream iStream = null;
-      try {
-          iStream = FileUtils.openInputStream(file);
-          byte[] inputData = getBytes(iStream);
-          blazeFileUploader.startUploading(inputData, "4MB.txt");
-      } catch (FileNotFoundException e) {
-          e.printStackTrace();
-      } catch (IOException e) {
-          e.printStackTrace();
-      }
-    } else {
-      System.out.println("파일이 없음!!");
-    }
-    
+    blazeFileUploader.startUploading(file, "4MB.txt");
     
   }
 
-
+  }
   
     
     // private static void downloadFile(String URL, String authorization, B2File file, File destination)  {

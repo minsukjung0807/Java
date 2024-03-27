@@ -11,6 +11,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.FileNotFoundException;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -154,15 +155,33 @@ public class BlazeFileUploader {
 
     }
 
-    public void startUploading(byte[] fileBytes, String fileName) {
+    public void startUploading(File file, String fileName) {
         isMultiUpload = false;
 
-        if (uploadingListener != null) {
-            uploadingListener.onUploadStarted();
+        
+        
+        
+        if(file.exists()) {
+            InputStream iStream = null;
+            try {
+
+                iStream = FileUtils.openInputStream(file);
+                byte[] inputData = getBytes(iStream);
+
+                checkIfAuthed(inputData, fileName);
+
+                if (uploadingListener != null) {
+                    uploadingListener.onUploadStarted();
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+          } else {
+            System.out.println("파일이 없습니다!");
+          }
         }
-            
-        checkIfAuthed(fileBytes, fileName);
-    }
+        
 
     // public void startUploading(File file, String fileName) {
     //     isMultiUpload = false;
@@ -186,7 +205,8 @@ public class BlazeFileUploader {
         Callable<Void> onFinish = () -> {
             System.out.println("파일 업로드가 완료되었습니다.");
             return null;
-            };
+        };
+
         uploadFile(filebytes, fileName, contentType, onFinish);  
     }
 
@@ -268,22 +288,6 @@ public class BlazeFileUploader {
 
 //     }
 
-    public void finish() { 
-        if (!uploadCall.isCanceled() && uploadCall.isExecuted())  {
-            uploadCall.cancel();
-            System.out.println("종료를 시도하였습니다.!!");
-            if (!uploadCall.isCanceled() && uploadCall.isExecuted())  {
-                uploadCall.cancel();
-                System.out.println("종료를 시도하였습니다.!!");
-                if (!uploadCall.isCanceled() && uploadCall.isExecuted())  {
-                    uploadCall.cancel();
-                    System.out.println("종료를 시도하였습니다.!!");
-                }
-            }
-            
-        }
-            
-    }
 
     private void uploadFile(byte[] fileBytes, String fileName, String contentType, Callable<Void> onFinish) {
         
