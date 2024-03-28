@@ -61,6 +61,7 @@ public class MultiFile {
         this.fileName = fileName;
         this.contentType = contentType;
     }
+    
     public void init(byte[] fileBytes, String fileName, String contentType) {
         this.fileBytes = fileBytes;
         this.fileName = fileName;

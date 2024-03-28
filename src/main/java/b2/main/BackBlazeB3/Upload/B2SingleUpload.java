@@ -22,7 +22,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class B2SingleUploadAbs {
+public class B2SingleUpload {
 
     private UploadListener uploadingListener;
     private String uploadUrl;
@@ -33,7 +33,7 @@ public class B2SingleUploadAbs {
     private String contentType = "";
     private OkHttpClient okHttpClient;
 
-    public B2SingleUploadAbs(String accountAuthorizationToken, String apiUrl, String uploadUrl, String uploadAuthorizationToken, String bucketId) {
+    public B2SingleUpload(String accountAuthorizationToken, String apiUrl, String uploadUrl, String uploadAuthorizationToken, String bucketId) {
         this.accountAuthorizationToken = accountAuthorizationToken;
         this.apiUrl = apiUrl;
         this.uploadUrl = uploadUrl;
@@ -78,32 +78,19 @@ public class B2SingleUploadAbs {
         okHttpClient = buildHttpClient();
 
         URL uploadURL = getURL(uploadUrl);
+
         String baseUrl =  getBaseUrl(uploadURL);
 
         Retrofit retrofit = buildRetrofit(baseUrl, okHttpClient);
 
         UploadInterface uploadInterface =  retrofit.create(UploadInterface.class);
 
-        UploadProgressRequestBody requestBody = new UploadProgressRequestBody(
-                new UploadProgressRequestBody.UploadInfo(fileBytes, fileBytes.length),
-                (progress, total) -> {
-
-                    int percentage = (int) ((progress * 100.0f) / total);
-
-                    if (uploadingListener != null) {
-                        uploadingListener.onUploadProgress(percentage, progress, total);
-                    }
-                        
-                }
-        );
+        UploadProgressRequestBody requestBody = setUploadProgressRequestBody(fileBytes);
 
         requestBody.setContentType(contentType);
                    
-        Call<UploadResponse> uploadCall = uploadInterface
-        .uploadFile(getPath(uploadURL), requestBody, uploadAuthorizationToken,
-                B2UploadUtils.SHAsum(fileBytes), fileName);
+        Call<UploadResponse> uploadCall = getUploadCall(uploadInterface, uploadURL, requestBody, uploadAuthorizationToken, fileBytes, fileName);
                 
-        
         uploadCall.enqueue(new Callback<UploadResponse>() {
             @Override
             public void onResponse(Call<UploadResponse> call1, Response<UploadResponse> response) {
@@ -121,9 +108,7 @@ public class B2SingleUploadAbs {
                     
             }
         });
-
-
-
+        
     }
 
     private Retrofit buildRetrofit(String baseUrl, OkHttpClient oHttpClient) {
@@ -165,5 +150,26 @@ public class B2SingleUploadAbs {
     private String getBaseUrl(URL url) {
         return url.getProtocol() + "://" + url.getHost();
     }
+
+    private UploadProgressRequestBody setUploadProgressRequestBody(byte[] fileBytes) {
+        return new UploadProgressRequestBody(
+            new UploadProgressRequestBody.UploadInfo(fileBytes, fileBytes.length),
+            (progress, total) -> {
+    
+                int percentage = (int) ((progress * 100.0f) / total);
+    
+                if (uploadingListener != null) {
+                    uploadingListener.onUploadProgress(percentage, progress, total);
+                }
+                    
+            });
+        }
+
+    private Call<UploadResponse> getUploadCall(UploadInterface uploadInterface, URL uploadURL, UploadProgressRequestBody requestBody, String uploadAuthorizationToken, byte[] fileBytes, String fileName) {
+        return uploadInterface.uploadFile(getPath(uploadURL), requestBody, uploadAuthorizationToken,
+                B2UploadUtils.SHAsum(fileBytes), fileName);
+    }
+    
+    
 
 }
