@@ -3,6 +3,10 @@ package b2.main.BackBlazeB3.fileUploader;
 import org.apache.commons.io.FileUtils;
 import org.json.JSONObject;
 import java.util.concurrent.*;
+
+import b2.main.BackBlazeB3.Upload.UploadInterface;
+import b2.main.BackBlazeB3.Upload.UploadListener;
+import b2.main.BackBlazeB3.Upload.UploadProgressRequestBody;
 import b2.main.BackBlazeB3.uploadModel.UploadResponse;
 import okhttp3.ConnectionPool;
 import okhttp3.OkHttpClient;
@@ -28,7 +32,7 @@ public class BlazeFileUploader {
 
     private UploadListener uploadingListener;
     private boolean isAuthed = false;
-    private String accountAuthorizationToken, apiUrl;
+    private String  apiUrl;
     private String contentType = "";
     Call<UploadResponse> uploadCall;
     
@@ -39,8 +43,7 @@ public class BlazeFileUploader {
 
     private boolean isMultiUpload = false;
 
-    public BlazeFileUploader(String accountAuthorizationToken, String apiUrl, String uploadUrl, String uploadAuthorizationToken, String bucketId) {
-        this.accountAuthorizationToken = accountAuthorizationToken;
+    public BlazeFileUploader(String apiUrl, String uploadUrl, String uploadAuthorizationToken, String bucketId) {
         this.apiUrl = apiUrl;
         this.uploadUrl = uploadUrl;
         this.uploadAuthorizationToken = uploadAuthorizationToken;

@@ -11,9 +11,6 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.io.FileUtils;
 
-import b2.main.BackBlazeB3.fileUploader.UploadInterface;
-import b2.main.BackBlazeB3.fileUploader.UploadListener;
-import b2.main.BackBlazeB3.fileUploader.UploadProgressRequestBody;
 import b2.main.BackBlazeB3.uploadModel.UploadResponse;
 import okhttp3.OkHttpClient;
 import retrofit2.Call;
@@ -26,18 +23,15 @@ public class B2SingleUpload {
 
     private UploadListener uploadingListener;
     private String uploadUrl;
-    private String accountAuthorizationToken;
     private String uploadAuthorizationToken;
     private boolean isMultiUpload = false;
-    private String apiUrl;
     private String contentType = "";
     private OkHttpClient okHttpClient;
 
-    public B2SingleUpload(String accountAuthorizationToken, String apiUrl, String uploadUrl, String uploadAuthorizationToken, String bucketId) {
-        this.accountAuthorizationToken = accountAuthorizationToken;
-        this.apiUrl = apiUrl;
+    public B2SingleUpload(String uploadUrl, String uploadAuthorizationToken, String bucketId, String contentType) {
         this.uploadUrl = uploadUrl;
         this.uploadAuthorizationToken = uploadAuthorizationToken;
+        this.contentType = contentType;
     }
 
     public void setOnUploadingListener(UploadListener uploadingListener) {
@@ -49,6 +43,7 @@ public class B2SingleUpload {
         isMultiUpload = false;
 
         if(file.exists()) {
+            System.out.println("파일이 존재합니다2!");
             InputStream iStream = null;
             try {
                 iStream = FileUtils.openInputStream(file);
@@ -69,12 +64,15 @@ public class B2SingleUpload {
         }
 
     private void checkIfAuthed(byte[] filebytes, String fileName) {
+        System.out.println("인증 확인!!");
         uploadFile(filebytes, fileName, contentType, null);  
     }
 
 
     private void uploadFile(byte[] fileBytes, String fileName, String contentType, Callable<Void> onFinish) {
         
+        System.out.println("파일이 존재합니다!");
+
         okHttpClient = buildHttpClient();
 
         URL uploadURL = getURL(uploadUrl);

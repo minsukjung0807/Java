@@ -1,4 +1,4 @@
-package b2.main.BackBlazeB3.fileUploader;
+package b2.main.BackBlazeB3.Upload;
 
 import b2.main.BackBlazeB3.uploadModel.UploadResponse;
 import okhttp3.RequestBody;
