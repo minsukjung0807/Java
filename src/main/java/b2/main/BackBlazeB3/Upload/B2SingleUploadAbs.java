@@ -1,14 +1,10 @@
 package b2.main.BackBlazeB3.Upload;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.Formatter;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -19,7 +15,6 @@ import b2.main.BackBlazeB3.fileUploader.UploadInterface;
 import b2.main.BackBlazeB3.fileUploader.UploadListener;
 import b2.main.BackBlazeB3.fileUploader.UploadProgressRequestBody;
 import b2.main.BackBlazeB3.uploadModel.UploadResponse;
-import okhttp3.ConnectionPool;
 import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -27,7 +22,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class B2UploadAbs {
+public class B2SingleUploadAbs {
 
     private UploadListener uploadingListener;
     private String uploadUrl;
@@ -36,8 +31,9 @@ public class B2UploadAbs {
     private boolean isMultiUpload = false;
     private String apiUrl;
     private String contentType = "";
+    private OkHttpClient okHttpClient;
 
-    public B2UploadAbs(String accountAuthorizationToken, String apiUrl, String uploadUrl, String uploadAuthorizationToken, String bucketId) {
+    public B2SingleUploadAbs(String accountAuthorizationToken, String apiUrl, String uploadUrl, String uploadAuthorizationToken, String bucketId) {
         this.accountAuthorizationToken = accountAuthorizationToken;
         this.apiUrl = apiUrl;
         this.uploadUrl = uploadUrl;
@@ -73,40 +69,18 @@ public class B2UploadAbs {
         }
 
     private void checkIfAuthed(byte[] filebytes, String fileName) {
-
-        Callable<Void> onFinish = () -> {
-            System.out.println("파일 업로드가 완료되었습니다.");
-            return null;
-        };
-
-        uploadFile(filebytes, fileName, contentType, onFinish);  
+        uploadFile(filebytes, fileName, contentType, null);  
     }
 
 
     private void uploadFile(byte[] fileBytes, String fileName, String contentType, Callable<Void> onFinish) {
         
-        URL url = null;
-        String path = null;
-        
-        try {
-            url = new URL(uploadUrl);
-            path = url.getPath();
-            path = path.replaceFirst("/", "");
+        okHttpClient = buildHttpClient();
 
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
+        URL uploadURL = getURL(uploadUrl);
+        String baseUrl =  getBaseUrl(uploadURL);
 
-        String baseUrl = url.getProtocol() + "://" + url.getHost();
-
-        OkHttpClient client = 
-        new OkHttpClient.Builder().build();
-        
-        Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(baseUrl)
-                    .client(client)
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .build();
+        Retrofit retrofit = buildRetrofit(baseUrl, okHttpClient);
 
         UploadInterface uploadInterface =  retrofit.create(UploadInterface.class);
 
@@ -125,37 +99,19 @@ public class B2UploadAbs {
 
         requestBody.setContentType(contentType);
                    
-        Call<UploadResponse> uploadCall = uploadInterface.uploadFile(path, requestBody, uploadAuthorizationToken,
+        Call<UploadResponse> uploadCall = uploadInterface
+        .uploadFile(getPath(uploadURL), requestBody, uploadAuthorizationToken,
                 B2UploadUtils.SHAsum(fileBytes), fileName);
-                uploadCall.enqueue(new Callback<UploadResponse>() {
+                
+        
+        uploadCall.enqueue(new Callback<UploadResponse>() {
             @Override
             public void onResponse(Call<UploadResponse> call1, Response<UploadResponse> response) {
 
                 if (uploadingListener != null) {
                     uploadingListener.onUploadFinished(response.body(), !isMultiUpload);
-
-                    // 네트워크 닫기 (Okio watch dog 닫기)
-                    client.connectionPool().evictAll();
-                    ExecutorService executorService = client.dispatcher().executorService();
-                    executorService.shutdown();
-                    
-                    try {
-                        executorService.awaitTermination(0, TimeUnit.SECONDS);
-                        System.out.println("시스템 종료 완료!");
-                    } 
-                    
-                    catch (InterruptedException e) {
-                        System.out.println("시스템 종료 실패!"+ e);
-                    }
+                    closeHttpClient();
                 }
-
-                // if (onFinish != null) {
-                //     try {
-                //         onFinish.call();
-                //     } catch (Exception e) {
-                //         e.printStackTrace();
-                //     }
-                // }
             }
 
             @Override
@@ -168,6 +124,46 @@ public class B2UploadAbs {
 
 
 
+    }
+
+    private Retrofit buildRetrofit(String baseUrl, OkHttpClient oHttpClient) {
+        return new Retrofit.Builder()
+        .baseUrl(baseUrl)
+        .client(oHttpClient)
+        .addConverterFactory(GsonConverterFactory.create())
+        .build();
+    }
+
+    private OkHttpClient buildHttpClient() {
+        return new OkHttpClient.Builder().build();
+    }
+
+    // OkHttpClient 닫기 (Okio WATCH DOG 닫기)
+    private void closeHttpClient() {
+        ExecutorService executorService;
+        okHttpClient.connectionPool().evictAll();
+        executorService = okHttpClient.dispatcher().executorService();
+        executorService.shutdown();
+        
+        try { executorService.awaitTermination(0, TimeUnit.SECONDS); } 
+        catch (InterruptedException e) { System.out.println("시스템 종료 실패!"+ e); }
+    }
+
+    private URL getURL(String uploadUrl) {
+        try {
+            return new URL(uploadUrl);
+        } catch (MalformedURLException e) {
+            System.out.println("잘못된 URL: " + e.getMessage());
+            return null;
+        }
+    }
+
+    private String getPath(URL url) {
+        return url.getPath().replaceFirst("/", "");
+    }
+
+    private String getBaseUrl(URL url) {
+        return url.getProtocol() + "://" + url.getHost();
     }
 
 }

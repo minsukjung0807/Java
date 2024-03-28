@@ -8,6 +8,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Formatter;
 
 public class B2UploadUtils {
+    
     public static String SHAsum(byte[] convertme) {
         MessageDigest md = null;
         try {
