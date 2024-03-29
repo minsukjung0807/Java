@@ -16,7 +16,6 @@ import b2.main.BackBlaze.models.BucketType1;
 import b2.main.BackBlazeB3.Upload.B2SingleUpload;
 import b2.main.BackBlazeB3.Upload.B2UploadUtils;
 import b2.main.BackBlazeB3.Upload.UploadListener;
-import b2.main.BackBlazeB3.fileUploader.BlazeFileUploader;
 import b2.main.BackBlazeB3.uploadModel.UploadResponse;
 
 public class Main {
@@ -130,15 +129,8 @@ public class Main {
 
       System.out.println("콘텐츠의 타입2: " + contentType);
       System.out.println("파일이 존재합니다!");
-    // uploadFile(backblazeB2, b2UploadRequest, file, "hello/10MB.txt");
     
-  //   if(percentage != prev_percentage) {
-  //     if (uploadingListener != null) {
-  //         uploadingListener.onUploadProgress(percentage, progress, total);
-  //     }
-  //     prev_percentage = percentage;
-  // } 
-    B2SingleUpload b2SingleUpload = new B2SingleUpload(apiUrl, uploadUrl, uploadAuthorizationToken, bucketId);
+    B2SingleUpload b2SingleUpload = new B2SingleUpload(uploadUrl, uploadAuthorizationToken, bucketId);
     
     b2SingleUpload.setOnUploadingListener(new UploadListener() {
       @Override
@@ -148,12 +140,12 @@ public class Main {
 
       @Override
       public void onUploadProgress(int percentage, long progress, long total) {
-          System.out.println("uplooooad: "+ percentage + "  " + progress + "   " + total);
+          System.out.println("파일 업로드 중... "+ percentage + "%");
       }
 
       @Override
       public void onUploadFinished(UploadResponse response, boolean allFilesUploaded) {
-        System.out.println("파일 업로드 완료...");
+        System.out.println("파일 업로드 완료!!");
       }
 
       @Override
@@ -167,47 +159,5 @@ public class Main {
 } else{
   System.out.println("파일이 없습니다!");
 }
-  
-
   }
-  
-    
-    // private static void downloadFile(String URL, String authorization, B2File file, File destination)  {
-    //     try {
-    //         URL url = new URL(URL + "/b2api/v3/b2_download_file_by_id");
-    //         HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
-    //         connection.setRequestMethod("POST");
-    //         connection.setRequestProperty("User-Agent", USER_AGENT);
-    //         connection.setRequestProperty("Authorization", authorization);
-
-    //         connection.setDoOutput(true);
-    //         DataOutputStream outputStream = new DataOutputStream(connection.getOutputStream());
-    //         outputStream.writeBytes(new JSONObject().put("fileId", file.getID()).toString());
-    //         outputStream.flush();
-    //         outputStream.close();
-
-    //         if(connection.getResponseCode() < 400){
-    //             InputStream inputStream =  connection.getInputStream();
-    //             OutputStream fileOutputStream = new FileOutputStream(destination);
-
-    //             int read = 0;
-    //             byte[] bytes = new byte[1024];
-
-    //             while ((read = inputStream.read(bytes)) != -1) {
-    //                 fileOutputStream.write(bytes, 0, read);
-    //             }
-    //             fileOutputStream.close();
-    //             connection.disconnect();
-    //         }else{
-    //             InputStream errorStream =  connection.getErrorStream();
-    //             JSONObject requestResult = inputToJSON(errorStream);
-
-    //             B2APIException exception = new B2APIException(requestResult.getString("message"));
-    //             exception.setStatusCode(requestResult.getInt("status"));
-    //             exception.setIdentifier(requestResult.getString("code"));
-    //             throw exception;
-    //         }
-
-    //     } catch (IOException ignored) {}
-    // }
 }

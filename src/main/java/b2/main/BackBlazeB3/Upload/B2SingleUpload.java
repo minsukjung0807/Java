@@ -27,20 +27,16 @@ public class B2SingleUpload {
 
     private UploadListener uploadingListener;
     private boolean isAuthed = false;
-    private String  apiUrl;
     private String contentType = "";
-    Call<UploadResponse> uploadCall;
-    
-    // private ArrayList<MultiFile> files;
-
+    private Call<UploadResponse> uploadCall;
+    private OkHttpClient client; 
     private String uploadUrl;
     private String uploadAuthorizationToken;
     private int prev_percentage = 0;
 
     private boolean isMultiUpload = false;
 
-    public B2SingleUpload(String apiUrl, String uploadUrl, String uploadAuthorizationToken, String bucketId) {
-        this.apiUrl = apiUrl;
+    public B2SingleUpload(String uploadUrl, String uploadAuthorizationToken, String bucketId) {
         this.uploadUrl = uploadUrl;
         this.uploadAuthorizationToken = uploadAuthorizationToken;
         isAuthed = false;
@@ -82,87 +78,66 @@ public class B2SingleUpload {
 
     private void uploadFile(byte[] fileBytes, String fileName, String contentType, Callable<Void> onFinish) {
         
-        URL url = null;
-        String path = null;
-        
-        try {
-            url = new URL(uploadUrl);
-            path = url.getPath();
-            path = path.replaceFirst("/", "");
+        URL url = getUploadUrl(uploadUrl);
 
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-
-
-        String baseUrl = url.getProtocol() + "://" + url.getHost();
-
-        OkHttpClient client = 
-        new OkHttpClient.Builder().build();
-        
-        Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(baseUrl)
-                    .client(client)
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .build();
-
-        UploadInterface uploadInterface =  retrofit.create(UploadInterface.class);
-
-        UploadProgressRequestBody requestBody = new UploadProgressRequestBody(
-                new UploadProgressRequestBody.UploadInfo(fileBytes, fileBytes.length),
-                (progress, total) -> {
-
-                    int percentage = (int) ((progress * 100.0f) / total);
-                    if(percentage != prev_percentage) {
-                            if (uploadingListener != null) {
-                                uploadingListener.onUploadProgress(percentage, progress, total);
-                            }
-                            prev_percentage = percentage;
-                        } 
+        if(url != null) {
+            String path = getPath(url);
+            String baseUrl = getBaseUrl(url);
+    
+            client = new OkHttpClient.Builder().build();
+            
+            Retrofit retrofit = buildRetrofit(baseUrl);
+    
+            UploadInterface uploadInterface =  retrofit.create(UploadInterface.class);
+    
+            UploadProgressRequestBody requestBody = getUploadProgressRequestBody(fileBytes);
+    
+            requestBody.setContentType(contentType);
+                       
+            uploadCall = uploadInterface.uploadFile(path, requestBody, uploadAuthorizationToken,
+                    SHAsum(fileBytes), fileName);
+                    
+            uploadCall.enqueue(new Callback<UploadResponse>() {
+                @Override
+                public void onResponse(Call<UploadResponse> call1, Response<UploadResponse> response) {
+    
+                    if (uploadingListener != null) {
+                        uploadingListener.onUploadFinished(response.body(), !isMultiUpload);
+                        closeHttpClient();
+                    }
+    
+                }
+    
+                @Override
+                public void onFailure(Call<UploadResponse> call, Throwable t) {
+                    if (uploadingListener != null)
+                        uploadingListener.onUploadFailed((Exception) t);
                         
                 }
-        );
-
-        requestBody.setContentType(contentType);
-                   
-       uploadCall = uploadInterface.uploadFile(path, requestBody, uploadAuthorizationToken,
-                SHAsum(fileBytes), fileName);
-                uploadCall.enqueue(new Callback<UploadResponse>() {
-            @Override
-            public void onResponse(Call<UploadResponse> call1, Response<UploadResponse> response) {
-
-                if (uploadingListener != null) {
-                    uploadingListener.onUploadFinished(response.body(), !isMultiUpload);
-
-                    // 네트워크 닫기 (Okio watch dog 닫기)
-                    client.connectionPool().evictAll();
-                    ExecutorService executorService = client.dispatcher().executorService();
-                    executorService.shutdown();
-                    try {
-                        executorService.awaitTermination(0, TimeUnit.SECONDS);
-                        System.out.println("시스템 종료 완료!");
-                    } catch (InterruptedException e) {
-                        System.out.println("시스템 종료 실패!"+ e);
-                    }
-                }
-
-            }
-
-            @Override
-            public void onFailure(Call<UploadResponse> call, Throwable t) {
-                if (uploadingListener != null)
-                    uploadingListener.onUploadFailed((Exception) t);
-                    
-            }
-        });
-
-
-
+            });
+        }
     }
 
 
     public void setOnUploadingListener(UploadListener uploadingListener) {
         this.uploadingListener = uploadingListener;
+    }
+
+    private UploadProgressRequestBody getUploadProgressRequestBody(byte[] fileBytes) {
+        return new UploadProgressRequestBody(
+            new UploadProgressRequestBody.UploadInfo(fileBytes, fileBytes.length),
+            (progress, total) -> {
+
+                int percentage = (int) ((progress * 100.0f) / total);
+                if(percentage != prev_percentage) {
+                        if (uploadingListener != null) {
+                            uploadingListener.onUploadProgress(percentage, progress, total);
+                        }
+                        prev_percentage = percentage;
+                    } 
+                    
+            }
+        );
     }
 
 
@@ -173,15 +148,19 @@ public class B2SingleUpload {
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
-        return byteArray2Hex(md.digest(convertme));
+        return byteArrayToHex(md.digest(convertme));
     }
 
-    private static String byteArray2Hex(final byte[] hash) {
+    private static String byteArrayToHex(final byte[] hash) {
         Formatter formatter = new Formatter();
+        
         for (byte b : hash) {
             formatter.format("%02x", b);
         }
-        return formatter.toString();
+
+        String Hex = formatter.toString();
+        formatter.close();
+        return Hex;
     }
 
 
@@ -197,5 +176,39 @@ public class B2SingleUpload {
         return byteBuffer.toByteArray();
     }
 
+    // HttpClient 네트워크 닫기 (Okio watch dog 닫기)
+    private void closeHttpClient() {
+        client.connectionPool().evictAll();
+        ExecutorService executorService = client.dispatcher().executorService();
+        executorService.shutdown();
+        try {
+            executorService.awaitTermination(0, TimeUnit.SECONDS);
+            System.out.println("시스템 종료 완료!");
+        } catch (InterruptedException e) {
+            System.out.println("시스템 종료 실패!"+ e);
+        }
+    }
+
+    private Retrofit buildRetrofit(String baseUrl) {
+        return new Retrofit.Builder().baseUrl(baseUrl).client(client)
+        .addConverterFactory(GsonConverterFactory.create()).build();
+    }
+
+    private String getBaseUrl(URL url) {
+        return url.getProtocol() + "://" + url.getHost();
+    }
+
+    private String getPath(URL url) {
+        return url.getPath().replaceFirst("/", "");
+    }
+
+    private URL getUploadUrl(String uploadUrl) {
+        try {
+            return new URL(uploadUrl);
+        } catch (MalformedURLException e) {
+            System.out.println("잘못된 URL: " + e.getMessage());
+            return null;
+        }
+    }
 
 }
