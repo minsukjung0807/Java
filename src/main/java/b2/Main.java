@@ -8,7 +8,6 @@ import java.io.File;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
 import b2.main.BackBlaze.BackblazeB2;
 import b2.main.BackBlaze.models.B2Bucket1;
 import b2.main.BackBlaze.models.B2Session1;
@@ -19,9 +18,6 @@ import b2.main.BackBlazeB3.Upload.B2UploadUtils;
 import b2.main.BackBlazeB3.Upload.UploadListener;
 import b2.main.BackBlazeB3.fileUploader.BlazeFileUploader;
 import b2.main.BackBlazeB3.uploadModel.UploadResponse;
-
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 public class Main {
   
@@ -131,13 +127,20 @@ public class Main {
     String contentType = B2UploadUtils.getContentType(file);
 
    if(file.exists()) {
+
       System.out.println("콘텐츠의 타입2: " + contentType);
       System.out.println("파일이 존재합니다!");
     // uploadFile(backblazeB2, b2UploadRequest, file, "hello/10MB.txt");
-
-    B2SingleUpload blazeFileUploader = new B2SingleUpload(apiUrl, uploadUrl, uploadAuthorizationToken, bucketId);
     
-    blazeFileUploader.setOnUploadingListener(new UploadListener() {
+  //   if(percentage != prev_percentage) {
+  //     if (uploadingListener != null) {
+  //         uploadingListener.onUploadProgress(percentage, progress, total);
+  //     }
+  //     prev_percentage = percentage;
+  // } 
+    B2SingleUpload b2SingleUpload = new B2SingleUpload(apiUrl, uploadUrl, uploadAuthorizationToken, bucketId);
+    
+    b2SingleUpload.setOnUploadingListener(new UploadListener() {
       @Override
       public void onUploadStarted() {
         System.out.println("파일 업로드 시작...");
@@ -159,7 +162,7 @@ public class Main {
       }
   });
 
-  blazeFileUploader.startUploading(file, "MAP/10MB.txt");
+  b2SingleUpload.startUploading(file, "MAP/12MB.txt");
 
 } else{
   System.out.println("파일이 없습니다!");

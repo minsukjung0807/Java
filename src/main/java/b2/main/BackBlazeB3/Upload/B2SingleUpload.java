@@ -1,14 +1,9 @@
 package b2.main.BackBlazeB3.Upload;
 
 import org.apache.commons.io.FileUtils;
-import org.json.JSONObject;
 import java.util.concurrent.*;
 
-import b2.main.BackBlazeB3.Upload.UploadInterface;
-import b2.main.BackBlazeB3.Upload.UploadListener;
-import b2.main.BackBlazeB3.Upload.UploadProgressRequestBody;
 import b2.main.BackBlazeB3.uploadModel.UploadResponse;
-import okhttp3.ConnectionPool;
 import okhttp3.OkHttpClient;
 
 import java.io.ByteArrayOutputStream;
@@ -35,10 +30,12 @@ public class B2SingleUpload {
     private String  apiUrl;
     private String contentType = "";
     Call<UploadResponse> uploadCall;
-    private int prev_percentage = 0;
+    
+    // private ArrayList<MultiFile> files;
 
     private String uploadUrl;
     private String uploadAuthorizationToken;
+    private int prev_percentage = 0;
 
     private boolean isMultiUpload = false;
 
@@ -72,7 +69,7 @@ public class B2SingleUpload {
             System.out.println("파일이 없습니다!");
           }
         }
-
+        
     private void checkIfAuthed(byte[] filebytes, String fileName) {
 
         Callable<Void> onFinish = () -> {
@@ -97,7 +94,6 @@ public class B2SingleUpload {
             e.printStackTrace();
         }
 
-        // ConnectionPool connectionPool = new ConnectionPool(1, 1, TimeUnit.MINUTES);
 
         String baseUrl = url.getProtocol() + "://" + url.getHost();
 
@@ -112,21 +108,18 @@ public class B2SingleUpload {
 
         UploadInterface uploadInterface =  retrofit.create(UploadInterface.class);
 
-        
-        
         UploadProgressRequestBody requestBody = new UploadProgressRequestBody(
                 new UploadProgressRequestBody.UploadInfo(fileBytes, fileBytes.length),
                 (progress, total) -> {
 
                     int percentage = (int) ((progress * 100.0f) / total);
-                    
                     if(percentage != prev_percentage) {
-                        if (uploadingListener != null) {
-                            uploadingListener.onUploadProgress(percentage, progress, total);
-                        }
-                        prev_percentage = percentage;
-                    } 
-                      
+                            if (uploadingListener != null) {
+                                uploadingListener.onUploadProgress(percentage, progress, total);
+                            }
+                            prev_percentage = percentage;
+                        } 
+                        
                 }
         );
 
@@ -153,13 +146,6 @@ public class B2SingleUpload {
                     }
                 }
 
-                // if (onFinish != null) {
-                //     try {
-                //         onFinish.call();
-                //     } catch (Exception e) {
-                //         e.printStackTrace();
-                //     }
-                // }
             }
 
             @Override
@@ -173,6 +159,7 @@ public class B2SingleUpload {
 
 
     }
+
 
     public void setOnUploadingListener(UploadListener uploadingListener) {
         this.uploadingListener = uploadingListener;
