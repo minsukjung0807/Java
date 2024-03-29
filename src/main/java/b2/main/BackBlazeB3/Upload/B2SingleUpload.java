@@ -129,6 +129,7 @@ public class B2SingleUpload {
             (progress, total) -> {
 
                 int percentage = (int) ((progress * 100.0f) / total);
+                
                 if(percentage != prev_percentage) {
                         if (uploadingListener != null) {
                             uploadingListener.onUploadProgress(percentage, progress, total);
