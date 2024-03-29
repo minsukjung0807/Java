@@ -15,6 +15,7 @@ import b2.main.BackBlaze.models.B2Session1;
 import b2.main.BackBlaze.models.B2UploadRequest1;
 import b2.main.BackBlaze.models.BucketType1;
 import b2.main.BackBlazeB3.Upload.B2SingleUpload;
+import b2.main.BackBlazeB3.Upload.B2UploadUtils;
 import b2.main.BackBlazeB3.Upload.UploadListener;
 import b2.main.BackBlazeB3.fileUploader.BlazeFileUploader;
 import b2.main.BackBlazeB3.uploadModel.UploadResponse;
@@ -127,64 +128,42 @@ public class Main {
     File path = new File("");
     File file = new File(path.getAbsolutePath()+"/src/file/10MB.txt");
 
-    String contentType = "";
+    String contentType = B2UploadUtils.getContentType(file);
 
-   try {
+   if(file.exists()) {
+      System.out.println("콘텐츠의 타입2: " + contentType);
+      System.out.println("파일이 존재합니다!");
+    // uploadFile(backblazeB2, b2UploadRequest, file, "hello/10MB.txt");
 
-      Path path1 = Paths.get(file.getPath());
-      String tempContentType = Files.probeContentType(path1);
-
-      if(tempContentType.equals(null)) {
-        contentType = "";
-        System.out.println("콘텐츠의 타입을 가져올 수 없습니다!");
-      } else {
-        contentType = tempContentType;
-        System.out.println("콘텐츠의 타입: " + contentType);
-
-        if(file.exists()) {
-          System.out.println("콘텐츠의 타입2: " + contentType);
-          System.out.println("파일이 존재합니다!");
-          // uploadFile(backblazeB2, b2UploadRequest, file, "hello/10MB.txt");
-
-          BlazeFileUploader blazeFileUploader = new BlazeFileUploader(apiUrl, uploadUrl, uploadAuthorizationToken, bucketId);
-          // B2SingleUpload blazeFileUploader = new B2SingleUpload(uploadUrl, uploadAuthorizationToken, bucketId, contentType);
-          blazeFileUploader.setOnUploadingListener(new UploadListener() {
-            @Override
-            public void onUploadStarted() {
-              System.out.println("파일 업로드 시작...");
-            }
+    B2SingleUpload blazeFileUploader = new B2SingleUpload(apiUrl, uploadUrl, uploadAuthorizationToken, bucketId);
     
-    
-            @Override
-            public void onUploadProgress(int percentage, long progress, long total) {
-                System.out.println("uplooooad: "+ percentage + "  " + progress + "   " + total);
-            }
-    
-            @Override
-            public void onUploadFinished(UploadResponse response, boolean allFilesUploaded) {
-              System.out.println("파일 업로드 완료...");
-            }
-    
-            @Override
-            public void onUploadFailed(Exception e) {
-              System.out.println(e.getMessage());
-            }
-        });
-    
-        blazeFileUploader.startUploading(file, "MAP/10MB.txt");
-
-      } else{
-        System.out.println("파일이 없습니다!");
+    blazeFileUploader.setOnUploadingListener(new UploadListener() {
+      @Override
+      public void onUploadStarted() {
+        System.out.println("파일 업로드 시작...");
       }
-    }
-   }
-   catch (IOException e) {
-      contentType = "";
-      System.out.println("콘텐츠의 타입을 가져올 수 없습니다!");
-   }
 
-    
-    
+      @Override
+      public void onUploadProgress(int percentage, long progress, long total) {
+          System.out.println("uplooooad: "+ percentage + "  " + progress + "   " + total);
+      }
+
+      @Override
+      public void onUploadFinished(UploadResponse response, boolean allFilesUploaded) {
+        System.out.println("파일 업로드 완료...");
+      }
+
+      @Override
+      public void onUploadFailed(Exception e) {
+        System.out.println("업로드 실패: " + e.getMessage());
+      }
+  });
+
+  blazeFileUploader.startUploading(file, "MAP/10MB.txt");
+
+} else{
+  System.out.println("파일이 없습니다!");
+}
   
 
   }

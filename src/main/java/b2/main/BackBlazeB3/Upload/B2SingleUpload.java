@@ -1,18 +1,27 @@
 package b2.main.BackBlazeB3.Upload;
 
+import org.apache.commons.io.FileUtils;
+import org.json.JSONObject;
+import java.util.concurrent.*;
+
+import b2.main.BackBlazeB3.Upload.UploadInterface;
+import b2.main.BackBlazeB3.Upload.UploadListener;
+import b2.main.BackBlazeB3.Upload.UploadProgressRequestBody;
+import b2.main.BackBlazeB3.uploadModel.UploadResponse;
+import okhttp3.ConnectionPool;
+import okhttp3.OkHttpClient;
+
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.TimeUnit;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Formatter;
 
-import org.apache.commons.io.FileUtils;
-
-import b2.main.BackBlazeB3.uploadModel.UploadResponse;
-import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -22,32 +31,33 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class B2SingleUpload {
 
     private UploadListener uploadingListener;
+    private boolean isAuthed = false;
+    private String  apiUrl;
+    private String contentType = "";
+    Call<UploadResponse> uploadCall;
+    private int prev_percentage = 0;
+
     private String uploadUrl;
     private String uploadAuthorizationToken;
-    private boolean isMultiUpload = false;
-    private String contentType = "";
-    private OkHttpClient okHttpClient;
 
-    public B2SingleUpload(String uploadUrl, String uploadAuthorizationToken, String bucketId, String contentType) {
+    private boolean isMultiUpload = false;
+
+    public B2SingleUpload(String apiUrl, String uploadUrl, String uploadAuthorizationToken, String bucketId) {
+        this.apiUrl = apiUrl;
         this.uploadUrl = uploadUrl;
         this.uploadAuthorizationToken = uploadAuthorizationToken;
-        this.contentType = contentType;
-    }
-
-    public void setOnUploadingListener(UploadListener uploadingListener) {
-        this.uploadingListener = uploadingListener;
+        isAuthed = false;
     }
 
     public void startUploading(File file, String fileName) {
-        
         isMultiUpload = false;
 
         if(file.exists()) {
-            System.out.println("파일이 존재합니다2!");
             InputStream iStream = null;
             try {
+
                 iStream = FileUtils.openInputStream(file);
-                byte[] inputData = B2UploadUtils.getBytes(iStream);
+                byte[] inputData = getBytes(iStream);
 
                 checkIfAuthed(inputData, fileName);
 
@@ -64,39 +74,92 @@ public class B2SingleUpload {
         }
 
     private void checkIfAuthed(byte[] filebytes, String fileName) {
-        System.out.println("인증 확인!!");
-        uploadFile(filebytes, fileName, contentType, null);  
-    }
 
+        Callable<Void> onFinish = () -> {
+            System.out.println("파일 업로드가 완료되었습니다.");
+            return null;
+        };
+
+        uploadFile(filebytes, fileName, contentType, onFinish);  
+    }
 
     private void uploadFile(byte[] fileBytes, String fileName, String contentType, Callable<Void> onFinish) {
         
-        System.out.println("파일이 존재합니다!");
+        URL url = null;
+        String path = null;
+        
+        try {
+            url = new URL(uploadUrl);
+            path = url.getPath();
+            path = path.replaceFirst("/", "");
 
-        okHttpClient = buildHttpClient();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
 
-        URL uploadURL = getURL(uploadUrl);
+        // ConnectionPool connectionPool = new ConnectionPool(1, 1, TimeUnit.MINUTES);
 
-        String baseUrl =  getBaseUrl(uploadURL);
+        String baseUrl = url.getProtocol() + "://" + url.getHost();
 
-        Retrofit retrofit = buildRetrofit(baseUrl, okHttpClient);
+        OkHttpClient client = 
+        new OkHttpClient.Builder().build();
+        
+        Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl(baseUrl)
+                    .client(client)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
 
         UploadInterface uploadInterface =  retrofit.create(UploadInterface.class);
 
-        UploadProgressRequestBody requestBody = setUploadProgressRequestBody(fileBytes);
+        
+        
+        UploadProgressRequestBody requestBody = new UploadProgressRequestBody(
+                new UploadProgressRequestBody.UploadInfo(fileBytes, fileBytes.length),
+                (progress, total) -> {
+
+                    int percentage = (int) ((progress * 100.0f) / total);
+                    
+                    if(percentage != prev_percentage) {
+                        if (uploadingListener != null) {
+                            uploadingListener.onUploadProgress(percentage, progress, total);
+                        }
+                        prev_percentage = percentage;
+                    } 
+                      
+                }
+        );
 
         requestBody.setContentType(contentType);
                    
-        Call<UploadResponse> uploadCall = getUploadCall(uploadInterface, uploadURL, requestBody, uploadAuthorizationToken, fileBytes, fileName);
-                
-        uploadCall.enqueue(new Callback<UploadResponse>() {
+       uploadCall = uploadInterface.uploadFile(path, requestBody, uploadAuthorizationToken,
+                SHAsum(fileBytes), fileName);
+                uploadCall.enqueue(new Callback<UploadResponse>() {
             @Override
             public void onResponse(Call<UploadResponse> call1, Response<UploadResponse> response) {
 
                 if (uploadingListener != null) {
                     uploadingListener.onUploadFinished(response.body(), !isMultiUpload);
-                    closeHttpClient();
+
+                    // 네트워크 닫기 (Okio watch dog 닫기)
+                    client.connectionPool().evictAll();
+                    ExecutorService executorService = client.dispatcher().executorService();
+                    executorService.shutdown();
+                    try {
+                        executorService.awaitTermination(0, TimeUnit.SECONDS);
+                        System.out.println("시스템 종료 완료!");
+                    } catch (InterruptedException e) {
+                        System.out.println("시스템 종료 실패!"+ e);
+                    }
                 }
+
+                // if (onFinish != null) {
+                //     try {
+                //         onFinish.call();
+                //     } catch (Exception e) {
+                //         e.printStackTrace();
+                //     }
+                // }
             }
 
             @Override
@@ -106,68 +169,46 @@ public class B2SingleUpload {
                     
             }
         });
-        
+
+
+
     }
 
-    private Retrofit buildRetrofit(String baseUrl, OkHttpClient oHttpClient) {
-        return new Retrofit.Builder()
-        .baseUrl(baseUrl)
-        .client(oHttpClient)
-        .addConverterFactory(GsonConverterFactory.create())
-        .build();
+    public void setOnUploadingListener(UploadListener uploadingListener) {
+        this.uploadingListener = uploadingListener;
     }
 
-    private OkHttpClient buildHttpClient() {
-        return new OkHttpClient.Builder().build();
-    }
 
-    // OkHttpClient 닫기 (Okio WATCH DOG 닫기)
-    private void closeHttpClient() {
-        ExecutorService executorService;
-        okHttpClient.connectionPool().evictAll();
-        executorService = okHttpClient.dispatcher().executorService();
-        executorService.shutdown();
-        
-        try { executorService.awaitTermination(0, TimeUnit.SECONDS); } 
-        catch (InterruptedException e) { System.out.println("시스템 종료 실패!"+ e); }
-    }
-
-    private URL getURL(String uploadUrl) {
+    private static String SHAsum(byte[] convertme) {
+        MessageDigest md = null;
         try {
-            return new URL(uploadUrl);
-        } catch (MalformedURLException e) {
-            System.out.println("잘못된 URL: " + e.getMessage());
-            return null;
+            md = MessageDigest.getInstance("SHA-1");
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
         }
+        return byteArray2Hex(md.digest(convertme));
     }
 
-    private String getPath(URL url) {
-        return url.getPath().replaceFirst("/", "");
-    }
-
-    private String getBaseUrl(URL url) {
-        return url.getProtocol() + "://" + url.getHost();
-    }
-
-    private UploadProgressRequestBody setUploadProgressRequestBody(byte[] fileBytes) {
-        return new UploadProgressRequestBody(
-            new UploadProgressRequestBody.UploadInfo(fileBytes, fileBytes.length),
-            (progress, total) -> {
-    
-                int percentage = (int) ((progress * 100.0f) / total);
-    
-                if (uploadingListener != null) {
-                    uploadingListener.onUploadProgress(percentage, progress, total);
-                }
-                    
-            });
+    private static String byteArray2Hex(final byte[] hash) {
+        Formatter formatter = new Formatter();
+        for (byte b : hash) {
+            formatter.format("%02x", b);
         }
-
-    private Call<UploadResponse> getUploadCall(UploadInterface uploadInterface, URL uploadURL, UploadProgressRequestBody requestBody, String uploadAuthorizationToken, byte[] fileBytes, String fileName) {
-        return uploadInterface.uploadFile(getPath(uploadURL), requestBody, uploadAuthorizationToken,
-                B2UploadUtils.SHAsum(fileBytes), fileName);
+        return formatter.toString();
     }
-    
-    
+
+
+    public byte[] getBytes(InputStream inputStream) throws IOException {
+        ByteArrayOutputStream byteBuffer = new ByteArrayOutputStream();
+        int bufferSize = 1024;
+        byte[] buffer = new byte[bufferSize];
+
+        int len = 0;
+        while ((len = inputStream.read(buffer)) != -1) {
+            byteBuffer.write(buffer, 0, len);
+        }
+        return byteBuffer.toByteArray();
+    }
+
 
 }

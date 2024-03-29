@@ -139,25 +139,22 @@ public class BlazeFileUploader {
     // }
 
 
-    public void startUploading(byte[] fileBytes, String fileName, String contentType) {
-        this.contentType = contentType;
-        isMultiUpload = false;
+    // public void startUploading(byte[] fileBytes, String fileName, String contentType) {
+    //     this.contentType = contentType;
+    //     isMultiUpload = false;
 
 
-        if (uploadingListener != null)
-            uploadingListener.onUploadStarted();
+    //     if (uploadingListener != null)
+    //         uploadingListener.onUploadStarted();
 
 
-        checkIfAuthed(fileBytes, fileName);
+    //     checkIfAuthed(fileBytes, fileName);
 
-    }
+    // }
 
     public void startUploading(File file, String fileName) {
         isMultiUpload = false;
 
-        
-        
-        
         if(file.exists()) {
             InputStream iStream = null;
             try {
