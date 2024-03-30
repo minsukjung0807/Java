@@ -1,9 +1,11 @@
-package b2.main.BackBlazeB3.uploadModel;
+package b2.BackBlaze.upload_file.response;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class UploadResponse {
+import b2.BackBlaze.upload_file.model.ServerSideEncryption;
+
+public class B2UploadFileResponse {
 
     @SerializedName("fileId")
     @Expose

@@ -1,15 +1,20 @@
-package b2.main.BackBlazeB3.fileUploader;
-
-import java.io.File;
+package b2.BackBlaze.upload_file.model;
 
 public class MultiFile {
     public byte[] fileBytes;
     public String fileName;
     public String contentType;
+
     public MultiFile() {
     }
 
     public MultiFile(byte[] fileBytes, String fileName, String contentType) {
+        this.fileBytes = fileBytes;
+        this.fileName = fileName;
+        this.contentType = contentType;
+    }
+
+    public void init(byte[] fileBytes, String fileName, String contentType) {
         this.fileBytes = fileBytes;
         this.fileName = fileName;
         this.contentType = contentType;
@@ -36,12 +41,6 @@ public class MultiFile {
     }
 
     public void setContentType(String contentType) {
-        this.contentType = contentType;
-    }
-
-    public void init(byte[] fileBytes, String fileName, String contentType) {
-        this.fileBytes = fileBytes;
-        this.fileName = fileName;
         this.contentType = contentType;
     }
 }

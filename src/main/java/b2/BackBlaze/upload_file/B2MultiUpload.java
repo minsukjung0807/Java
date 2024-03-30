@@ -1,15 +1,17 @@
-package b2.main.BackBlazeB3.Upload;
+package b2.BackBlaze.upload_file;
 
 import java.util.concurrent.*;
 
-import b2.main.BackBlazeB3.fileUploader.MultiFile;
-import b2.main.BackBlazeB3.uploadModel.UploadResponse;
+import b2.BackBlaze.get_upload_url.response.B2GetUploadUrlResponse;
+import b2.BackBlaze.upload_file.model.MultiFile;
+import b2.BackBlaze.upload_file.model.UploadInterface;
+import b2.BackBlaze.upload_file.model.UploadListener;
+import b2.BackBlaze.upload_file.model.UploadProgressRequestBody;
+import b2.BackBlaze.upload_file.response.B2UploadFileResponse;
 import okhttp3.OkHttpClient;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.MessageDigest;
@@ -23,23 +25,23 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class B2MultiUpload {
     
-
     private boolean isMultiUpload = false;
     private ArrayList<MultiFile> files;
     private UploadListener uploadingListener;
     private int prev_percentage = 0;
     private String uploadUrl;
-    private Call<UploadResponse> uploadCall;
+    private Call<B2UploadFileResponse> uploadCall;
     private OkHttpClient client; 
     private String uploadAuthorizationToken;
 
-    public void startUploadingMultipleFiles(ArrayList<MultiFile> files, String uploadUrl, String uploadAuthorizationToken) {
-        
+    public B2MultiUpload (B2GetUploadUrlResponse b2UploadRequest) {
+        this. uploadUrl = b2UploadRequest.getUploadURL();
+        this.uploadAuthorizationToken = b2UploadRequest.getUploadAuthorizationToken();
+    }
+
+    public void startUploadingMultipleFiles(ArrayList<MultiFile> files) {
         this.files = files;
         isMultiUpload = true;
-        this. uploadUrl = uploadUrl;
-        this.uploadAuthorizationToken = uploadAuthorizationToken;
-
         try {
             uploadMultiImages(new ArrayList<>());
         } catch (IOException e) {
@@ -54,9 +56,10 @@ public class B2MultiUpload {
             
         uploadFile(fileModel.getFileBytes(), fileModel.getFileName(), fileModel.getContentType(), () -> {
                         file.add(fileModel);
+
                             if (file.size() == files.size()) {
     
-                                UploadResponse uploadResponse = new UploadResponse();
+                                B2UploadFileResponse uploadResponse = new B2UploadFileResponse();
     
                                 if (uploadingListener != null)
                                     uploadingListener.onUploadFinished(uploadResponse, true);
@@ -93,9 +96,9 @@ public class B2MultiUpload {
                 uploadCall = uploadInterface.uploadFile(path, requestBody, uploadAuthorizationToken,
                 SHAsum(fileBytes), fileName);
 
-                uploadCall.enqueue(new Callback<UploadResponse>() {
+                uploadCall.enqueue(new Callback<B2UploadFileResponse>() {
             @Override
-            public void onResponse(Call<UploadResponse> call, Response<UploadResponse> response) {
+            public void onResponse(Call<B2UploadFileResponse> call, Response<B2UploadFileResponse> response) {
                 
                 if (uploadingListener != null) {
                     uploadingListener.onUploadFinished(response.body(), !isMultiUpload);
@@ -112,12 +115,14 @@ public class B2MultiUpload {
             }
 
             @Override
-            public void onFailure(Call<UploadResponse> call, Throwable t) {
+            public void onFailure(Call<B2UploadFileResponse> call, Throwable t) {
                 if (uploadingListener != null)
                     uploadingListener.onUploadFailed((Exception) t);
 
-            }
-        }); }
+                }
+        
+            }); 
+        }
 
     }
 

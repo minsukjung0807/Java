@@ -1,9 +1,15 @@
-package b2.main.BackBlazeB3.Upload;
+package b2.BackBlaze.upload_file;
 
 import org.apache.commons.io.FileUtils;
+
+import b2.BackBlaze.get_upload_url.response.B2GetUploadUrlResponse;
+import b2.BackBlaze.upload_file.model.UploadInterface;
+import b2.BackBlaze.upload_file.model.UploadListener;
+import b2.BackBlaze.upload_file.model.UploadProgressRequestBody;
+import b2.BackBlaze.upload_file.response.B2UploadFileResponse;
+
 import java.util.concurrent.*;
 
-import b2.main.BackBlazeB3.uploadModel.UploadResponse;
 import okhttp3.OkHttpClient;
 
 import java.io.ByteArrayOutputStream;
@@ -28,7 +34,7 @@ public class B2SingleUpload {
     private UploadListener uploadingListener;
 
     private String contentType = "";
-    private Call<UploadResponse> uploadCall;
+    private Call<B2UploadFileResponse> uploadCall;
     private OkHttpClient client; 
     private String uploadUrl;
     private String uploadAuthorizationToken;
@@ -36,9 +42,9 @@ public class B2SingleUpload {
 
     private boolean isMultiUpload = false;
 
-    public B2SingleUpload(String uploadUrl, String uploadAuthorizationToken) {
-        this.uploadUrl = uploadUrl;
-        this.uploadAuthorizationToken = uploadAuthorizationToken;
+    public B2SingleUpload(B2GetUploadUrlResponse b2GetUploadUrlResponse) {
+        this.uploadUrl = b2GetUploadUrlResponse.getUploadURL();
+        this.uploadAuthorizationToken = b2GetUploadUrlResponse.getUploadAuthorizationToken();
     }
 
     public void startUploading(File file, String fileName) {
@@ -91,9 +97,9 @@ public class B2SingleUpload {
             uploadCall = uploadInterface.uploadFile(path, requestBody, uploadAuthorizationToken,
                     SHAsum(fileBytes), fileName);
                     
-            uploadCall.enqueue(new Callback<UploadResponse>() {
+            uploadCall.enqueue(new Callback<B2UploadFileResponse>() {
                 @Override
-                public void onResponse(Call<UploadResponse> call1, Response<UploadResponse> response) {
+                public void onResponse(Call<B2UploadFileResponse> call1, Response<B2UploadFileResponse> response) {
     
                     if (uploadingListener != null) {
                         uploadingListener.onUploadFinished(response.body(), !isMultiUpload);
@@ -103,7 +109,7 @@ public class B2SingleUpload {
                 }
     
                 @Override
-                public void onFailure(Call<UploadResponse> call, Throwable t) {
+                public void onFailure(Call<B2UploadFileResponse> call, Throwable t) {
                     if (uploadingListener != null)
                         uploadingListener.onUploadFailed((Exception) t);
                         

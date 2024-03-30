@@ -1,6 +1,6 @@
-package b2.main.BackBlaze.models;
+package b2.BackBlaze.create_bucket.model;
 
-public enum BucketType1 {
+public enum BucketType {
     ALL_PUBLIC("allPublic"),
     ALL_PRIVATE("allPrivate");
 
@@ -11,7 +11,7 @@ public enum BucketType1 {
      *
      * @param identifier Internal identifier for the type used by the B2 API
      */
-    BucketType1(String identifier){
+    BucketType(String identifier){
         this.identifier = identifier;
     }
 
@@ -24,8 +24,8 @@ public enum BucketType1 {
         return identifier;
     }
 
-    public static BucketType1 getByIdentifier(String name){
-        for(BucketType1 type : BucketType1.values()){
+    public static BucketType getByIdentifier(String name){
+        for(BucketType type : BucketType.values()){
             if(type.getIdentifier().equals(name)) return type;
         }
         return null;

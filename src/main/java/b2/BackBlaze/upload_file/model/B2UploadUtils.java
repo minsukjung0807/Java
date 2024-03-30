@@ -1,4 +1,4 @@
-package b2.main.BackBlazeB3.Upload;
+package b2.BackBlaze.upload_file.model;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;

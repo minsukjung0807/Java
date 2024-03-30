@@ -1,4 +1,4 @@
-package b2.main.BackBlazeB3.uploadModel;
+package b2.BackBlaze.upload_file.model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

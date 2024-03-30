@@ -1,0 +1,107 @@
+package b2.BackBlaze.authorize_account;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.StringReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
+
+import javax.json.Json;
+import javax.json.JsonObject;
+
+import org.json.JSONObject;
+
+import b2.BackBlaze.api.values.B2Keys;
+import b2.BackBlaze.authorize_account.response.B2AuthResponse;
+import b2.BackBlaze.create_bucket.model.BucketType;
+
+public class B2Auth {
+
+     public interface OnAuthStateListener { 
+        abstract void onSuccess(B2AuthResponse b2AuthResponse);
+        abstract void onFailed(String message);
+    }
+
+    public OnAuthStateListener onAuthStateListener;
+
+    public void setOnAuthStateListener(OnAuthStateListener onAuthStateListener){
+        this.onAuthStateListener = onAuthStateListener;
+    }
+
+
+    public void startAuthenticating() {
+        HttpURLConnection connection = null;
+        try {
+                URL url = new URL("https://api.backblazeb2.com/b2api/v2/b2_authorize_account");
+                connection = (HttpURLConnection) url.openConnection();
+                String encodedAuth = encodeAuthorization(B2Keys.APP_KEY_ID + ":" + B2Keys.APP_KEY);
+                connection.setRequestProperty("Authorization", encodedAuth);
+                connection.setConnectTimeout(5000);   
+                connection.setReadTimeout(1000);
+
+                JSONObject requestResult;
+
+            if(connection.getResponseCode() < 400){
+                InputStream inputStream =  connection.getInputStream();
+                requestResult = inputToJSON(inputStream);
+                onAuthStateListener.onSuccess(new B2AuthResponse(requestResult.getString("authorizationToken"), requestResult.getString("accountId"), requestResult.getString("apiUrl"), requestResult.getString("downloadUrl")));
+            }else{
+                InputStream errorStream =  connection.getErrorStream();
+                requestResult = inputToJSON(errorStream);
+                onAuthStateListener.onFailed("실패!: " + requestResult.getString("message") +
+                requestResult.getInt("status") + requestResult.getString("code"));
+            } 
+        }
+        
+        catch (Exception e) {
+                    this.onAuthStateListener.onFailed("에러: " + e.getMessage());
+        }  finally {
+            if(connection != null) {
+                connection.disconnect();
+            }
+        }
+
+
+
+
+        //   try {
+        //         try (InputStream inputStream = connection.getInputStream()) {
+        //                 String respStr = readInputStream(inputStream);
+        //                 JsonObject response = Json.createReader(new StringReader(respStr)).readObject();
+        //                 b2Session = new ();
+
+        //                 this.onAuthStateListener.onSuccess(b2Session);
+        //             }
+        //     } 
+
+        //     catch (Exception e) {
+        //         this.onAuthStateListener.onFailed("에러: " + e.getMessage());
+        //     }
+    
+        //     finally {
+        //         connection.disconnect();
+        //     }
+          
+    
+        
+    }
+
+
+    private String encodeAuthorization(String input){
+        byte[] authorizationBytes = input.getBytes(StandardCharsets.UTF_8);
+        String encodedAuthorization = Base64.getEncoder().encodeToString(authorizationBytes);
+        return "Basic " + encodedAuthorization;
+    }
+
+    private JSONObject inputToJSON(InputStream inputStream) throws IOException {
+        StringBuilder JSON = new StringBuilder();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+
+        while(reader.ready()) JSON.append(reader.readLine());
+        return new JSONObject(JSON.toString().trim());
+    }
+}
