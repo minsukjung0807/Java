@@ -46,12 +46,41 @@ public class Main {
     BackBlazeB2 backBlazeB2 = new BackBlazeB2();
     backBlazeB2.setOnAuthStateListener(new BackBlazeB2.OnAuthStateListener() {
       @Override
-      public void onCompleted(B2AuthResponse b2Session) {
+      public void onCompleted(B2AuthResponse b2AuthResponse) {
 
-          System.out.println("Download URL: " + b2Session.getDownloadURL());
-          System.out.println("Authentication Token: " + b2Session.getAuthToken());
-          System.out.println("API URL: " + b2Session.getAPIURL());
-          System.out.println("Account Id: " + b2Session.getAccountID());
+          System.out.println("Download URL: " + b2AuthResponse.getDownloadURL());
+          System.out.println("Authentication Token: " + b2AuthResponse.getAuthToken());
+          System.out.println("API URL: " + b2AuthResponse.getAPIURL());
+          System.out.println("Account Id: " + b2AuthResponse.getAccountID());
+
+          // createBucket(b2AuthResponse);
+          // B2CreateBucketResponse b2CreateBucketResponse = new B2CreateBucketResponse("mcpehub0403", "2e862fa05f0f830885e8081b", BucketType.ALL_PRIVATE);
+    
+          // getUploadUrl(b2AuthResponse, b2CreateBucketResponse);
+
+          deleteFile(b2AuthResponse, "MAP/Image1.jpg","4_z2e862fa05f0f830885e8081b_f1085e5a603837f65_d20240329_m101818_c005_v0501017_t0012_u01711707498686");
+        }
+      @Override
+      public void onFailed(String message) {
+        System.out.println("으음: " + message);
+      }
+    });
+
+    backBlazeB2.authorize();
+  }
+
+  // 버킷 생성
+  private static void createBucket(B2AuthResponse b2Session) {
+
+    BackBlazeB2 backBlazeB2 = new BackBlazeB2();
+
+    backBlazeB2.setOnCreateBucketStateListener(new BackBlazeB2.OnCreateBucketStateListener() {
+      @Override
+      public void onCompleted(B2CreateBucketResponse b2CreateBucketResponse) {
+
+        System.out.println(b2CreateBucketResponse.getID());
+        System.out.println(b2CreateBucketResponse.getName());
+    
 
       }
       @Override
@@ -60,52 +89,48 @@ public class Main {
       }
     });
 
-    backBlazeB2.authorize();
+    backBlazeB2.createBucket(b2Session, "MCBedrock0807", BucketType.ALL_PRIVATE);
   }
-    // BackblazeB2Auth authentication = new BackblazeB2Auth();
 
-    // authentication.setOnAuthStateListener(new BackblazeB2Auth.OnAuthStateListener() {
+  private static void deleteFile(B2AuthResponse b2AuthResponse, String fileName, String fileId) {
 
-      
+    BackBlazeB2 backBlazeB2 = new BackBlazeB2();
 
+    backBlazeB2.setOnDeleteSingleFileListener(new BackBlazeB2.OnDeleteSingleFileStateListener() {
+      @Override
+      public void onSuccess() {
+        System.out.println("삭제 성공!!");
+      }
+      @Override
+      public void onFailed(String message) {
+        System.out.println("삭제 실패: " + message);
+      }
+    });
 
-    //       // createBucket(b2Session);
-    //       B2CreateBucketResponse b2Bucket1 = new B2CreateBucketResponse(b2Session.getAPIURL(), "2e862fa05f0f830885e8081b", BucketType.ALL_PUBLIC);
-          
-    //       getUploadUrl(backblazeB2, b2Session, b2Bucket1);
-    //   }
+    backBlazeB2.deleteSingleFile(b2AuthResponse, fileName, fileId);
 
-    //   @Override
-    //   public void onFailed(String message) {
+  }
 
-    //   }
-    // });
+  private static void getUploadUrl(B2AuthResponse b2AuthResponse, B2CreateBucketResponse b2CreateBucketResponse) {
+    BackBlazeB2 backBlazeB2 = new BackBlazeB2();
 
-    // authentication.authenticate();
-  
+    backBlazeB2.setOnGetUploadUrlStateListener(new BackBlazeB2.OnGetUploadUrlStateListener() {
+      @Override
+      public void onCompleted(B2GetUploadUrlResponse b2GetUploadUrlResponse) {
 
-  // // 버킷 생성
-  // private static void createBucket(B2AuthResponse b2Session) {
+        System.out.println(b2GetUploadUrlResponse.getUploadURL());
+        System.out.println(b2GetUploadUrlResponse.getUploadAuthorizationToken());
+    
 
-  //   BackblazeB2 bucketCreation = new BackblazeB2();
-  //   bucketCreation.setOnBucketStateListener(new BackblazeB2.OnCreateBucketStateListener() {
-  //     @Override
-  //     public void onSuccess(String message) {
-  //       System.out.println(message);
-  //     }
+      }
+      @Override
+      public void onFailed(String message) {
+        System.out.println("실패: " + message);
+      }
+    });
 
-  //     @Override
-  //     public void onFailed(String message) {
-  //       System.out.println(message);
-  //     }
-  //   });
-
-  //   B2CreateBucketResponse b2Bucket = bucketCreation.createBucket(b2Session, "Mc", BucketType.ALL_PUBLIC);
-  //   System.out.println(b2Bucket.getID());
-  //   System.out.println(b2Bucket.getName());
-
-  //   getUploadUrl(bucketCreation, b2Session, b2Bucket);
-  // }
+    backBlazeB2.getUploadUrl(b2AuthResponse, b2CreateBucketResponse);
+  }
 
 
   // private static void getUploadUrl(BackblazeB2 backblazeB2, B2AuthResponse b2Session, B2CreateBucketResponse b2Bucket) {

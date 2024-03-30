@@ -45,6 +45,6 @@ public class B2GetUploadUrl {
 
         parameters.put("bucketId", b2CreateBucketResponse.getID());
 
-        httpRequest.call(b2AuthResponse.getAPIURL()+ "/b2api/v3/", "b2_get_upload_url", b2AuthResponse.getAuthToken(), parameters);
+        httpRequest.call(b2AuthResponse.getAPIURL()+ "/b2api/v3/", "b2_get_upload_url", b2AuthResponse.getAuthToken(), parameters, "GET");
     }
 }

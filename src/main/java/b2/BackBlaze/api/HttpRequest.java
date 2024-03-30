@@ -26,7 +26,7 @@ public class HttpRequest {
         this.onHttpRequestListener = onHttpRequestListener;
     }
 
-    public JSONObject call(String URL, String method, String authorization, JSONObject body) {
+    public JSONObject call(String URL, String method, String authorization, JSONObject body, String requestMethod) {
 
         HttpsURLConnection connection = null; 
 
@@ -34,7 +34,7 @@ public class HttpRequest {
 
             URL url = new URL(URL + method);
             connection = (HttpsURLConnection) url.openConnection();
-            connection.setRequestMethod("POST");
+            connection.setRequestMethod(requestMethod);
             // connection.setRequestProperty("User-Agent", USER_AGENT);
             connection.setRequestProperty("Authorization", authorization);
             

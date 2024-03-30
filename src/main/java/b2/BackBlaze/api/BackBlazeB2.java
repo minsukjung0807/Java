@@ -8,6 +8,7 @@ import b2.BackBlaze.authorize_account.response.B2AuthResponse;
 import b2.BackBlaze.create_bucket.B2CreateBucket;
 import b2.BackBlaze.create_bucket.model.BucketType;
 import b2.BackBlaze.create_bucket.response.B2CreateBucketResponse;
+import b2.BackBlaze.delete_file.B2DeleteSingleFile;
 import b2.BackBlaze.get_upload_url.B2GetUploadUrl;
 import b2.BackBlaze.get_upload_url.response.B2GetUploadUrlResponse;
 import b2.BackBlaze.upload_file.B2MultiUpload;
@@ -183,6 +184,43 @@ public class BackBlazeB2 {
         b2SingleUpload.startUploading(file, b2FileName);
 
     }
+
+    /* @remove
+     * 하나의(단일) 파일 삭제 시 사용
+     */
+
+     public OnDeleteSingleFileStateListener onDeleteSingleFileStateListener;
+
+     public interface OnDeleteSingleFileStateListener { 
+         abstract void onSuccess();
+         abstract void onFailed(String message);
+     }
+ 
+     public void setOnDeleteSingleFileListener(OnDeleteSingleFileStateListener onDeleteSingleFileStateListener){
+         this.onDeleteSingleFileStateListener = onDeleteSingleFileStateListener;
+     }
+ 
+     public void deleteSingleFile(B2AuthResponse b2AuthResponse, String fileName, String fileId) {
+         
+         B2DeleteSingleFile b2DeleteSingleFile = new B2DeleteSingleFile();
+        
+         if(onDeleteSingleFileStateListener != null) {
+            b2DeleteSingleFile.setOnDeleteFileStateListener(new B2DeleteSingleFile.OnDeleteFileStateListener() {
+                @Override
+                public void onSuccess() {
+                    onDeleteSingleFileStateListener.onSuccess();
+                }
+
+                @Override
+                public void onFailed(String message) {
+                    onDeleteSingleFileStateListener.onFailed(message);
+                }
+             });
+            
+         }
+
+         b2DeleteSingleFile.startDeletingFile(b2AuthResponse, fileName, fileId);
+     }
 
 
     /* 

@@ -46,7 +46,7 @@ public class B2CreateBucket {
         parameters.put("bucketName", bucketName);
         parameters.put("bucketType", bucketType.getIdentifier());
 
-        httpRequest.call(b2AuthResponse.getAPIURL()+ "/b2api/v3/", "b2_create_bucket", b2AuthResponse.getAuthToken(), parameters);
+        httpRequest.call(b2AuthResponse.getAPIURL()+ "/b2api/v3/", "b2_create_bucket", b2AuthResponse.getAuthToken(), parameters, "POST");
     }
 
     

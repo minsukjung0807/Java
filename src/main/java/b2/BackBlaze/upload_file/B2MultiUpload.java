@@ -2,6 +2,9 @@ package b2.BackBlaze.upload_file;
 
 import java.util.concurrent.*;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import b2.BackBlaze.get_upload_url.response.B2GetUploadUrlResponse;
 import b2.BackBlaze.upload_file.model.MultiFile;
 import b2.BackBlaze.upload_file.model.UploadInterface;
@@ -19,6 +22,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.*;
 import retrofit2.Call;
 import retrofit2.Callback;
+import retrofit2.HttpException;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -115,14 +119,60 @@ public class B2MultiUpload {
             }
 
             @Override
-            public void onFailure(Call<B2UploadFileResponse> call, Throwable t) {
-                if (uploadingListener != null)
-                    uploadingListener.onUploadFailed((Exception) t);
+            public void onFailure(Call<B2UploadFileResponse> call, Throwable throwable) {
 
+                if (throwable instanceof HttpException) {
+                    HttpException httpException = (HttpException) throwable;
+                    Response<?> response = httpException.response();
+                        
+                    if (response != null) {
+
+                        int errorCode = response.code(); // HTTP status code
+
+                        String errorMessage = null;
+                        String errorBody = null;
+            
+                        try {
+                            if (response.errorBody() != null) {
+                                errorBody = response.errorBody().string(); // Error message from the server
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+            
+                        if (errorBody != null && !errorBody.isEmpty()) {
+                            try {
+                                
+                                JSONObject jsonObject = new JSONObject(errorBody);
+                                
+                                if (jsonObject.has("code") && jsonObject.has("message") && jsonObject.has("status")) {
+                                    
+                                    String errorCodeFromServer = jsonObject.getString("code");
+                                    String errorMessageFromServer = jsonObject.getString("message");
+                                    int statusFromServer = jsonObject.getInt("status");
+                                } else {
+
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+            
+                        // Handle errorCode and errorMessage as needed
+                        if (uploadingListener != null) {
+                            uploadingListener.onUploadFailed(new Exception(errorMessage));
+                        }
+                    }
+                    
+                } else {
+                    // Handle other types of exceptions (network issues, serialization errors, etc.)
+                    if (uploadingListener != null) {
+                         uploadingListener.onUploadFailed((Exception) throwable);
+                    }
                 }
-        
-            }); 
-        }
+            }
+        });
+    }
 
     }
 

@@ -36,6 +36,7 @@ public class B2Auth {
                 connection = (HttpURLConnection) url.openConnection();
                 String encodedAuth = encodeAuthorization(B2Keys.APP_KEY_ID + ":" + B2Keys.APP_KEY);
                 connection.setRequestProperty("Authorization", encodedAuth);
+                connection.setRequestMethod("GET");
                 connection.setConnectTimeout(5000);   
                 connection.setReadTimeout(1000);
 
