@@ -61,7 +61,7 @@ public class Main {
           // deleteFile(b2AuthResponse, "MAP/Image1.jpg","4_z2e862fa05f0f830885e8081b_f1085e5a603837f65_d20240329_m101818_c005_v0501017_t0012_u01711707498686");
         }
       @Override
-      public void onFailed(String message) {
+      public void onFailed(int status, String code, String message) {
         System.out.println("으음: " + message);
       }
     });
@@ -84,7 +84,7 @@ public class Main {
 
       }
       @Override
-      public void onFailed(String message) {
+      public void onFailed(int status, String code, String message) {
         System.out.println("실패: " + message);
       }
     });
@@ -102,7 +102,7 @@ public class Main {
         System.out.println("삭제 성공!!");
       }
       @Override
-      public void onFailed(String message) {
+      public void onFailed(int status, String code, String message) {
         System.out.println("삭제 실패: " + message);
       }
     });
@@ -125,7 +125,7 @@ public class Main {
         uploadSingleFile(b2GetUploadUrlResponse);
       }
       @Override
-      public void onFailed(String message) {
+      public void onFailed(int status, String code, String message) {
         System.out.println("실패: " + message);
       }
     }).getUploadUrl(b2AuthResponse, b2CreateBucketResponse);

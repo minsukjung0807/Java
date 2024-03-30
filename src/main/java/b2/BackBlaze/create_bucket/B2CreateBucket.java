@@ -14,7 +14,7 @@ public class B2CreateBucket {
 
     public interface OnCreateBucketStateListener { 
         abstract void onSuccess(B2CreateBucketResponse b2CreateBucketResponse);
-        abstract void onFailed(String message);
+        abstract void onFailed(int status, String code, String message);
     }
 
     public OnCreateBucketStateListener onCreateBucketStateListener;
@@ -37,8 +37,7 @@ public class B2CreateBucket {
             }
             @Override
             public void onFailed(JSONObject response) {
-                onCreateBucketStateListener.onFailed("실패!: " + response.getString("message") +
-                response.getInt("status") + response.getString("code"));
+                onCreateBucketStateListener.onFailed(response.getInt("status"), response.getString("code"), response.getString("message"));
             }
            });
 

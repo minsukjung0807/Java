@@ -19,7 +19,7 @@ public class B2Auth {
 
      public interface OnAuthStateListener { 
         abstract void onSuccess(B2AuthResponse b2AuthResponse);
-        abstract void onFailed(String message);
+        abstract void onFailed(int status, String code, String message);
     }
 
     public OnAuthStateListener onAuthStateListener;
@@ -49,13 +49,12 @@ public class B2Auth {
             }else{
                 InputStream errorStream =  connection.getErrorStream();
                 requestResult = inputToJSON(errorStream);
-                onAuthStateListener.onFailed("실패!: " + requestResult.getString("message") +
-                requestResult.getInt("status") + requestResult.getString("code"));
+                onAuthStateListener.onFailed(requestResult.getInt("status"), requestResult.getString("code"), requestResult.getString("message"));
             } 
         }
         
         catch (Exception e) {
-                    this.onAuthStateListener.onFailed("에러: " + e.getMessage());
+                    this.onAuthStateListener.onFailed(0, "", "");
         }  finally {
             if(connection != null) {
                 connection.disconnect();

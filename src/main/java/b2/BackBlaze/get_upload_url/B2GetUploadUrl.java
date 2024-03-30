@@ -14,7 +14,7 @@ public class B2GetUploadUrl {
 
     public interface OnGetUploadUrlStateListener { 
         abstract void onSuccess(B2GetUploadUrlResponse b2GetUploadUrlResponse);
-        abstract void onFailed(String message);
+        abstract void onFailed(int status, String code, String message);
     }
 
     public OnGetUploadUrlStateListener onGetUploadUrlStateListener;
@@ -38,8 +38,7 @@ public class B2GetUploadUrl {
             }
             @Override
             public void onFailed(JSONObject response) {
-                onGetUploadUrlStateListener.onFailed("실패!: " + response.getString("message") +
-                response.getInt("status") + response.getString("code"));
+                onGetUploadUrlStateListener.onFailed(response.getInt("status"), response.getString("code"), response.getString("message"));
             }
            });
 

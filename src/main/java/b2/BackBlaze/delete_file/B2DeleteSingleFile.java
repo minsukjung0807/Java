@@ -17,7 +17,7 @@ public class B2DeleteSingleFile {
 
     public interface OnDeleteFileStateListener { 
         abstract void onSuccess();
-        abstract void onFailed(String message);
+        abstract void onFailed(int status, String code, String message);
     }
 
     public OnDeleteFileStateListener onDeleteFileStateListener;
@@ -36,8 +36,7 @@ public class B2DeleteSingleFile {
             }
             @Override
             public void onFailed(JSONObject response) {
-                onDeleteFileStateListener.onFailed("실패!: " + response.getString("message") +
-                response.getInt("status") + response.getString("code"));
+                onDeleteFileStateListener.onFailed(response.getInt("status"), response.getString("code"), response.getString("message"));
             }
            });
 

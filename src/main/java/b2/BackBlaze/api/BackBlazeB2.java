@@ -31,7 +31,7 @@ public class BackBlazeB2 {
 
      public interface OnAuthStateListener { 
          abstract void onCompleted(B2AuthResponse b2AuthResponse);
-         abstract void onFailed(String message);
+         abstract void onFailed(int status, String code, String message);
      }
  
      public BackBlazeB2 setOnAuthStateListener(OnAuthStateListener onAuthStateListener){
@@ -51,8 +51,8 @@ public class BackBlazeB2 {
                  }
      
                  @Override
-                 public void onFailed(String message) {
-                    onAuthStateListener.onFailed(message);
+                 public void onFailed(int status, String code, String message) {
+                    onAuthStateListener.onFailed(status, code, message);
                  }
             });
          }
@@ -68,7 +68,7 @@ public class BackBlazeB2 {
 
     public interface OnCreateBucketStateListener { 
         abstract void onCompleted(B2CreateBucketResponse b2CreateBucketResponse);
-        abstract void onFailed(String message);
+        abstract void onFailed(int status, String code, String message);
     }
 
     public BackBlazeB2 setOnCreateBucketStateListener(OnCreateBucketStateListener onCreateBucketStateListener){
@@ -89,8 +89,8 @@ public class BackBlazeB2 {
                 }
     
                 @Override
-                public void onFailed(String message) {
-                    onCreateBucketStateListener.onFailed(message);
+                public void onFailed(int status, String code, String message) {
+                    onCreateBucketStateListener.onFailed(status, code, message);
                 }
             } );
         }
@@ -107,7 +107,7 @@ public class BackBlazeB2 {
 
     public interface OnGetUploadUrlStateListener { 
         abstract void onCompleted(B2GetUploadUrlResponse b2GetUploadUrlResponse);
-        abstract void onFailed(String message);
+        abstract void onFailed(int status, String code, String message);
     }
 
     public BackBlazeB2 setOnGetUploadUrlStateListener(OnGetUploadUrlStateListener onGetUploadUrlStateListener){
@@ -127,8 +127,8 @@ public class BackBlazeB2 {
                 }
     
                 @Override
-                public void onFailed(String message) {
-                    onGetUploadUrlStateListener.onFailed(message);
+                public void onFailed(int status, String code, String message) {
+                    onGetUploadUrlStateListener.onFailed(status, code, message);
                 }
             });
             
@@ -197,7 +197,7 @@ public class BackBlazeB2 {
 
      public interface OnDeleteSingleFileStateListener { 
          abstract void onSuccess();
-         abstract void onFailed(String message);
+         abstract void onFailed(int status, String code, String message);
      }
  
      public BackBlazeB2 setOnDeleteSingleFileListener(OnDeleteSingleFileStateListener onDeleteSingleFileStateListener){
@@ -217,8 +217,8 @@ public class BackBlazeB2 {
                 }
 
                 @Override
-                public void onFailed(String message) {
-                    onDeleteSingleFileStateListener.onFailed(message);
+                public void onFailed(int status, String code, String message) {
+                    onDeleteSingleFileStateListener.onFailed(status, code, message);
                 }
              });
             
