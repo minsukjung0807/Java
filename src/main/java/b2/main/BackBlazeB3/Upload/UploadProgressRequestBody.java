@@ -26,10 +26,10 @@ public class UploadProgressRequestBody extends RequestBody {
         // File size in bytes
         public long contentLength;
 
-        public UploadInfo(File file, long contentLength) {
-            this.file = file;
-            this.contentLength = contentLength;
-        }
+        // public UploadInfo(File file, long contentLength) {
+        //     this.file = file;
+        //     this.contentLength = contentLength;
+        // }
 
         public UploadInfo(byte[] fileBytes, long contentLength) {
             this.fileBytes = fileBytes;

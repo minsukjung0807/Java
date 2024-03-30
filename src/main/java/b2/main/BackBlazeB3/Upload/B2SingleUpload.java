@@ -26,7 +26,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class B2SingleUpload {
 
     private UploadListener uploadingListener;
-    private boolean isAuthed = false;
+
     private String contentType = "";
     private Call<UploadResponse> uploadCall;
     private OkHttpClient client; 
@@ -36,10 +36,9 @@ public class B2SingleUpload {
 
     private boolean isMultiUpload = false;
 
-    public B2SingleUpload(String uploadUrl, String uploadAuthorizationToken, String bucketId) {
+    public B2SingleUpload(String uploadUrl, String uploadAuthorizationToken) {
         this.uploadUrl = uploadUrl;
         this.uploadAuthorizationToken = uploadAuthorizationToken;
-        isAuthed = false;
     }
 
     public void startUploading(File file, String fileName) {
@@ -68,15 +67,10 @@ public class B2SingleUpload {
         
     private void checkIfAuthed(byte[] filebytes, String fileName) {
 
-        Callable<Void> onFinish = () -> {
-            System.out.println("파일 업로드가 완료되었습니다.");
-            return null;
-        };
-
-        uploadFile(filebytes, fileName, contentType, onFinish);  
+        uploadFile(filebytes, fileName, contentType);  
     }
 
-    private void uploadFile(byte[] fileBytes, String fileName, String contentType, Callable<Void> onFinish) {
+    private void uploadFile(byte[] fileBytes, String fileName, String contentType) {
         
         URL url = getUploadUrl(uploadUrl);
 

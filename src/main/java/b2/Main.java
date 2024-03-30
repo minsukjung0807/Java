@@ -5,25 +5,24 @@ import b2.main.BackBlaze.BackblazeB2Auth;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-
 import java.io.IOException;
 import java.io.InputStream;
+import org.apache.commons.io.FileUtils;
+import java.util.*;
 import b2.main.BackBlaze.BackblazeB2;
 import b2.main.BackBlaze.models.B2Bucket1;
 import b2.main.BackBlaze.models.B2Session1;
 import b2.main.BackBlaze.models.B2UploadRequest1;
 import b2.main.BackBlaze.models.BucketType1;
-import b2.main.BackBlazeB3.Upload.B2SingleUpload;
+import b2.main.BackBlazeB3.Upload.B2MultiUpload;
 import b2.main.BackBlazeB3.Upload.B2UploadUtils;
 import b2.main.BackBlazeB3.Upload.UploadListener;
+import b2.main.BackBlazeB3.fileUploader.MultiFile;
 import b2.main.BackBlazeB3.uploadModel.UploadResponse;
 
 public class Main {
-  
-  private static String appKeyId = "005e6f0ff38588b000000000a";
-  private static String appKey = "K005k2tpcpfoqMY525/C9Pj5kHbDWXY";
 
-  private static String authorizationToken, apiUrl, uploadUrl, uploadAuthorizationToken, bucketId;
+  private static String uploadUrl, uploadAuthorizationToken;
   
     public static void main(String[] args) {
       authenticate();
@@ -69,6 +68,7 @@ public class Main {
             }
           });
 
+
           // createBucket(b2Session);
           B2Bucket1 b2Bucket1 = new B2Bucket1(b2Session.getAPIURL(), "2e862fa05f0f830885e8081b", BucketType1.ALL_PUBLIC);
           
@@ -112,52 +112,101 @@ public class Main {
 
     B2UploadRequest1 b2UploadRequest = backblazeB2.getUploadURL(b2Session, b2Bucket);
 
-    apiUrl = b2Session.getAPIURL();
-    authorizationToken = b2Session.getAuthToken();
     uploadUrl = b2UploadRequest.getUploadURL();
-    bucketId = b2Bucket.getID();
     uploadAuthorizationToken = b2UploadRequest.getAuthorizationToken();
 
     System.out.println("업로드 URL: " + b2UploadRequest.getUploadURL());
 
-    File path = new File("");
-    File file = new File(path.getAbsolutePath()+"/src/file/10MB.txt");
-
-    String contentType = B2UploadUtils.getContentType(file);
-
-   if(file.exists()) {
-
-      System.out.println("콘텐츠의 타입2: " + contentType);
-      System.out.println("파일이 존재합니다!");
     
-    B2SingleUpload b2SingleUpload = new B2SingleUpload(uploadUrl, uploadAuthorizationToken, bucketId);
+    B2MultiUpload b2MultiUpload = new B2MultiUpload();
+
+    ArrayList<MultiFile> arrayList = new ArrayList<>();
+
+    for (int i = 0; i < 6; i++) {
+
+        File path = new File("");
+        File file = new File(path.getAbsolutePath()+"/src/image/image"+i+".jpg");
+
+            MultiFile multiFile = new MultiFile();
+        
+            if(file.exists()) {
+              InputStream iStream = null;
+                try {
+                  String fileType = B2UploadUtils.getContentType(file);
+                  iStream = FileUtils.openInputStream(file);
+                  byte[] inputData = getBytes(iStream);
+                  multiFile.init(inputData, "MAP/Image" + i+".jpg", fileType);
+                  arrayList.add(multiFile);
+            } catch (IOException e) {
+                e.printStackTrace();
+                System.out.println("에러!");
+            }
+          } else {
+            System.out.println("파일이 없습니다!");
+          }
+
+    }
     
-    b2SingleUpload.setOnUploadingListener(new UploadListener() {
-      @Override
-      public void onUploadStarted() {
-        System.out.println("파일 업로드 시작...");
-      }
+    b2MultiUpload.setOnUploadingListener(new UploadListener() {
+            @Override
+            public void onUploadStarted() {
+              System.out.println("파일 업로드 시작...");
+            }
+      
+            @Override
+            public void onUploadProgress(int percentage, long progress, long total) {
+                System.out.println("파일 업로드 중... "+ percentage + "%");
+            }
+      
+            @Override
+            public void onUploadFinished(UploadResponse response, boolean allFilesUploaded) {
+              System.out.println("파일 업로드 완료!!");
+            }
+      
+            @Override
+            public void onUploadFailed(Exception e) {
+              System.out.println("업로드 실패: " + e.getMessage());
+            }
+        });
+    if (arrayList.size() > 0) {
+      b2MultiUpload.startUploadingMultipleFiles(arrayList, uploadUrl, uploadAuthorizationToken);
+    }
 
-      @Override
-      public void onUploadProgress(int percentage, long progress, long total) {
-          System.out.println("파일 업로드 중... "+ percentage + "%");
-      }
+    // String contentType = B2UploadUtils.getContentType(file);
 
-      @Override
-      public void onUploadFinished(UploadResponse response, boolean allFilesUploaded) {
-        System.out.println("파일 업로드 완료!!");
-      }
+//    if(file.exists()) {
 
-      @Override
-      public void onUploadFailed(Exception e) {
-        System.out.println("업로드 실패: " + e.getMessage());
-      }
-  });
+//       System.out.println("콘텐츠의 타입2: " + contentType);
+//       System.out.println("파일이 존재합니다!");
+    
+//     B2SingleUpload b2SingleUpload = new B2SingleUpload(uploadUrl, uploadAuthorizationToken);
+    
+//     b2SingleUpload.setOnUploadingListener(new UploadListener() {
+//       @Override
+//       public void onUploadStarted() {
+//         System.out.println("파일 업로드 시작...");
+//       }
 
-  b2SingleUpload.startUploading(file, "MAP/12MB.txt");
+//       @Override
+//       public void onUploadProgress(int percentage, long progress, long total) {
+//           System.out.println("파일 업로드 중... "+ percentage + "%");
+//       }
 
-} else{
-  System.out.println("파일이 없습니다!");
-}
+//       @Override
+//       public void onUploadFinished(UploadResponse response, boolean allFilesUploaded) {
+//         System.out.println("파일 업로드 완료!!");
+//       }
+
+//       @Override
+//       public void onUploadFailed(Exception e) {
+//         System.out.println("업로드 실패: " + e.getMessage());
+//       }
+//   });
+
+//   b2SingleUpload.startUploading(file, "MAP/12MB.txt");
+
+// } else{
+//   System.out.println("파일이 없습니다!");
+// }
   }
 }
