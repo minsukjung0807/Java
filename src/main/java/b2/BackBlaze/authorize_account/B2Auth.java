@@ -4,20 +4,16 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.StringReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
-import javax.json.Json;
-import javax.json.JsonObject;
 
 import org.json.JSONObject;
 
 import b2.BackBlaze.api.values.B2Keys;
 import b2.BackBlaze.authorize_account.response.B2AuthResponse;
-import b2.BackBlaze.create_bucket.model.BucketType;
 
 public class B2Auth {
 
@@ -63,31 +59,7 @@ public class B2Auth {
             if(connection != null) {
                 connection.disconnect();
             }
-        }
-
-
-
-
-        //   try {
-        //         try (InputStream inputStream = connection.getInputStream()) {
-        //                 String respStr = readInputStream(inputStream);
-        //                 JsonObject response = Json.createReader(new StringReader(respStr)).readObject();
-        //                 b2Session = new ();
-
-        //                 this.onAuthStateListener.onSuccess(b2Session);
-        //             }
-        //     } 
-
-        //     catch (Exception e) {
-        //         this.onAuthStateListener.onFailed("에러: " + e.getMessage());
-        //     }
-    
-        //     finally {
-        //         connection.disconnect();
-        //     }
-          
-    
-        
+        }   
     }
 
 
