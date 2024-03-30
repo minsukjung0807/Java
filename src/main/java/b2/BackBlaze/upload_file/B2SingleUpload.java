@@ -1,6 +1,8 @@
 package b2.BackBlaze.upload_file;
 
 import org.apache.commons.io.FileUtils;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import b2.BackBlaze.get_upload_url.response.B2GetUploadUrlResponse;
 import b2.BackBlaze.upload_file.model.UploadInterface;
@@ -25,6 +27,7 @@ import java.util.Formatter;
 
 import retrofit2.Call;
 import retrofit2.Callback;
+import retrofit2.HttpException;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -98,23 +101,34 @@ public class B2SingleUpload {
                     SHAsum(fileBytes), fileName);
                     
             uploadCall.enqueue(new Callback<B2UploadFileResponse>() {
+                
                 @Override
                 public void onResponse(Call<B2UploadFileResponse> call1, Response<B2UploadFileResponse> response) {
     
+                    
                     if (uploadingListener != null) {
-                        uploadingListener.onUploadFinished(response.body(), !isMultiUpload);
+
+                        if(response.code() < 400){
+                            uploadingListener.onUploadFinished(response.body(), !isMultiUpload);
+                        } else {
+                            uploadingListener.onUploadFailed(response.body().getStatus(), response.body().getCode(), response.body().getMessage());  
+                        }
+                    
                         closeHttpClient();
                     }
     
                 }
     
                 @Override
-                public void onFailure(Call<B2UploadFileResponse> call, Throwable t) {
-                    if (uploadingListener != null)
-                        uploadingListener.onUploadFailed((Exception) t);
+                public void onFailure(Call<B2UploadFileResponse> call, Throwable throwable) {
+
+                    if(uploadingListener!=null) {
+                        uploadingListener.onUploadFailed(0, "", "");  
+                    }
+            }
+        });
                         
-                }
-            });
+            
         }
     }
 

@@ -34,8 +34,9 @@ public class BackBlazeB2 {
          abstract void onFailed(String message);
      }
  
-     public void setOnAuthStateListener(OnAuthStateListener onAuthStateListener){
+     public BackBlazeB2 setOnAuthStateListener(OnAuthStateListener onAuthStateListener){
          this.onAuthStateListener = onAuthStateListener;
+         return this;
      }
  
      public void authorize() {
@@ -70,8 +71,9 @@ public class BackBlazeB2 {
         abstract void onFailed(String message);
     }
 
-    public void setOnCreateBucketStateListener(OnCreateBucketStateListener onCreateBucketStateListener){
+    public BackBlazeB2 setOnCreateBucketStateListener(OnCreateBucketStateListener onCreateBucketStateListener){
         this.onCreateBucketStateListener = onCreateBucketStateListener;
+        return this;
     }
 
     public void createBucket(B2AuthResponse b2AuthResponse, String bucketName, BucketType bucketType) {
@@ -108,8 +110,9 @@ public class BackBlazeB2 {
         abstract void onFailed(String message);
     }
 
-    public void setOnGetUploadUrlStateListener(OnGetUploadUrlStateListener onGetUploadUrlStateListener){
+    public BackBlazeB2 setOnGetUploadUrlStateListener(OnGetUploadUrlStateListener onGetUploadUrlStateListener){
         this.onGetUploadUrlStateListener = onGetUploadUrlStateListener;
+        return this;
     }
 
     public void getUploadUrl(B2AuthResponse b2AuthResponse, B2CreateBucketResponse b2CreateBucketResponse) {
@@ -146,11 +149,12 @@ public class BackBlazeB2 {
         abstract void onStarted();
         abstract void onProgress(int percentage, long progress, long total);
         abstract void onCompleted(B2UploadFileResponse response, boolean allFilesUploaded);
-        abstract void onFailed(Exception e);
+        abstract void onFailed(int status, String code, String message);
     }
 
-    public void setOnUploadSingleFileStateListener(OnUploadSingleFileStateListener onUploadSingleFileStateListener){
+    public BackBlazeB2 setOnUploadSingleFileStateListener(OnUploadSingleFileStateListener onUploadSingleFileStateListener){
         this.onUploadSingleFileStateListener = onUploadSingleFileStateListener;
+        return this;
     }
 
     public void uploadSingleFile(File file, String b2FileName, B2GetUploadUrlResponse b2GetUploadUrlResponse) {
@@ -175,8 +179,8 @@ public class BackBlazeB2 {
                 }
           
                 @Override
-                public void onUploadFailed(Exception e) {
-                    onUploadSingleFileStateListener.onFailed(e);
+                public void onUploadFailed(int status, String code, String message) {
+                    onUploadSingleFileStateListener.onFailed(status, code, message);
                 }
             }); 
         }
@@ -196,8 +200,9 @@ public class BackBlazeB2 {
          abstract void onFailed(String message);
      }
  
-     public void setOnDeleteSingleFileListener(OnDeleteSingleFileStateListener onDeleteSingleFileStateListener){
+     public BackBlazeB2 setOnDeleteSingleFileListener(OnDeleteSingleFileStateListener onDeleteSingleFileStateListener){
          this.onDeleteSingleFileStateListener = onDeleteSingleFileStateListener;
+         return this;
      }
  
      public void deleteSingleFile(B2AuthResponse b2AuthResponse, String fileName, String fileId) {
@@ -233,11 +238,12 @@ public class BackBlazeB2 {
         abstract void onStarted();
         abstract void onProgress(int percentage, long progress, long total);
         abstract void onCompleted(B2UploadFileResponse response, boolean allFilesUploaded);
-        abstract void onFailed(Exception e);
+        abstract void onFailed(int status, String code, String message);
     }
 
-    public void setOnMultipleFilesStateListener(OnUploadMultipleFileStateListener onUploadMultipleFileStateListener){
+    public BackBlazeB2 setOnMultipleFilesStateListener(OnUploadMultipleFileStateListener onUploadMultipleFileStateListener){
         this.onUploadMultipleFileStateListener = onUploadMultipleFileStateListener;
+        return this;
     }
 
     public void uploadMultipleFiles(ArrayList<MultiFile> multiFiles, B2GetUploadUrlResponse b2GetUploadUrlResponse) {
@@ -262,8 +268,8 @@ public class BackBlazeB2 {
                 }
           
                 @Override
-                public void onUploadFailed(Exception e) {
-                    onUploadMultipleFileStateListener.onFailed(e);
+                public void onUploadFailed(int status, String code, String message) {
+                    onUploadMultipleFileStateListener.onFailed(status, code, message);
                 }
             });
         }

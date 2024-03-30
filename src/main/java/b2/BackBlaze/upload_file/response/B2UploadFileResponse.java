@@ -10,21 +10,27 @@ public class B2UploadFileResponse {
     @SerializedName("fileId")
     @Expose
     private String fileId;
+
     @SerializedName("fileName")
     @Expose
     private String fileName;
+
     @SerializedName("accountId")
     @Expose
     private String accountId;
+
     @SerializedName("bucketId")
     @Expose
     private String bucketId;
+
     @SerializedName("contentLength")
     @Expose
     private Integer contentLength;
+
     @SerializedName("contentSha1")
     @Expose
     private String contentSha1;
+
     @SerializedName("contentType")
     @Expose
     private String contentType;
@@ -32,6 +38,18 @@ public class B2UploadFileResponse {
     @SerializedName("serverSideEncryption")
     @Expose
     private ServerSideEncryption serverSideEncryption;
+
+    @SerializedName("message")
+    @Expose
+    private String message;
+
+    @SerializedName("status")
+    @Expose
+    private int status;
+    
+    @SerializedName("code")
+    @Expose
+    private String code;
 
     public String getFileId() {
         return fileId;
@@ -97,5 +115,31 @@ public class B2UploadFileResponse {
     public void setServerSideEncryption(ServerSideEncryption serverSideEncryption) {
         this.serverSideEncryption = serverSideEncryption;
     }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+
 
 }

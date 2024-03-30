@@ -10,5 +10,5 @@ public interface UploadListener {
     
     void onUploadFinished(B2UploadFileResponse response, boolean allFilesUploaded);
 
-    void onUploadFailed(Exception e);
+    void onUploadFailed(int status, String code, String message);
 }

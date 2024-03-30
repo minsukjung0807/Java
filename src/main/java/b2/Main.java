@@ -54,11 +54,11 @@ public class Main {
           System.out.println("Account Id: " + b2AuthResponse.getAccountID());
 
           // createBucket(b2AuthResponse);
-          // B2CreateBucketResponse b2CreateBucketResponse = new B2CreateBucketResponse("mcpehub0403", "2e862fa05f0f830885e8081b", BucketType.ALL_PRIVATE);
-    
-          // getUploadUrl(b2AuthResponse, b2CreateBucketResponse);
+          B2CreateBucketResponse b2CreateBucketResponse = new B2CreateBucketResponse("mcpehub0403", "2e862fa05f0f830885e8081b", BucketType.ALL_PRIVATE);
+          
+          getUploadUrl(b2AuthResponse, b2CreateBucketResponse);
 
-          deleteFile(b2AuthResponse, "MAP/Image1.jpg","4_z2e862fa05f0f830885e8081b_f1085e5a603837f65_d20240329_m101818_c005_v0501017_t0012_u01711707498686");
+          // deleteFile(b2AuthResponse, "MAP/Image1.jpg","4_z2e862fa05f0f830885e8081b_f1085e5a603837f65_d20240329_m101818_c005_v0501017_t0012_u01711707498686");
         }
       @Override
       public void onFailed(String message) {
@@ -112,9 +112,9 @@ public class Main {
   }
 
   private static void getUploadUrl(B2AuthResponse b2AuthResponse, B2CreateBucketResponse b2CreateBucketResponse) {
-    BackBlazeB2 backBlazeB2 = new BackBlazeB2();
 
-    backBlazeB2.setOnGetUploadUrlStateListener(new BackBlazeB2.OnGetUploadUrlStateListener() {
+
+    new BackBlazeB2().setOnGetUploadUrlStateListener(new BackBlazeB2.OnGetUploadUrlStateListener() {
       @Override
       public void onCompleted(B2GetUploadUrlResponse b2GetUploadUrlResponse) {
 
@@ -122,14 +122,13 @@ public class Main {
         System.out.println(b2GetUploadUrlResponse.getUploadAuthorizationToken());
     
 
+        uploadSingleFile(b2GetUploadUrlResponse);
       }
       @Override
       public void onFailed(String message) {
         System.out.println("실패: " + message);
       }
-    });
-
-    backBlazeB2.getUploadUrl(b2AuthResponse, b2CreateBucketResponse);
+    }).getUploadUrl(b2AuthResponse, b2CreateBucketResponse);
   }
 
 
@@ -199,6 +198,34 @@ public class Main {
   //     b2MultiUpload.startUploadingMultipleFiles(arrayList, b2UploadRequest);
   //   }
 
+  private static void uploadSingleFile(B2GetUploadUrlResponse b2GetUploadUrlResponse) {
+
+
+    File path = new File("");
+    File file = new File(path.getAbsolutePath()+"/src/file/10MB.txt");
+
+    BackBlazeB2 backBlazeB2 = new BackBlazeB2();
+    backBlazeB2.setOnUploadSingleFileStateListener(new BackBlazeB2.OnUploadSingleFileStateListener() {
+      @Override
+      public void onStarted() {
+        System.out.println("시작중!!");
+      }
+
+      @Override
+      public void onProgress(int percentage, long progress, long total) {
+        System.out.println("업로드 중" + percentage);
+      }
+      @Override
+      public void onCompleted(B2UploadFileResponse response, boolean allFilesUploaded) {
+        System.out.println("업로드 완료!!");
+      }
+      @Override
+      public void onFailed(int status, String code, String message) {
+        System.out.println("오류!!"+  "상태:"+ status + "코드: " +code + "메시지: " + message);
+      }
+
+    }).uploadSingleFile(file, "MAP/xxx.jpg", b2GetUploadUrlResponse);
+  }
     // String contentType = B2UploadUtils.getContentType(file);
 
 //    if(file.exists()) {
