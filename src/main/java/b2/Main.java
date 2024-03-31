@@ -1,6 +1,5 @@
 package b2;
 
-
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -23,17 +22,6 @@ public class Main {
       authenticate();
     }
 
-    public static byte[] getBytes(InputStream inputStream) throws IOException {
-      ByteArrayOutputStream byteBuffer = new ByteArrayOutputStream();
-      int bufferSize = 1024;
-      byte[] buffer = new byte[bufferSize];
-
-      int len = 0;
-      while ((len = inputStream.read(buffer)) != -1) {
-          byteBuffer.write(buffer, 0, len);
-      }
-      return byteBuffer.toByteArray();
-  }
   
   // 인증 작업
   private static void authenticate() {
