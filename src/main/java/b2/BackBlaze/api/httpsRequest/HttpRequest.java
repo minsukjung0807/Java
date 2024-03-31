@@ -25,14 +25,19 @@ public class HttpRequest {
      * httpsURLConnection.setRequestProperty("User-Agent", USER_AGENT);
      */
     
-    public OnHttpsRequestListener onHttpRequestListener; 
+    public OnHttpsRequestListener onHttpsRequestListener; 
 
-    public void setOnHttpsRequestListener(OnHttpsRequestListener onHttpRequestListener){
-        this.onHttpRequestListener = onHttpRequestListener;
+    /**
+     * HTTPS 요청의 리스너 객체를 전달받아 리스너를 등록합니다
+     * 
+     * @param onHttpsRequestListener HTTPS 요청의 리스너 객체입니다
+     */
+    public void setOnHttpsRequestListener(OnHttpsRequestListener onHttpsRequestListener){
+        this.onHttpsRequestListener = onHttpsRequestListener;
     }
 
      /**
-     * Parameter들을 이용하여 HTTP 통신을 요청하고 성공/실패 여부를 호출하며, JSONObject를 반환합니다.
+     * parameter들을 이용하여 HTTP 통신을 요청하고 성공/실패 여부를 호출하며, JSONObject를 반환합니다.
      * 
      * @param URL B2 API와 통신하기 위한 URL 주소입니다
      * @param method B2 API 통신에 사용될 요청 메서드입니다
@@ -72,6 +77,11 @@ public class HttpRequest {
         }
     }
 
+    /**
+     * @param inputStream HTTPS 통신 결과로 가져온 InputStream입니다
+     * @return B2 API 통신으로 가져온 결과를 JSONObject로 반환합니다
+     * @throws IOException
+     */
     private JSONObject inputToJSON(InputStream inputStream) throws IOException {
         StringBuilder JSON = new StringBuilder();
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
@@ -79,24 +89,31 @@ public class HttpRequest {
         return new JSONObject(JSON.toString().trim());
     }
 
+    /**
+     * @param httpsURLConnection HTTPS통신을 하기 위한 객체입니다 
+     * @return B2 API 호출을 성공하였을때 전달받은 결과를 JSONObject로 반환합니다 
+     * @throws IOException
+     */
     private JSONObject connectionSuccess(HttpsURLConnection httpsURLConnection) throws IOException {
             JSONObject requestResult = inputToJSON(httpsURLConnection.getInputStream());
-            onHttpRequestListener.onSuccess(requestResult);
+            onHttpsRequestListener.onSuccess(requestResult);
             return requestResult;
     }
 
     /**
-     * 
-     * @return B2 통신으로 전달받은 결과를 JSONObject로 반환합니다 
+     * @param httpsURLConnection HTTPS통신을 하기 위한 객체입니다 
+     * @return B2 API 호출을 실패하였을때 전달받은 결과를 JSONObject로 반환합니다 
+     * @throws IOException
      */
     private JSONObject connectionFailed(HttpsURLConnection httpsURLConnection) throws IOException {
             JSONObject requestResult = inputToJSON(httpsURLConnection.getErrorStream());
-            onHttpRequestListener.onFailed(requestResult);
+            onHttpsRequestListener.onFailed(requestResult);
             return requestResult;
     }
 
     /**
-     * HttpsURLConnection을 생성합니다
+     * parameter들을 받아서 HttpsURLConnection을 생성합니다
+     * 
      * @param URL B2 API와 통신하기 위한 URL 주소입니다
      * @param method B2 API 통신에 사용될 요청 메서드입니다
      * @return B2 통신으로 전달받은 결과를 JSONObject로 반환합니다 

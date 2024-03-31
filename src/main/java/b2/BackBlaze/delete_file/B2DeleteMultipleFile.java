@@ -11,11 +11,10 @@ import org.json.JSONObject;
 
 public class B2DeleteMultipleFile {
 
-    private HttpRequest httpRequest;
     private ArrayList<DeleteFileItem> filesToDelete;
 
     public B2DeleteMultipleFile() {
-        httpRequest = new HttpRequest();
+        
         filesToDelete = new ArrayList<>();
     }
 
@@ -37,6 +36,8 @@ public class B2DeleteMultipleFile {
     }
 
     public void startDeletingFiles(B2AuthResponse b2AuthResponse) {
+        
+        HttpRequest httpRequest = new HttpRequest();
 
         if(filesToDelete.size() > 0) {
 

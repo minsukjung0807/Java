@@ -22,7 +22,6 @@ public class Main {
       authenticate();
     }
 
-  
   // 인증 작업
   private static void authenticate() {
 
@@ -45,7 +44,8 @@ public class Main {
         }
       @Override
       public void onFailed(int status, String code, String message) {
-        System.out.println("실패: " + message);
+        
+        System.out.println("실패 11: " + status);
       }
     });
 
@@ -54,47 +54,47 @@ public class Main {
     
   }
 
-  // 버킷 생성
-  private static void createBucket(B2AuthResponse b2Session) {
+  // // 버킷 생성
+  // private static void createBucket(B2AuthResponse b2Session) {
 
-    BackBlazeB2 backBlazeB2 = new BackBlazeB2();
+  //   BackBlazeB2 backBlazeB2 = new BackBlazeB2();
 
-    backBlazeB2.setOnCreateBucketStateListener(new BackBlazeB2.OnCreateBucketStateListener() {
-      @Override
-      public void onCompleted(B2CreateBucketResponse b2CreateBucketResponse) {
+  //   backBlazeB2.setOnCreateBucketStateListener(new BackBlazeB2.OnCreateBucketStateListener() {
+  //     @Override
+  //     public void onCompleted(B2CreateBucketResponse b2CreateBucketResponse) {
 
-        System.out.println(b2CreateBucketResponse.getID());
-        System.out.println(b2CreateBucketResponse.getName());
+  //       System.out.println(b2CreateBucketResponse.getID());
+  //       System.out.println(b2CreateBucketResponse.getName());
     
 
-      }
-      @Override
-      public void onFailed(int status, String code, String message) {
-        System.out.println("실패: " + message);
-      }
-    });
+  //     }
+  //     @Override
+  //     public void onFailed(int status, String code, String message) {
+  //       System.out.println("실패: " + message);
+  //     }
+  //   });
 
-    backBlazeB2.createBucket(b2Session, "MCBedrock0807", BucketType.ALL_PRIVATE);
-  }
+  //   backBlazeB2.createBucket(b2Session, "MCBedrock0807", BucketType.ALL_PRIVATE);
+  // }
 
-  private static void deleteFile(B2AuthResponse b2AuthResponse, String fileName, String fileId) {
+  // private static void deleteFile(B2AuthResponse b2AuthResponse, String fileName, String fileId) {
 
-    BackBlazeB2 backBlazeB2 = new BackBlazeB2();
+  //   BackBlazeB2 backBlazeB2 = new BackBlazeB2();
 
-    backBlazeB2.setOnDeleteSingleFileListener(new BackBlazeB2.OnDeleteSingleFileStateListener() {
-      @Override
-      public void onSuccess() {
-        System.out.println("삭제 성공!!");
-      }
-      @Override
-      public void onFailed(int status, String code, String message) {
-        System.out.println("삭제 실패: " + message);
-      }
-    });
+  //   backBlazeB2.setOnDeleteSingleFileListener(new BackBlazeB2.OnDeleteSingleFileStateListener() {
+  //     @Override
+  //     public void onSuccess() {
+  //       System.out.println("삭제 성공!!");
+  //     }
+  //     @Override
+  //     public void onFailed(int status, String code, String message) {
+  //       System.out.println("삭제 실패: " + message);
+  //     }
+  //   });
 
-    backBlazeB2.deleteSingleFile(b2AuthResponse, fileName, fileId);
+  //   backBlazeB2.deleteSingleFile(b2AuthResponse, fileName, fileId);
 
-  }
+  // }
 
   private static void deleteMultipleFiles(B2AuthResponse b2AuthResponse) {
     
@@ -104,7 +104,9 @@ public class Main {
     
     // deleteFileItems.add(new DeleteFileItem("hello1.txt", "4_z2e862fa05f0f830885e8081b_f1071e0a9edeafa02_d20240331_m060143_c005_v0501010_t0010_u01711864903665"));
     // deleteFileItems.add(new DeleteFileItem("hello2.txt", "4_z2e862fa05f0f830885e8081b_f1071e0a9edeafa76_d20240331_m060146_c005_v0501010_t0027_u01711864906781"));
-    deleteFileItems.add(new DeleteFileItem("hello3.txt", "4_z2e862fa05f0f830885e8081b_f1071e0a9edeafaf6_d20240331_m060150_c005_v0501010_t0037_u01711864910455"));
+    
+    // deleteFileItems.add(new DeleteFileItem("hello3.txt", "4_z2e862fa05f0f830885e8081b_f1071e0a9edeafaf6_d20240331_m060150_c005_v0501010_t0037_u01711864910455"));
+    
     backBlazeB2.setOnDeleteMultipleFileListener(new BackBlazeB2.OnDeleteMultipleFileStateListener() {
       @Override
       public void onSuccess(int nTh) {
@@ -122,131 +124,96 @@ public class Main {
     });
 
     backBlazeB2.deleteMultipleFiles(b2AuthResponse, deleteFileItems);
+
   }
 
-  private static void getUploadUrl(B2AuthResponse b2AuthResponse, B2CreateBucketResponse b2CreateBucketResponse) {
+  // private static void getUploadUrl(B2AuthResponse b2AuthResponse, B2CreateBucketResponse b2CreateBucketResponse) {
 
 
-    new BackBlazeB2().setOnGetUploadUrlStateListener(new BackBlazeB2.OnGetUploadUrlStateListener() {
-      @Override
-      public void onCompleted(B2GetUploadUrlResponse b2GetUploadUrlResponse) {
+  //   new BackBlazeB2().setOnGetUploadUrlStateListener(new BackBlazeB2.OnGetUploadUrlStateListener() {
+  //     @Override
+  //     public void onCompleted(B2GetUploadUrlResponse b2GetUploadUrlResponse) {
 
-        System.out.println(b2GetUploadUrlResponse.getUploadURL());
-        System.out.println(b2GetUploadUrlResponse.getUploadAuthorizationToken());
+  //       System.out.println(b2GetUploadUrlResponse.getUploadURL());
+  //       System.out.println(b2GetUploadUrlResponse.getUploadAuthorizationToken());
     
 
-        uploadMultipleFiles(b2GetUploadUrlResponse);
-        // uploadSingleFile(b2GetUploadUrlResponse);
-      }
-      @Override
-      public void onFailed(int status, String code, String message) {
-        System.out.println("실패: " + message);
-      }
-    }).getUploadUrl(b2AuthResponse, b2CreateBucketResponse);
-  }
-
-  private static void uploadMultipleFiles(B2GetUploadUrlResponse b2GetUploadUrlResponse) {
-    BackBlazeB2 backBlazeB2 = new BackBlazeB2();
-
-    File path = new File("");
-
-    File file = new File(path.getAbsolutePath()+"/src/file/5MB.txt");
-
-    File file2 = new File(path.getAbsolutePath()+"/src/file/10MB.txt");
-
-    ArrayList<MultiFile> arrayList = new ArrayList<>();
-    arrayList.add(new MultiFile(file, "hello1.txt"));
-    arrayList.add(new MultiFile(file2, "hello2.txt"));
-    arrayList.add(new MultiFile(file, "hello3.txt"));
-
-    backBlazeB2.setOnUploadMultipleFilesStateListener(new BackBlazeB2.OnUploadMultipleFileStateListener() {
-      @Override
-      public void onStarted() {
-        System.out.println("시작중!!");
-      }
-
-      @Override
-      public void onProgress(int percentage, long progress, long total) {
-        System.out.println("업로드 중" + percentage);
-      }
-      @Override
-      public void onCompleted(B2UploadFileResponse response, boolean allFilesUploaded) {
-        System.out.println("업로드 완료!!");
-      }
-      @Override
-      public void onFailed(int status, String code, String message) {
-        System.out.println("오류!!"+  "상태:"+ status + "코드: " +code + "메시지: " + message);
-      }
-    });
-
-    backBlazeB2.uploadMultipleFiles(arrayList, b2GetUploadUrlResponse);
-  }
-  private static void uploadSingleFile(B2GetUploadUrlResponse b2GetUploadUrlResponse) {
-
-
-    File path = new File("");
-    File file = new File(path.getAbsolutePath()+"/src/file/test.zip");
-
-    BackBlazeB2 backBlazeB2 = new BackBlazeB2();
-    backBlazeB2.setOnUploadSingleFileStateListener(new BackBlazeB2.OnUploadSingleFileStateListener() {
-      @Override
-      public void onStarted() {
-        System.out.println("시작중!!");
-      }
-
-      @Override
-      public void onProgress(int percentage, long progress, long total) {
-        System.out.println("업로드 중" + percentage);
-      }
-      @Override
-      public void onCompleted(B2UploadFileResponse response, boolean allFilesUploaded) {
-        System.out.println("업로드 완료!!");
-      }
-      @Override
-      public void onFailed(int status, String code, String message) {
-        System.out.println("오류!!"+  "상태:"+ status + "코드: " +code + "메시지: " + message);
-      }
-
-    }).uploadSingleFile(file, "MAP/test.mcworld", b2GetUploadUrlResponse);
-  }
-
-
-
-    // String contentType = B2UploadUtils.getContentType(file);
-
-//    if(file.exists()) {
-
-//       System.out.println("콘텐츠의 타입2: " + contentType);
-//       System.out.println("파일이 존재합니다!");
-    
-//     B2SingleUpload b2SingleUpload = new B2SingleUpload(uploadUrl, uploadAuthorizationToken);
-    
-//     b2SingleUpload.setOnUploadingListener(new UploadListener() {
-//       @Override
-//       public void onUploadStarted() {
-//         System.out.println("파일 업로드 시작...");
-//       }
-
-//       @Override
-//       public void onUploadProgress(int percentage, long progress, long total) {
-//           System.out.println("파일 업로드 중... "+ percentage + "%");
-//       }
-
-//       @Override
-//       public void onUploadFinished(UploadResponse response, boolean allFilesUploaded) {
-//         System.out.println("파일 업로드 완료!!");
-//       }
-
-//       @Override
-//       public void onUploadFailed(Exception e) {
-//         System.out.println("업로드 실패: " + e.getMessage());
-//       }
-//   });
-
-//   b2SingleUpload.startUploading(file, "MAP/12MB.txt");
-
-// } else{
-//   System.out.println("파일이 없습니다!");
-// }
+  //       uploadMultipleFiles(b2GetUploadUrlResponse);
+  //       // uploadSingleFile(b2GetUploadUrlResponse);
+  //     }
+  //     @Override
+  //     public void onFailed(int status, String code, String message) {
+  //       System.out.println("실패: " + message);
+  //     }
+  //   }).getUploadUrl(b2AuthResponse, b2CreateBucketResponse);
   // }
+
+  // private static void uploadMultipleFiles(B2GetUploadUrlResponse b2GetUploadUrlResponse) {
+  //   BackBlazeB2 backBlazeB2 = new BackBlazeB2();
+
+  //   File path = new File("");
+
+  //   File file = new File(path.getAbsolutePath()+"/src/file/5MB.txt");
+
+  //   File file2 = new File(path.getAbsolutePath()+"/src/file/10MB.txt");
+
+  //   ArrayList<MultiFile> arrayList = new ArrayList<>();
+  //   arrayList.add(new MultiFile(file, "hello1.txt"));
+  //   arrayList.add(new MultiFile(file2, "hello2.txt"));
+  //   arrayList.add(new MultiFile(file, "hello3.txt"));
+
+  //   backBlazeB2.setOnUploadMultipleFilesStateListener(new BackBlazeB2.OnUploadMultipleFileStateListener() {
+  //     @Override
+  //     public void onStarted() {
+  //       System.out.println("시작중!!");
+  //     }
+
+  //     @Override
+  //     public void onProgress(int percentage, long progress, long total) {
+  //       System.out.println("업로드 중" + percentage);
+  //     }
+  //     @Override
+  //     public void onCompleted(B2UploadFileResponse response, boolean allFilesUploaded) {
+  //       System.out.println("업로드 완료!!");
+  //     }
+  //     @Override
+  //     public void onFailed(int status, String code, String message) {
+  //       System.out.println("오류!!"+  "상태:"+ status + "코드: " +code + "메시지: " + message);
+  //     }
+  //   });
+
+  //   backBlazeB2.uploadMultipleFiles(arrayList, b2GetUploadUrlResponse);
+  // }
+  // private static void uploadSingleFile(B2GetUploadUrlResponse b2GetUploadUrlResponse) {
+
+
+  //   File path = new File("");
+  //   File file = new File(path.getAbsolutePath()+"/src/file/test.zip");
+
+  //   BackBlazeB2 backBlazeB2 = new BackBlazeB2();
+  //   backBlazeB2.setOnUploadSingleFileStateListener(new BackBlazeB2.OnUploadSingleFileStateListener() {
+  //     @Override
+  //     public void onStarted() {
+  //       System.out.println("시작중!!");
+  //     }
+
+  //     @Override
+  //     public void onProgress(int percentage, long progress, long total) {
+  //       System.out.println("업로드 중" + percentage);
+  //     }
+  //     @Override
+  //     public void onCompleted(B2UploadFileResponse response, boolean allFilesUploaded) {
+  //       System.out.println("업로드 완료!!");
+  //     }
+  //     @Override
+  //     public void onFailed(int status, String code, String message) {
+  //       System.out.println("오류!!"+  "상태:"+ status + "코드: " +code + "메시지: " + message);
+  //     }
+
+  //   }).uploadSingleFile(file, "MAP/test.mcworld", b2GetUploadUrlResponse);
+  // }
+
+
+
+   
 }

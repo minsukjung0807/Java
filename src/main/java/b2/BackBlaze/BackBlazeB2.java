@@ -21,15 +21,11 @@ import b2.BackBlaze.upload_file.response.B2UploadFileResponse;
 
 public class BackBlazeB2 {
 
-    public BackBlazeB2() {
-
-    }
-
     /* 
      * 인증시에 사용
      */
 
-     public OnAuthStateListener onAuthStateListener;
+    public OnAuthStateListener onAuthStateListener;
 
     public interface OnAuthStateListener { 
          abstract void onCompleted(B2AuthResponse b2AuthResponse);

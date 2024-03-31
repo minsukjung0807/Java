@@ -46,15 +46,16 @@ public class B2Auth {
                 InputStream inputStream =  connection.getInputStream();
                 requestResult = inputToJSON(inputStream);
                 onAuthStateListener.onSuccess(new B2AuthResponse(requestResult.getString("authorizationToken"), requestResult.getString("accountId"), requestResult.getString("apiUrl"), requestResult.getString("downloadUrl")));
-            }else{
+            } else {
                 InputStream errorStream =  connection.getErrorStream();
                 requestResult = inputToJSON(errorStream);
                 onAuthStateListener.onFailed(requestResult.getInt("status"), requestResult.getString("code"), requestResult.getString("message"));
             } 
         }
         
-        catch (Exception e) {
-                    this.onAuthStateListener.onFailed(0, "", "");
+        catch (IOException e) {
+                onAuthStateListener.onFailed(0, "", "");
+                return;
         }  finally {
             if(connection != null) {
                 connection.disconnect();
