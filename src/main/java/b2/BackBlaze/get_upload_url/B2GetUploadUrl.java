@@ -2,8 +2,8 @@ package b2.BackBlaze.get_upload_url;
 
 import org.json.JSONObject;
 
-import b2.BackBlaze.api.HttpRequest;
-import b2.BackBlaze.api.HttpRequest.onHttpRequestListener;
+import b2.BackBlaze.api.httpsRequest.HttpRequest;
+import b2.BackBlaze.api.httpsRequest.HttpRequest.onHttpRequestListener;
 import b2.BackBlaze.authorize_account.response.B2AuthResponse;
 import b2.BackBlaze.create_bucket.response.B2CreateBucketResponse;
 import b2.BackBlaze.get_upload_url.response.B2GetUploadUrlResponse;
@@ -31,7 +31,7 @@ public class B2GetUploadUrl {
        
         JSONObject parameters = new JSONObject();
 
-        httpRequest.setOnHttpRequestListener(new onHttpRequestListener() {
+        httpRequest.setOnHttpsRequestListener(new OnHttpsRequestListener() {
             @Override
             public void onSuccess(JSONObject response) {
                 onGetUploadUrlStateListener.onSuccess(new B2GetUploadUrlResponse(b2CreateBucketResponse, response.getString("uploadUrl"), response.getString("authorizationToken")));

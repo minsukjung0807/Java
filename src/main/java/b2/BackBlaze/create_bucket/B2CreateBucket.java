@@ -2,8 +2,8 @@ package b2.BackBlaze.create_bucket;
 
 import org.json.JSONObject;
 
-import b2.BackBlaze.api.HttpRequest;
-import b2.BackBlaze.api.HttpRequest.onHttpRequestListener;
+import b2.BackBlaze.api.httpsRequest.HttpRequest;
+import b2.BackBlaze.api.httpsRequest.HttpRequest.onHttpRequestListener;
 import b2.BackBlaze.authorize_account.response.B2AuthResponse;
 import b2.BackBlaze.create_bucket.model.BucketType;
 import b2.BackBlaze.create_bucket.response.B2CreateBucketResponse;
@@ -30,7 +30,7 @@ public class B2CreateBucket {
     public void startCreatingBucket(B2AuthResponse b2AuthResponse, String bucketName, BucketType bucketType) {
         JSONObject parameters = new JSONObject();
 
-        httpRequest.setOnHttpRequestListener(new onHttpRequestListener() {
+        httpRequest.setOnHttpRequestListener(new OnHttpsRequestListener() {
             @Override
             public void onSuccess(JSONObject response) {
                 onCreateBucketStateListener.onSuccess(new B2CreateBucketResponse(bucketName, response.getString("bucketId"), bucketType));

@@ -1,7 +1,7 @@
 package b2.BackBlaze.delete_file;
 
-import b2.BackBlaze.api.HttpRequest;
 import b2.BackBlaze.delete_file.item.DeleteFileItem;
+import b2.BackBlaze.api.httpsRequest.HttpRequest;
 import b2.BackBlaze.authorize_account.response.B2AuthResponse;
 
 import java.util.ArrayList;
@@ -48,7 +48,7 @@ public class B2DeleteMultipleFile {
                 parameters.put("fileName", filesToDelete.get(j).getFileName());
                 parameters.put("fileId", filesToDelete.get(j).getFileId());
     
-                    httpRequest.setOnHttpRequestListener(new HttpRequest.onHttpRequestListener() {
+                    httpRequest.setOnHttpRequestListener(new HttpRequest.OnHttpsRequestListener() {
                             
                         @Override
                         public void onSuccess(JSONObject response) {

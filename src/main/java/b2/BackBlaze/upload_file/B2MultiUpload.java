@@ -2,9 +2,6 @@ package b2.BackBlaze.upload_file;
 
 import java.util.concurrent.*;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import b2.BackBlaze.get_upload_url.response.B2GetUploadUrlResponse;
 import b2.BackBlaze.upload_file.model.MultiFile;
 import b2.BackBlaze.upload_file.model.UploadInterface;
@@ -28,7 +25,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class B2MultiUpload {
     
-    private boolean isMultiUpload = false;
     private ArrayList<MultiFile> files;
     private UploadListener uploadingListener;
     private int prev_percentage = 0;
@@ -44,7 +40,6 @@ public class B2MultiUpload {
 
     public void startUploadingMultipleFiles(ArrayList<MultiFile> files) {
         this.files = files;
-        isMultiUpload = true;
         try {
             uploadMultiImages(new ArrayList<>());
         } catch (IOException e) {
@@ -65,7 +60,6 @@ public class B2MultiUpload {
                                 B2UploadFileResponse uploadResponse = new B2UploadFileResponse();
     
                                 if (uploadingListener != null) {
-                                    System.out.println("업로드 중 ㅎㅎㅎ");
                                     uploadingListener.onUploadFinished(uploadResponse, true);
                                 }
                             } 
@@ -126,6 +120,9 @@ public class B2MultiUpload {
 
             }
 
+            /*
+             * 이 함수는 정상적이지 않은 오류를 반환합니다
+             */
             @Override
             public void onFailure(Call<B2UploadFileResponse> call, Throwable throwable) {
                 if(uploadingListener!=null) {

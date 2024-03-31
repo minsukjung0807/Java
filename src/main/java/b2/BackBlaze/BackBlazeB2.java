@@ -1,4 +1,4 @@
-package b2.BackBlaze.api;
+package b2.BackBlaze;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -10,7 +10,6 @@ import b2.BackBlaze.create_bucket.model.BucketType;
 import b2.BackBlaze.create_bucket.response.B2CreateBucketResponse;
 import b2.BackBlaze.delete_file.B2DeleteMultipleFile;
 import b2.BackBlaze.delete_file.B2DeleteSingleFile;
-import b2.BackBlaze.delete_file.B2DeleteMultipleFile.OnDeleteMultipleFileStateListener;
 import b2.BackBlaze.delete_file.item.DeleteFileItem;
 import b2.BackBlaze.get_upload_url.B2GetUploadUrl;
 import b2.BackBlaze.get_upload_url.response.B2GetUploadUrlResponse;
@@ -32,10 +31,10 @@ public class BackBlazeB2 {
 
      public OnAuthStateListener onAuthStateListener;
 
-     public interface OnAuthStateListener { 
+    public interface OnAuthStateListener { 
          abstract void onCompleted(B2AuthResponse b2AuthResponse);
          abstract void onFailed(int status, String code, String message);
-     }
+    }
  
      public void setOnAuthStateListener(OnAuthStateListener onAuthStateListener){
          this.onAuthStateListener = onAuthStateListener;

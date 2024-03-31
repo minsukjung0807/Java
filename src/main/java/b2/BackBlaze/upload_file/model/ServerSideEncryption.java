@@ -8,6 +8,7 @@ public class ServerSideEncryption {
     @SerializedName("algorithm")
     @Expose
     private String algorithm;
+    
     @SerializedName("mode")
     @Expose
     private String mode;

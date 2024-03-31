@@ -2,25 +2,21 @@ package b2.BackBlaze.upload_file.model;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-
 import org.apache.commons.io.FileUtils;
 
 
 public class MultiFile {
+
     public byte[] fileBytes;
     public String fileName;
     public String contentType;
 
     public MultiFile(File file, String fileName) {
 
-         InputStream iStream = null;
                 try {
                   String fileType = B2UploadUtils.getContentType(file);
-
-                  iStream = FileUtils.openInputStream(file);
                   
-                  byte[] inputData = B2UploadUtils.getBytes(iStream);
+                  byte[] inputData = B2UploadUtils.getBytes(FileUtils.openInputStream(file));
 
                   init(inputData, fileName, fileType);
 

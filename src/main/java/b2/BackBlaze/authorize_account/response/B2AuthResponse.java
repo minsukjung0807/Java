@@ -1,15 +1,15 @@
 package b2.BackBlaze.authorize_account.response;
 
 /**
- * Represents a session obtained using the b2_authorize_account method.
+ * b2_authorize_account 방식으로 가져온 결과 값을 나타내는 클래스입니다.
  */
 public class B2AuthResponse {
 
     private String authorizationToken, accountID, APIURL, downloadURL;
 
     /**
-     * Constructs a B2Session using values which are returned by the B2 API.
-     *
+     * B2 API로부터 받아온 값들을 사용하여 B2AuthResponse를 생성합니다.
+     * 
      * @param authorizationToken Represents the authorizationToken returned by B2
      * @param accountID Represents the accountID returned by B2
      * @param APIURL Represents the api URI which should be used for further API calls
