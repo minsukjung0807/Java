@@ -22,7 +22,6 @@ import java.security.NoSuchAlgorithmException;
 import java.util.*;
 import retrofit2.Call;
 import retrofit2.Callback;
-import retrofit2.HttpException;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -109,7 +108,7 @@ public class B2MultiUpload {
                 if (uploadingListener != null) {
 
                     if(response.code() < 400){
-                        uploadingListener.onUploadFinished(response.body(), !isMultiUpload);
+                        uploadingListener.onUploadFinished(response.body(), false);
                     } else {
                         uploadingListener.onUploadFailed(response.body().getStatus(), response.body().getCode(), response.body().getMessage());  
                     }

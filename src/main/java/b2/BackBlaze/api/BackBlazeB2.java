@@ -8,7 +8,10 @@ import b2.BackBlaze.authorize_account.response.B2AuthResponse;
 import b2.BackBlaze.create_bucket.B2CreateBucket;
 import b2.BackBlaze.create_bucket.model.BucketType;
 import b2.BackBlaze.create_bucket.response.B2CreateBucketResponse;
+import b2.BackBlaze.delete_file.B2DeleteMultipleFile;
 import b2.BackBlaze.delete_file.B2DeleteSingleFile;
+import b2.BackBlaze.delete_file.B2DeleteMultipleFile.OnDeleteMultipleFileStateListener;
+import b2.BackBlaze.delete_file.item.DeleteFileItem;
 import b2.BackBlaze.get_upload_url.B2GetUploadUrl;
 import b2.BackBlaze.get_upload_url.response.B2GetUploadUrlResponse;
 import b2.BackBlaze.upload_file.B2MultiUpload;
@@ -34,9 +37,8 @@ public class BackBlazeB2 {
          abstract void onFailed(int status, String code, String message);
      }
  
-     public BackBlazeB2 setOnAuthStateListener(OnAuthStateListener onAuthStateListener){
+     public void setOnAuthStateListener(OnAuthStateListener onAuthStateListener){
          this.onAuthStateListener = onAuthStateListener;
-         return this;
      }
  
      public void authorize() {
@@ -71,9 +73,8 @@ public class BackBlazeB2 {
         abstract void onFailed(int status, String code, String message);
     }
 
-    public BackBlazeB2 setOnCreateBucketStateListener(OnCreateBucketStateListener onCreateBucketStateListener){
+    public void setOnCreateBucketStateListener(OnCreateBucketStateListener onCreateBucketStateListener){
         this.onCreateBucketStateListener = onCreateBucketStateListener;
-        return this;
     }
 
     public void createBucket(B2AuthResponse b2AuthResponse, String bucketName, BucketType bucketType) {
@@ -241,12 +242,12 @@ public class BackBlazeB2 {
         abstract void onFailed(int status, String code, String message);
     }
 
-    public BackBlazeB2 setOnMultipleFilesStateListener(OnUploadMultipleFileStateListener onUploadMultipleFileStateListener){
+    public BackBlazeB2 setOnUploadMultipleFilesStateListener(OnUploadMultipleFileStateListener onUploadMultipleFileStateListener){
         this.onUploadMultipleFileStateListener = onUploadMultipleFileStateListener;
         return this;
     }
 
-    public void uploadMultipleFiles(ArrayList<MultiFile> multiFiles, B2GetUploadUrlResponse b2GetUploadUrlResponse) {
+    public void uploadMultipleFiles(ArrayList<MultiFile> multiFilesArrayList, B2GetUploadUrlResponse b2GetUploadUrlResponse) {
         
         B2MultiUpload b2MultiUpload = new B2MultiUpload(b2GetUploadUrlResponse);
 
@@ -275,8 +276,52 @@ public class BackBlazeB2 {
         }
 
 
-        b2MultiUpload.startUploadingMultipleFiles(multiFiles);
+        b2MultiUpload.startUploadingMultipleFiles(multiFilesArrayList);
     }
+
+    /* 
+     * 많은 파일 삭제 시 사용
+     */
+
+     public OnDeleteMultipleFileStateListener onDeleteMultipleFileStateListener;
+
+     public interface OnDeleteMultipleFileStateListener { 
+         abstract void onFinish();
+         abstract void onSuccess(int nThItem);
+         abstract void onFailed(int status, String code, String message, int nThItem);
+     }
+ 
+     public void setOnDeleteMultipleFileListener(OnDeleteMultipleFileStateListener onDeleteMultipleFileStateListener){
+         this.onDeleteMultipleFileStateListener = onDeleteMultipleFileStateListener;
+     }
+ 
+     public void deleteMultipleFiles(B2AuthResponse b2AuthResponse, ArrayList<DeleteFileItem> filesToDelete) {
+         
+         B2DeleteMultipleFile b2DeleteMultipleFile = new B2DeleteMultipleFile();
+        
+         if(onDeleteMultipleFileStateListener != null) {
+            
+            b2DeleteMultipleFile.setOnDeleteMultipleFilesStateListener(new B2DeleteMultipleFile.OnDeleteMultipleFileStateListener() {
+                @Override
+                public void onSuccess(int nThItem) {
+                    onDeleteMultipleFileStateListener.onSuccess(nThItem);
+                }
+
+                @Override
+                public void onFailed(int status, String code, String message, int nThItem) {
+                    onDeleteMultipleFileStateListener.onFailed(status, code, message, nThItem);
+                }
+
+                @Override
+                public void onFinish() {
+                    onDeleteMultipleFileStateListener.onFinish();
+                }
+             });
+         }
+
+         b2DeleteMultipleFile.setFilesToDelete(filesToDelete);
+         b2DeleteMultipleFile.startDeletingFiles(b2AuthResponse);
+     }
 
 
     
