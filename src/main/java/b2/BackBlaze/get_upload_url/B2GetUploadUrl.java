@@ -3,7 +3,7 @@ package b2.BackBlaze.get_upload_url;
 import org.json.JSONObject;
 
 import b2.BackBlaze.api.httpsRequest.HttpRequest;
-import b2.BackBlaze.api.httpsRequest.HttpRequest.onHttpRequestListener;
+import b2.BackBlaze.api.httpsRequest.listener.OnHttpsRequestListener;
 import b2.BackBlaze.authorize_account.response.B2AuthResponse;
 import b2.BackBlaze.create_bucket.response.B2CreateBucketResponse;
 import b2.BackBlaze.get_upload_url.response.B2GetUploadUrlResponse;
@@ -43,7 +43,6 @@ public class B2GetUploadUrl {
            });
 
         parameters.put("bucketId", b2CreateBucketResponse.getID());
-
         httpRequest.call(b2AuthResponse.getAPIURL()+ "/b2api/v3/", "b2_get_upload_url", b2AuthResponse.getAuthToken(), parameters, "GET");
     }
 }

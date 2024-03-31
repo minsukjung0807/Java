@@ -31,16 +31,26 @@ public class HttpRequest {
         this.onHttpRequestListener = onHttpRequestListener;
     }
 
-    public JSONObject call(String URL, String method, String authorization, JSONObject body, String requestMethod) {
+     /**
+     * Parameter들을 이용하여 HTTP 통신을 요청하고 성공/실패 여부를 호출하며, JSONObject를 반환합니다.
+     * 
+     * @param URL B2 API와 통신하기 위한 URL 주소입니다
+     * @param method B2 API 통신에 사용될 요청 메서드입니다
+     * @param authToken b2_authorize_account로 얻은 인증 키입니다
+     * @param body HTTP 통신에 같이 첨부할 body 구조입니다
+     * @param requestMethod GET, POST, DELETE, PUT 등과 같은 HTTP 요청 메서드입니다
+     * 
+     * @return B2 통신으로 전달받은 결과를 JSONObject로 반환합니다 
+     */
+    public JSONObject call(String URL, String method, String authToken, JSONObject body, String requestMethod) {
         
         HttpsURLConnection httpsURLConnection = null;
         DataOutputStream dataOutputStream;
 
         try {
-
-            httpsURLConnection = getHttpsURLConnection(URL, method);
+            httpsURLConnection = buildHttpsURLConnection(URL, method);
             httpsURLConnection.setRequestMethod(requestMethod);
-            httpsURLConnection.setRequestProperty("Authorization", authorization);
+            httpsURLConnection.setRequestProperty("Authorization", authToken);
             httpsURLConnection.setDoOutput(true);
 
             dataOutputStream = new DataOutputStream(httpsURLConnection.getOutputStream());
@@ -75,18 +85,29 @@ public class HttpRequest {
             return requestResult;
     }
 
+    /**
+     * 
+     * @return B2 통신으로 전달받은 결과를 JSONObject로 반환합니다 
+     */
     private JSONObject connectionFailed(HttpsURLConnection httpsURLConnection) throws IOException {
             JSONObject requestResult = inputToJSON(httpsURLConnection.getErrorStream());
             onHttpRequestListener.onFailed(requestResult);
             return requestResult;
     }
 
-    private HttpsURLConnection getHttpsURLConnection(String URL, String method) throws IOException {
+    /**
+     * HttpsURLConnection을 생성합니다
+     * @param URL B2 API와 통신하기 위한 URL 주소입니다
+     * @param method B2 API 통신에 사용될 요청 메서드입니다
+     * @return B2 통신으로 전달받은 결과를 JSONObject로 반환합니다 
+     * @throws IOException
+     */
+    private HttpsURLConnection buildHttpsURLConnection(String URL, String method) throws IOException {
         URL url = new URL(URL + method);
 
         if(url.openConnection() instanceof HttpsURLConnection) 
             return (HttpsURLConnection) url.openConnection();
-            
+
         return null;
     }
 }

@@ -3,6 +3,7 @@ package b2.BackBlaze.delete_file;
 import org.json.JSONObject;
 
 import b2.BackBlaze.api.httpsRequest.HttpRequest;
+import b2.BackBlaze.api.httpsRequest.listener.OnHttpsRequestListener;
 import b2.BackBlaze.authorize_account.response.B2AuthResponse;
 
 
@@ -28,7 +29,7 @@ public class B2DeleteSingleFile {
     public void startDeletingFile(B2AuthResponse b2AuthResponse, String fileName, String fileId) {
         JSONObject parameters = new JSONObject();
 
-        httpRequest.setOnHttpRequestListener(new HttpRequest.OnHttpsRequestListener() {
+        httpRequest.setOnHttpsRequestListener(new OnHttpsRequestListener() {
             @Override
             public void onSuccess(JSONObject response) {
                 onDeleteFileStateListener.onSuccess();
@@ -37,8 +38,8 @@ public class B2DeleteSingleFile {
             public void onFailed(JSONObject response) {
                 onDeleteFileStateListener.onFailed(response.getInt("status"), response.getString("code"), response.getString("message"));
             }
-           });
-
+        });
+    
         parameters.put("fileName", fileName);
         parameters.put("fileId", fileId);
 
