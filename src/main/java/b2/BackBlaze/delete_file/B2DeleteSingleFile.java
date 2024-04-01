@@ -3,7 +3,7 @@ package b2.BackBlaze.delete_file;
 import org.json.JSONObject;
 
 import b2.BackBlaze.api.httpsRequest.HttpRequest;
-import b2.BackBlaze.api.httpsRequest.listener.OnHttpsRequestListener;
+import b2.BackBlaze.api.httpsRequest.HttpRequest.OnHttpsRequestListener;
 import b2.BackBlaze.authorize_account.response.B2AuthResponse;
 
 

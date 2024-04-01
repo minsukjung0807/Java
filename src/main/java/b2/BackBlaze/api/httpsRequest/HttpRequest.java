@@ -9,7 +9,6 @@ import java.net.URL;
 import javax.net.ssl.HttpsURLConnection;
 import org.json.JSONObject;
 
-import b2.BackBlaze.api.httpsRequest.listener.OnHttpsRequestListener;
 
     /**
      * 이 클래스는 B2 API 사용때 공통으로 이용할 HttpsURL 통신 함수를 제공하고 있습니다. 

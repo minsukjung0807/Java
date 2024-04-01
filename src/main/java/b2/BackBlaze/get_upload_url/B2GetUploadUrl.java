@@ -3,7 +3,7 @@ package b2.BackBlaze.get_upload_url;
 import org.json.JSONObject;
 
 import b2.BackBlaze.api.httpsRequest.HttpRequest;
-import b2.BackBlaze.api.httpsRequest.listener.OnHttpsRequestListener;
+import b2.BackBlaze.api.httpsRequest.HttpRequest.OnHttpsRequestListener;
 import b2.BackBlaze.authorize_account.response.B2AuthResponse;
 import b2.BackBlaze.create_bucket.response.B2CreateBucketResponse;
 import b2.BackBlaze.get_upload_url.response.B2GetUploadUrlResponse;
