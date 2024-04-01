@@ -39,13 +39,16 @@ public class B2MultiUpload {
     }
 
     public void startUploadingMultipleFiles(ArrayList<MultiFile> files) {
-        this.files = files;
-        try {
-            uploadMultiImages(new ArrayList<>());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        if(files != null && files.size() > 0 ) {
 
+            this.files = files;
+
+            try {
+                uploadMultiImages(new ArrayList<>());
+            } catch (IOException e) {
+                uploadingListener.onUploadFailed(10000, "ERROR", "에러: " + e.getMessage());
+            }
+        }
     }
 
     private void uploadMultiImages(ArrayList<MultiFile> file) throws IOException {
@@ -126,11 +129,11 @@ public class B2MultiUpload {
             @Override
             public void onFailure(Call<B2UploadFileResponse> call, Throwable throwable) {
                 if(uploadingListener!=null) {
-                    uploadingListener.onUploadFailed(0, "", "");  
+                    uploadingListener.onUploadFailed(10000, "ERROR", "에러: " + throwable.getMessage());
                 }
             }
         });
-    }
+            }
 
     }
 

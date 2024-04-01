@@ -16,13 +16,18 @@ import okhttp3.OkHttpClient;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.time.Duration;
 import java.util.Formatter;
 
 import retrofit2.Call;
@@ -56,9 +61,10 @@ public class B2SingleUpload {
         if(file.exists()) {
             InputStream iStream = null;
             try {
-
+                // byte[] array = Files.readAllBytes(Paths.get(file.getPath())); 
                 iStream = FileUtils.openInputStream(file);
-                byte[] inputData = getBytes(iStream);
+                // byte[] inputData = getBytes(iStream);
+                byte[] inputData = readFileToBytesWithProgress(file.getPath());
 
                 checkIfAuthed(inputData, fileName);
 
@@ -87,7 +93,10 @@ public class B2SingleUpload {
             String path = getPath(url);
             String baseUrl = getBaseUrl(url);
     
-            client = new OkHttpClient.Builder().build();
+            client = new OkHttpClient.Builder()
+            .connectTimeout(2, TimeUnit.MINUTES)
+            .readTimeout(2, TimeUnit.MINUTES)
+            .writeTimeout(2, TimeUnit.MINUTES).build();
             
             Retrofit retrofit = buildRetrofit(baseUrl);
     
@@ -123,8 +132,10 @@ public class B2SingleUpload {
                 public void onFailure(Call<B2UploadFileResponse> call, Throwable throwable) {
 
                     if(uploadingListener!=null) {
-                        uploadingListener.onUploadFailed(0, "", "");  
+                        uploadingListener.onUploadFailed(0, "", throwable.getMessage());  
                     }
+
+                    closeHttpClient();
             }
         });
                         
@@ -178,17 +189,70 @@ public class B2SingleUpload {
         return Hex;
     }
 
+    // byte[] readFileToBytes(String filePath) throws IOException {
+    //     Files.readAllBytes()
+    // }
+
 
     public byte[] getBytes(InputStream inputStream) throws IOException {
-        ByteArrayOutputStream byteBuffer = new ByteArrayOutputStream();
-        int bufferSize = 1024;
-        byte[] buffer = new byte[bufferSize];
 
-        int len = 0;
-        while ((len = inputStream.read(buffer)) != -1) {
-            byteBuffer.write(buffer, 0, len);
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        
+ 
+        int byteRead = 0;
+        //inpustream가 한번에 가능한 최대치만큼 설정
+            byte[] buffer = new byte[inputStream.available()];  
+            while((byteRead = inputStream.read(buffer))>0){
+        out.write(buffer, 0, byteRead);
         }
-        return byteBuffer.toByteArray();
+        out.close();
+        return out.toByteArray();
+    //     ByteArrayOutputStream byteArray = new ByteArrayOutputStream();
+    //     int bufferSize = 1024;
+    //     byte[] buffer = new byte[bufferSize];
+    //     int len = 0;
+    //     while ((len = inputStream.read(buffer)) != -1) {
+    //         byteArray.write(buffer, 0, len);
+    //     }
+    //    return  byteArray.toByteArray();
+    }
+
+    public static byte[] readFileToBytesWithProgress(String filePath) throws IOException {
+        Path path = Paths.get(filePath);
+        long fileSize = Files.size(path);
+        
+        try (FileInputStream fis = new FileInputStream(filePath)) {
+            byte[] buffer = new byte[1024];
+            int bytesRead;
+            long totalBytesRead = 0;
+            byte[] result = new byte[(int) fileSize];
+            int offset = 0;
+            
+            int y = 0;
+
+            while ((bytesRead = fis.read(buffer)) != -1) {
+                // bytesRead는 현재 읽은 바이트 수입니다.
+                // 여기에 원하는 작업을 수행하면 됩니다.
+                
+                totalBytesRead += bytesRead;
+                
+                // 진행 상태 출력 예시
+                double progress = (double) totalBytesRead / fileSize * 100;
+                
+                int x = (int)(progress);
+                if(y != x) {
+                    System.out.println("진행 상태: " +  x + "%");
+                    y = x;
+                }
+                
+                
+                // 읽은 데이터를 result 배열에 추가
+                System.arraycopy(buffer, 0, result, offset, bytesRead);
+                offset += bytesRead;
+            }
+            
+            return result;
+        }
     }
 
     // HttpClient 네트워크 닫기 (Okio watch dog 닫기)

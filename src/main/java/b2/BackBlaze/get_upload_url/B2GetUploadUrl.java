@@ -40,6 +40,11 @@ public class B2GetUploadUrl {
             public void onFailed(JSONObject response) {
                 onGetUploadUrlStateListener.onFailed(response.getInt("status"), response.getString("code"), response.getString("message"));
             }
+            @Override
+            public void onError(Exception e) {
+                onGetUploadUrlStateListener.onFailed(0, "EXCEPTION", "에러: " + e.getMessage());
+            }
+            
            });
 
         parameters.put("bucketId", b2CreateBucketResponse.getID());

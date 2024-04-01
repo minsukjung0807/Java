@@ -69,7 +69,8 @@ public class HttpRequest {
                 return connectionFailed(httpsURLConnection);
             }
             
-        } catch (IOException ioException) {
+        } catch (Exception e) {
+            onHttpsRequestListener.onError(e);
             return new JSONObject();
         } finally {
             if(httpsURLConnection != null)

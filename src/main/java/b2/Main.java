@@ -1,21 +1,28 @@
 package b2;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-
+import java.nio.file.*;
 import b2.BackBlaze.BackBlazeB2;
 import b2.BackBlaze.authorize_account.response.B2AuthResponse;
-import b2.BackBlaze.create_bucket.model.BucketType;
-import b2.BackBlaze.create_bucket.response.B2CreateBucketResponse;
 import b2.BackBlaze.delete_file.item.DeleteFileItem;
 import b2.BackBlaze.get_upload_url.response.B2GetUploadUrlResponse;
 import b2.BackBlaze.upload_file.response.B2UploadFileResponse;
-import b2.BackBlaze.upload_file.model.MultiFile;
+import b2.BackBlaze.create_bucket.model.BucketType;
+import b2.BackBlaze.create_bucket.response.B2CreateBucketResponse;
 
 import java.util.*;
 
+/* 테스트 파일 다운로드 주소
+ * http://212.183.159.230/1GB.zip
+ * http://212.183.159.230/512MB.zip
+ * http://212.183.159.230/200MB.zip
+ * http://212.183.159.230/100MB.zip
+ * http://212.183.159.230/50MB.zip
+ * http://212.183.159.230/20MB.zip
+ * http://212.183.159.230/10MB.zip
+ * http://212.183.159.230/5MB.zip
+ * 
+ */
 public class Main {
   
     public static void main(String[] args) {
@@ -36,10 +43,10 @@ public class Main {
           System.out.println("Account Id: " + b2AuthResponse.getAccountID());
 
           // createBucket(b2AuthResponse);
-          // B2CreateBucketResponse b2CreateBucketResponse = new B2CreateBucketResponse("mcpehub0403", "2e862fa05f0f830885e8081b", BucketType.ALL_PRIVATE);
-          
-          // getUploadUrl(b2AuthResponse, b2CreateBucketResponse);
-          deleteMultipleFiles(b2AuthResponse);
+
+          B2CreateBucketResponse b2CreateBucketResponse = new B2CreateBucketResponse("mcpehub0403", "2e862fa05f0f830885e8081b", BucketType.ALL_PRIVATE);
+          getUploadUrl(b2AuthResponse, b2CreateBucketResponse);
+          // deleteMultipleFiles(b2AuthResponse);
           // deleteFile(b2AuthResponse, "MAP/Image2.jpg","4_z2e862fa05f0f830885e8081b_f1085e5a60383817f_d20240329_m101822_c005_v0501017_t0033_u01711707502593");
         }
       @Override
@@ -123,30 +130,30 @@ public class Main {
       }
     });
 
-    backBlazeB2.deleteMultipleFiles(b2AuthResponse, deleteFileItems);
+    backBlazeB2.deleteMultipleFiles(b2AuthResponse, null);
 
   }
 
-  // private static void getUploadUrl(B2AuthResponse b2AuthResponse, B2CreateBucketResponse b2CreateBucketResponse) {
+  private static void getUploadUrl(B2AuthResponse b2AuthResponse, B2CreateBucketResponse b2CreateBucketResponse) {
 
 
-  //   new BackBlazeB2().setOnGetUploadUrlStateListener(new BackBlazeB2.OnGetUploadUrlStateListener() {
-  //     @Override
-  //     public void onCompleted(B2GetUploadUrlResponse b2GetUploadUrlResponse) {
+    new BackBlazeB2().setOnGetUploadUrlStateListener(new BackBlazeB2.OnGetUploadUrlStateListener() {
+      @Override
+      public void onCompleted(B2GetUploadUrlResponse b2GetUploadUrlResponse) {
 
-  //       System.out.println(b2GetUploadUrlResponse.getUploadURL());
-  //       System.out.println(b2GetUploadUrlResponse.getUploadAuthorizationToken());
+        System.out.println(b2GetUploadUrlResponse.getUploadURL());
+        System.out.println(b2GetUploadUrlResponse.getUploadAuthorizationToken());
     
 
-  //       uploadMultipleFiles(b2GetUploadUrlResponse);
-  //       // uploadSingleFile(b2GetUploadUrlResponse);
-  //     }
-  //     @Override
-  //     public void onFailed(int status, String code, String message) {
-  //       System.out.println("실패: " + message);
-  //     }
-  //   }).getUploadUrl(b2AuthResponse, b2CreateBucketResponse);
-  // }
+        // uploadMultipleFiles(b2GetUploadUrlResponse);
+        uploadSingleFile(b2GetUploadUrlResponse);
+      }
+      @Override
+      public void onFailed(int status, String code, String message) {
+        System.out.println("실패: " + message);
+      }
+    }).getUploadUrl(b2AuthResponse, b2CreateBucketResponse);
+  }
 
   // private static void uploadMultipleFiles(B2GetUploadUrlResponse b2GetUploadUrlResponse) {
   //   BackBlazeB2 backBlazeB2 = new BackBlazeB2();
@@ -184,34 +191,34 @@ public class Main {
 
   //   backBlazeB2.uploadMultipleFiles(arrayList, b2GetUploadUrlResponse);
   // }
-  // private static void uploadSingleFile(B2GetUploadUrlResponse b2GetUploadUrlResponse) {
+  private static void uploadSingleFile(B2GetUploadUrlResponse b2GetUploadUrlResponse) {
 
 
-  //   File path = new File("");
-  //   File file = new File(path.getAbsolutePath()+"/src/file/test.zip");
+    File path = new File("");
+    File file = new File(path.getAbsolutePath()+"/src/file/1GB.zip");
 
-  //   BackBlazeB2 backBlazeB2 = new BackBlazeB2();
-  //   backBlazeB2.setOnUploadSingleFileStateListener(new BackBlazeB2.OnUploadSingleFileStateListener() {
-  //     @Override
-  //     public void onStarted() {
-  //       System.out.println("시작중!!");
-  //     }
+    BackBlazeB2 backBlazeB2 = new BackBlazeB2();
+    backBlazeB2.setOnUploadSingleFileStateListener(new BackBlazeB2.OnUploadSingleFileStateListener() {
+      @Override
+      public void onStarted() {
+        System.out.println("시작중!!");
+      }
 
-  //     @Override
-  //     public void onProgress(int percentage, long progress, long total) {
-  //       System.out.println("업로드 중" + percentage);
-  //     }
-  //     @Override
-  //     public void onCompleted(B2UploadFileResponse response, boolean allFilesUploaded) {
-  //       System.out.println("업로드 완료!!");
-  //     }
-  //     @Override
-  //     public void onFailed(int status, String code, String message) {
-  //       System.out.println("오류!!"+  "상태:"+ status + "코드: " +code + "메시지: " + message);
-  //     }
+      @Override
+      public void onProgress(int percentage, long progress, long total) {
+        System.out.println("업로드 중" + percentage);
+      }
+      @Override
+      public void onCompleted(B2UploadFileResponse response, boolean allFilesUploaded) {
+        System.out.println("업로드 완료!!");
+      }
+      @Override
+      public void onFailed(int status, String code, String message) {
+        System.out.println("오류!!"+  "상태:"+ status + "코드: " +code + "메시지: " + message);
+      }
 
-  //   }).uploadSingleFile(file, "MAP/test.mcworld", b2GetUploadUrlResponse);
-  // }
+    }).uploadSingleFile(file, "MAP/test2.mcworld", b2GetUploadUrlResponse);
+  }
 
 
 

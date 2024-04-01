@@ -1,19 +1,19 @@
 package b2.BackBlaze.authorize_account.response;
 
 /**
- * b2_authorize_account 방식으로 가져온 결과 값을 나타내는 클래스입니다.
+ * b2_authorize_account으로 통신 받은 결과 값을 나타내는 클래스입니다.
  */
 public class B2AuthResponse {
 
     private String authorizationToken, accountID, APIURL, downloadURL;
 
     /**
-     * B2 API로부터 받아온 값들을 사용하여 B2AuthResponse를 생성합니다.
+     * B2 API로부터 통신 받은 값들을 사용하여 B2AuthResponse를 생성합니다.
      * 
-     * @param authorizationToken Represents the authorizationToken returned by B2
-     * @param accountID Represents the accountID returned by B2
-     * @param APIURL Represents the api URI which should be used for further API calls
-     * @param downloadURL Represents the download URL which should be used for retrieving files
+     * @param authorizationToken B2로부터 반환된 인증 토큰입니다
+     * @param accountID B2로부터 반환된 accountID입니다
+     * @param APIURL B2의 API 호출을 위해서 사용되는 URL입니다
+     * @param downloadURL 파일을 다운로드 받기위해 사용되는 URL입니다
      */
     public B2AuthResponse(String authorizationToken, String accountID, String APIURL, String downloadURL){
         this.authorizationToken = authorizationToken;

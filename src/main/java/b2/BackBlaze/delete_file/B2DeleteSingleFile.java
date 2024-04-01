@@ -38,6 +38,11 @@ public class B2DeleteSingleFile {
             public void onFailed(JSONObject response) {
                 onDeleteFileStateListener.onFailed(response.getInt("status"), response.getString("code"), response.getString("message"));
             }
+
+            @Override
+            public void onError(Exception e) {
+                onDeleteFileStateListener.onFailed(10000, "EXCEPTION", "에러: " + e.getMessage());
+            }
         });
     
         parameters.put("fileName", fileName);

@@ -39,6 +39,11 @@ public class B2CreateBucket {
             public void onFailed(JSONObject response) {
                 onCreateBucketStateListener.onFailed(response.getInt("status"), response.getString("code"), response.getString("message"));
             }
+
+            @Override
+            public void onError(Exception e) {
+                onCreateBucketStateListener.onFailed(0, "EXCEPTION", "에러: " + e.getMessage());
+            }
         }); 
 
         parameters.put("accountId", b2AuthResponse.getAccountID());

@@ -30,6 +30,7 @@ public class B2Auth {
 
 
     public void startAuthenticating() {
+
         HttpURLConnection connection = null;
         try {
                 URL url = new URL("https://api.backblazeb2.com/b2api/v2/b2_authorize_account");
@@ -53,9 +54,8 @@ public class B2Auth {
             } 
         }
         
-        catch (IOException e) {
+        catch (Exception e) {
                 onAuthStateListener.onFailed(0, "", "");
-                return;
         }  finally {
             if(connection != null) {
                 connection.disconnect();
