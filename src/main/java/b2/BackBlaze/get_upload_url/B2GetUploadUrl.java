@@ -32,6 +32,7 @@ public class B2GetUploadUrl {
         JSONObject parameters = new JSONObject();
 
         httpRequest.setOnHttpsRequestListener(new OnHttpsRequestListener() {
+
             @Override
             public void onSuccess(JSONObject response) {
                 onGetUploadUrlStateListener.onSuccess(new B2GetUploadUrlResponse(b2CreateBucketResponse, response.getString("uploadUrl"), response.getString("authorizationToken")));
@@ -42,7 +43,7 @@ public class B2GetUploadUrl {
             }
             @Override
             public void onError(Exception e) {
-                onGetUploadUrlStateListener.onFailed(0, "EXCEPTION", "에러: " + e.getMessage());
+                onGetUploadUrlStateListener.onFailed(0, "ERROR", e.getMessage());
             }
             
            });

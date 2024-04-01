@@ -17,6 +17,9 @@ import b2.BackBlaze.authorize_account.response.B2AuthResponse;
 
 public class B2Auth {
 
+    private String encodedAuth;
+    private JSONObject requestResult;
+
      public interface OnAuthStateListener { 
         abstract void onSuccess(B2AuthResponse b2AuthResponse);
         abstract void onFailed(int status, String code, String message);
@@ -35,13 +38,13 @@ public class B2Auth {
         try {
                 URL url = new URL("https://api.backblazeb2.com/b2api/v2/b2_authorize_account");
                 connection = (HttpURLConnection) url.openConnection();
-                String encodedAuth = encodeAuthorization(B2Keys.APP_KEY_ID + ":" + B2Keys.APP_KEY);
+                encodedAuth = encodeAuthorization(B2Keys.APP_KEY_ID + ":" + B2Keys.APP_KEY);
                 connection.setRequestProperty("Authorization", encodedAuth);
                 connection.setRequestMethod("GET");
                 connection.setConnectTimeout(5000);   
                 connection.setReadTimeout(1000);
 
-                JSONObject requestResult;
+                
 
             if(connection.getResponseCode() < 400){
                 InputStream inputStream =  connection.getInputStream();

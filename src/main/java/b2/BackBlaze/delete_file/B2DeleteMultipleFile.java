@@ -69,14 +69,14 @@ public class B2DeleteMultipleFile {
 
                         @Override
                         public void onError(Exception e) {
-                            onDeleteMultipleFileStateListener.onFailed(0, "0", "에러: " + e.getMessage(), 0);
+                            onDeleteMultipleFileStateListener.onFailed(0, "ERROR", e.getMessage(), 0);
                         }
                     });
     
                 httpRequest.call(b2AuthResponse.getAPIURL() + "/b2api/v3/", "b2_delete_file_version", b2AuthResponse.getAuthToken(), parameters, "POST");
             }
         } else {
-            onDeleteMultipleFileStateListener.onFailed(0, "EXCEPTION", "삭제할 파일이 존재하지 않습니다!!", 0);
+            onDeleteMultipleFileStateListener.onFailed(0, "ERROR", "삭제할 파일이 존재하지 않습니다", 0);
         }
        
     }

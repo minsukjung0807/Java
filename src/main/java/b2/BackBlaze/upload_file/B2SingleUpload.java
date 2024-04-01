@@ -48,7 +48,6 @@ public class B2SingleUpload {
     private String uploadAuthorizationToken;
     private int prev_percentage = 0;
 
-    private boolean isMultiUpload = false;
 
     public B2SingleUpload(B2GetUploadUrlResponse b2GetUploadUrlResponse) {
         this.uploadUrl = b2GetUploadUrlResponse.getUploadURL();
@@ -56,14 +55,9 @@ public class B2SingleUpload {
     }
 
     public void startUploading(File file, String fileName) {
-        isMultiUpload = false;
 
         if(file.exists()) {
-            InputStream iStream = null;
             try {
-                // byte[] array = Files.readAllBytes(Paths.get(file.getPath())); 
-                iStream = FileUtils.openInputStream(file);
-                // byte[] inputData = getBytes(iStream);
                 byte[] inputData = readFileToBytesWithProgress(file.getPath());
 
                 checkIfAuthed(inputData, fileName);
@@ -72,11 +66,11 @@ public class B2SingleUpload {
                     uploadingListener.onUploadStarted();
                 }
 
-            } catch (IOException e) {
-                e.printStackTrace();
+            } catch (Exception e) {
+                uploadingListener.onUploadFailed(0, "ERROR", e.getMessage());
             }
           } else {
-            System.out.println("파일이 없습니다!");
+            uploadingListener.onUploadFailed(0, "ERROR", "File Not Found");
           }
         }
         
@@ -118,7 +112,7 @@ public class B2SingleUpload {
                     if (uploadingListener != null) {
 
                         if(response.code() < 400){
-                            uploadingListener.onUploadFinished(response.body(), !isMultiUpload);
+                            uploadingListener.onUploadFinished(response.body(), false);
                         } else {
                             uploadingListener.onUploadFailed(response.body().getStatus(), response.body().getCode(), response.body().getMessage());  
                         }
@@ -132,7 +126,7 @@ public class B2SingleUpload {
                 public void onFailure(Call<B2UploadFileResponse> call, Throwable throwable) {
 
                     if(uploadingListener!=null) {
-                        uploadingListener.onUploadFailed(0, "", throwable.getMessage());  
+                        uploadingListener.onUploadFailed(0, "ERROR", throwable.getMessage());  
                     }
 
                     closeHttpClient();
@@ -189,34 +183,6 @@ public class B2SingleUpload {
         return Hex;
     }
 
-    // byte[] readFileToBytes(String filePath) throws IOException {
-    //     Files.readAllBytes()
-    // }
-
-
-    public byte[] getBytes(InputStream inputStream) throws IOException {
-
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        
- 
-        int byteRead = 0;
-        //inpustream가 한번에 가능한 최대치만큼 설정
-            byte[] buffer = new byte[inputStream.available()];  
-            while((byteRead = inputStream.read(buffer))>0){
-        out.write(buffer, 0, byteRead);
-        }
-        out.close();
-        return out.toByteArray();
-    //     ByteArrayOutputStream byteArray = new ByteArrayOutputStream();
-    //     int bufferSize = 1024;
-    //     byte[] buffer = new byte[bufferSize];
-    //     int len = 0;
-    //     while ((len = inputStream.read(buffer)) != -1) {
-    //         byteArray.write(buffer, 0, len);
-    //     }
-    //    return  byteArray.toByteArray();
-    }
-
     public static byte[] readFileToBytesWithProgress(String filePath) throws IOException {
         Path path = Paths.get(filePath);
         long fileSize = Files.size(path);
@@ -240,6 +206,7 @@ public class B2SingleUpload {
                 double progress = (double) totalBytesRead / fileSize * 100;
                 
                 int x = (int)(progress);
+
                 if(y != x) {
                     System.out.println("진행 상태: " +  x + "%");
                     y = x;

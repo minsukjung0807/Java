@@ -42,7 +42,7 @@ public class B2CreateBucket {
 
             @Override
             public void onError(Exception e) {
-                onCreateBucketStateListener.onFailed(0, "EXCEPTION", "에러: " + e.getMessage());
+                onCreateBucketStateListener.onFailed(0, "ERROR", e.getMessage());
             }
         }); 
 

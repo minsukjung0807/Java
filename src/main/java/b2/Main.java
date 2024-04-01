@@ -1,6 +1,7 @@
 package b2;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.nio.file.*;
 import b2.BackBlaze.BackBlazeB2;
 import b2.BackBlaze.authorize_account.response.B2AuthResponse;
@@ -23,10 +24,11 @@ import java.util.*;
  * http://212.183.159.230/5MB.zip
  * 
  */
+
 public class Main {
   
     public static void main(String[] args) {
-      authenticate();
+      // authenticate();
     }
 
   // 인증 작업

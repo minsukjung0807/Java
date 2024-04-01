@@ -41,7 +41,7 @@ public class B2DeleteSingleFile {
 
             @Override
             public void onError(Exception e) {
-                onDeleteFileStateListener.onFailed(10000, "EXCEPTION", "에러: " + e.getMessage());
+                onDeleteFileStateListener.onFailed(0, "ERROR", e.getMessage());
             }
         });
     

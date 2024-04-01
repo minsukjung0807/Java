@@ -28,12 +28,13 @@ public class BackBlazeB2 {
     public OnAuthStateListener onAuthStateListener;
 
     public interface OnAuthStateListener { 
-         abstract void onCompleted(B2AuthResponse b2AuthResponse);
-         abstract void onFailed(int status, String code, String message);
+        abstract void onCompleted(B2AuthResponse b2AuthResponse);
+        abstract void onFailed(int status, String code, String message);
     }
  
-     public void setOnAuthStateListener(OnAuthStateListener onAuthStateListener){
-         this.onAuthStateListener = onAuthStateListener;
+     public BackBlazeB2 setOnAuthStateListener(OnAuthStateListener onAuthStateListener){
+        this.onAuthStateListener = onAuthStateListener;
+        return this;
      }
  
      public void authorize() {
@@ -68,8 +69,9 @@ public class BackBlazeB2 {
         abstract void onFailed(int status, String code, String message);
     }
 
-    public void setOnCreateBucketStateListener(OnCreateBucketStateListener onCreateBucketStateListener){
+    public BackBlazeB2 setOnCreateBucketStateListener(OnCreateBucketStateListener onCreateBucketStateListener){
         this.onCreateBucketStateListener = onCreateBucketStateListener;
+        return this;
     }
 
     public void createBucket(B2AuthResponse b2AuthResponse, String bucketName, BucketType bucketType) {
@@ -286,8 +288,9 @@ public class BackBlazeB2 {
          abstract void onFailed(int status, String code, String message, int nThItem);
      }
  
-     public void setOnDeleteMultipleFileListener(OnDeleteMultipleFileStateListener onDeleteMultipleFileStateListener){
-         this.onDeleteMultipleFileStateListener = onDeleteMultipleFileStateListener;
+     public BackBlazeB2 setOnDeleteMultipleFileListener(OnDeleteMultipleFileStateListener onDeleteMultipleFileStateListener){
+        this.onDeleteMultipleFileStateListener = onDeleteMultipleFileStateListener;
+        return this;
      }
  
      public void deleteMultipleFiles(B2AuthResponse b2AuthResponse, ArrayList<DeleteFileItem> filesToDelete) {

@@ -36,7 +36,13 @@ public class HttpRequest {
         this.onHttpsRequestListener = onHttpsRequestListener;
     }
 
-     /**
+    public interface OnHttpsRequestListener { 
+        abstract void onSuccess(JSONObject requestResult);
+        abstract void onFailed(JSONObject requestResult);
+        abstract void onError(Exception e);
+    }
+
+    /**
      * parameter들을 이용하여 HTTP 통신을 요청하고 성공/실패 여부를 호출하며, JSONObject를 반환합니다.
      * 
      * @param URL B2 API와 통신하기 위한 URL 주소입니다

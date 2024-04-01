@@ -1,6 +1,7 @@
 package b2.BackBlaze.delete_file.item;
 
 public class DeleteFileItem {
+    
     private String fileName;
     private String fileId;
 
