@@ -6,6 +6,34 @@
     "configurations": [
         {
             "type": "java",
+            "name": "OperatorEx5",
+            "request": "launch",
+            "mainClass": "master.chapter3.OperatorEx5",
+            "projectName": "java-url"
+        },
+        {
+            "type": "java",
+            "name": "OperatorEx3",
+            "request": "launch",
+            "mainClass": "master.chapter3.OperatorEx3",
+            "projectName": "java-url"
+        },
+        {
+            "type": "java",
+            "name": "OperatorEx2",
+            "request": "launch",
+            "mainClass": "master.chapter3.OperatorEx2",
+            "projectName": "java-url"
+        },
+        {
+            "type": "java",
+            "name": "OperatorEx1",
+            "request": "launch",
+            "mainClass": "master.chapter3.OperatorEx1",
+            "projectName": "java-url"
+        },
+        {
+            "type": "java",
             "name": "ScannerEx",
             "request": "launch",
             "mainClass": "master.chapter2.ScannerEx",

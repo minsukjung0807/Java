@@ -50,5 +50,5 @@ dependencies {
 
 application {
     // Define the main class for the application
-    mainClassName = 'master.chapter2.PrintEx1'
+    mainClassName = 'b2.Main'
 }
