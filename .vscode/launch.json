@@ -6,6 +6,27 @@
     "configurations": [
         {
             "type": "java",
+            "name": "ScannerEx",
+            "request": "launch",
+            "mainClass": "master.chapter2.ScannerEx",
+            "projectName": "java-url"
+        },
+        {
+            "type": "java",
+            "name": "PrintEx2",
+            "request": "launch",
+            "mainClass": "master.chapter2.PrintEx2",
+            "projectName": "java-url"
+        },
+        {
+            "type": "java",
+            "name": "PrintEx1",
+            "request": "launch",
+            "mainClass": "master.chapter2.PrintEx1",
+            "projectName": "java-url"
+        },
+        {
+            "type": "java",
             "name": "Main",
             "request": "launch",
             "mainClass": "b2.Main",

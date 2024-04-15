@@ -197,23 +197,17 @@ public class B2SingleUpload {
             int y = 0;
 
             while ((bytesRead = fis.read(buffer)) != -1) {
-                // bytesRead는 현재 읽은 바이트 수입니다.
-                // 여기에 원하는 작업을 수행하면 됩니다.
-                
                 totalBytesRead += bytesRead;
-                
-                // 진행 상태 출력 예시
+
                 double progress = (double) totalBytesRead / fileSize * 100;
                 
                 int x = (int)(progress);
 
                 if(y != x) {
-                    System.out.println("진행 상태: " +  x + "%");
+                    System.out.println("파일 크기 읽는 중: " +  x + "%");
                     y = x;
                 }
                 
-                
-                // 읽은 데이터를 result 배열에 추가
                 System.arraycopy(buffer, 0, result, offset, bytesRead);
                 offset += bytesRead;
             }

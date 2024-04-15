@@ -27,8 +27,10 @@ import java.util.*;
 
 public class Main {
   
+  // authorization Token : 4_005e6f0ff38588b000000000a_01b39226_6fffae_acct_dorP0cNJ8akOEPm_giGqOKiMuoE=
+  /* BackBlaze 파일 업데이트 기능 및 */
     public static void main(String[] args) {
-      // authenticate();
+      authenticate();
     }
 
   // 인증 작업
@@ -197,7 +199,7 @@ public class Main {
 
 
     File path = new File("");
-    File file = new File(path.getAbsolutePath()+"/src/file/1GB.zip");
+    File file = new File(path.getAbsolutePath()+"/src/file/10MB.txt");
 
     BackBlazeB2 backBlazeB2 = new BackBlazeB2();
     backBlazeB2.setOnUploadSingleFileStateListener(new BackBlazeB2.OnUploadSingleFileStateListener() {
@@ -219,7 +221,7 @@ public class Main {
         System.out.println("오류!!"+  "상태:"+ status + "코드: " +code + "메시지: " + message);
       }
 
-    }).uploadSingleFile(file, "MAP/test2.mcworld", b2GetUploadUrlResponse);
+    }).uploadSingleFile(file, "MAP/10MB.txt", b2GetUploadUrlResponse);
   }
 
 
