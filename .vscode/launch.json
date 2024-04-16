@@ -6,6 +6,83 @@
     "configurations": [
         {
             "type": "java",
+            "name": "OperatorEx16",
+            "request": "launch",
+            "mainClass": "master.chapter3.OperatorEx16",
+            "projectName": "java-url"
+        },
+        {
+            "type": "java",
+            "name": "OperatorEx15",
+            "request": "launch",
+            "mainClass": "master.chapter3.OperatorEx15",
+            "projectName": "java-url"
+        },
+        {
+            "type": "java",
+            "name": "OperatorEx14",
+            "request": "launch",
+            "mainClass": "master.chapter3.OperatorEx14",
+            "projectName": "java-url"
+        },
+        {
+            "type": "java",
+            "name": "OperatorEx13",
+            "request": "launch",
+            "mainClass": "master.chapter3.OperatorEx13",
+            "projectName": "java-url"
+        },
+        {
+            "type": "java",
+            "name": "OperatorEx12",
+            "request": "launch",
+            "mainClass": "master.chapter3.OperatorEx12",
+            "projectName": "java-url"
+        },
+        {
+            "type": "java",
+            "name": "OperatorEx11",
+            "request": "launch",
+            "mainClass": "master.chapter3.OperatorEx11",
+            "projectName": "java-url"
+        },
+        {
+            "type": "java",
+            "name": "OperatorEx10",
+            "request": "launch",
+            "mainClass": "master.chapter3.OperatorEx10",
+            "projectName": "java-url"
+        },
+        {
+            "type": "java",
+            "name": "OperatorEx9",
+            "request": "launch",
+            "mainClass": "master.chapter3.OperatorEx9",
+            "projectName": "java-url"
+        },
+        {
+            "type": "java",
+            "name": "OperatorEx8",
+            "request": "launch",
+            "mainClass": "master.chapter3.OperatorEx8",
+            "projectName": "java-url"
+        },
+        {
+            "type": "java",
+            "name": "OperatorEx7",
+            "request": "launch",
+            "mainClass": "master.chapter3.OperatorEx7",
+            "projectName": "java-url"
+        },
+        {
+            "type": "java",
+            "name": "OperatorEx6",
+            "request": "launch",
+            "mainClass": "master.chapter3.OperatorEx6",
+            "projectName": "java-url"
+        },
+        {
+            "type": "java",
             "name": "OperatorEx5",
             "request": "launch",
             "mainClass": "master.chapter3.OperatorEx5",
