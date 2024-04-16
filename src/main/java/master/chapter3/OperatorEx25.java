@@ -22,5 +22,7 @@ public class OperatorEx25 {
         if(('ㄱ' <= ch && ch <= 'ㅎ') || ('ㅏ' <= ch && ch <= 'ㅣ')) {
             System.out.printf("입력하신 문자는 한글입니다.%n");
         }
+
+        scanner.close();
     }
 }
