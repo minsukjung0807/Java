@@ -6,6 +6,48 @@
     "configurations": [
         {
             "type": "java",
+            "name": "OperatorEx22",
+            "request": "launch",
+            "mainClass": "master.chapter3.OperatorEx22",
+            "projectName": "java-url"
+        },
+        {
+            "type": "java",
+            "name": "OperatorEx21",
+            "request": "launch",
+            "mainClass": "master.chapter3.OperatorEx21",
+            "projectName": "java-url"
+        },
+        {
+            "type": "java",
+            "name": "OperatorEx20",
+            "request": "launch",
+            "mainClass": "master.chapter3.OperatorEx20",
+            "projectName": "java-url"
+        },
+        {
+            "type": "java",
+            "name": "OperatorEx19",
+            "request": "launch",
+            "mainClass": "master.chapter3.OperatorEx19",
+            "projectName": "java-url"
+        },
+        {
+            "type": "java",
+            "name": "OperatorEx18",
+            "request": "launch",
+            "mainClass": "master.chapter3.OperatorEx18",
+            "projectName": "java-url"
+        },
+        {
+            "type": "java",
+            "name": "OperatorEx17",
+            "request": "launch",
+            "mainClass": "master.chapter3.OperatorEx17",
+            "projectName": "java-url"
+        },
+        {
+            "type": "java",
             "name": "OperatorEx16",
             "request": "launch",
             "mainClass": "master.chapter3.OperatorEx16",
