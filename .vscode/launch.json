@@ -6,6 +6,27 @@
     "configurations": [
         {
             "type": "java",
+            "name": "OperatorEx32",
+            "request": "launch",
+            "mainClass": "master.chapter3.OperatorEx32",
+            "projectName": "java-url"
+        },
+        {
+            "type": "java",
+            "name": "OperatorEx31",
+            "request": "launch",
+            "mainClass": "master.chapter3.OperatorEx31",
+            "projectName": "java-url"
+        },
+        {
+            "type": "java",
+            "name": "OperatorEx30",
+            "request": "launch",
+            "mainClass": "master.chapter3.OperatorEx30",
+            "projectName": "java-url"
+        },
+        {
+            "type": "java",
             "name": "OperatorEx29",
             "request": "launch",
             "mainClass": "master.chapter3.OperatorEx29",
