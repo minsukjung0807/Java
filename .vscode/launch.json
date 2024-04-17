@@ -6,6 +6,62 @@
     "configurations": [
         {
             "type": "java",
+            "name": "FlowEx15",
+            "request": "launch",
+            "mainClass": "master.chapter4.FlowEx15",
+            "projectName": "BackBlaze"
+        },
+        {
+            "type": "java",
+            "name": "FlowEx14",
+            "request": "launch",
+            "mainClass": "master.chapter4.FlowEx14",
+            "projectName": "BackBlaze"
+        },
+        {
+            "type": "java",
+            "name": "FlowEx13",
+            "request": "launch",
+            "mainClass": "master.chapter4.FlowEx13",
+            "projectName": "BackBlaze"
+        },
+        {
+            "type": "java",
+            "name": "FlowEx12",
+            "request": "launch",
+            "mainClass": "master.chapter4.FlowEx12",
+            "projectName": "BackBlaze"
+        },
+        {
+            "type": "java",
+            "name": "FlowEx11",
+            "request": "launch",
+            "mainClass": "master.chapter4.FlowEx11",
+            "projectName": "BackBlaze"
+        },
+        {
+            "type": "java",
+            "name": "FlowEx10",
+            "request": "launch",
+            "mainClass": "master.chapter4.FlowEx10",
+            "projectName": "BackBlaze"
+        },
+        {
+            "type": "java",
+            "name": "FlowEx9",
+            "request": "launch",
+            "mainClass": "master.chapter4.FlowEx9",
+            "projectName": "BackBlaze"
+        },
+        {
+            "type": "java",
+            "name": "FlowEx8",
+            "request": "launch",
+            "mainClass": "master.chapter4.FlowEx8",
+            "projectName": "BackBlaze"
+        },
+        {
+            "type": "java",
             "name": "FlowEx7",
             "request": "launch",
             "mainClass": "master.chapter4.FlowEx7",
