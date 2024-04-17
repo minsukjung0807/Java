@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "OperatorEx29",
+            "request": "launch",
+            "mainClass": "master.chapter3.OperatorEx29",
+            "projectName": "java-url"
+        },
+        {
+            "type": "java",
             "name": "OperatorEx28",
             "request": "launch",
             "mainClass": "master.chapter3.OperatorEx28",
