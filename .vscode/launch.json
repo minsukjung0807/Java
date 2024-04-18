@@ -6,6 +6,55 @@
     "configurations": [
         {
             "type": "java",
+            "name": "FlowEx33",
+            "request": "launch",
+            "mainClass": "master.chapter4.FlowEx33",
+            "projectName": "BackBlaze"
+        },
+        {
+            "type": "java",
+            "name": "FlowEx32",
+            "request": "launch",
+            "mainClass": "master.chapter4.FlowEx32",
+            "projectName": "BackBlaze"
+        },
+        {
+            "type": "java",
+            "name": "FlowEx31",
+            "request": "launch",
+            "mainClass": "master.chapter4.FlowEx31",
+            "projectName": "BackBlaze"
+        },
+        {
+            "type": "java",
+            "name": "FlowEx30",
+            "request": "launch",
+            "mainClass": "master.chapter4.FlowEx30",
+            "projectName": "BackBlaze"
+        },
+        {
+            "type": "java",
+            "name": "FlowEx29",
+            "request": "launch",
+            "mainClass": "master.chapter4.FlowEx29",
+            "projectName": "BackBlaze"
+        },
+        {
+            "type": "java",
+            "name": "FlowEx28",
+            "request": "launch",
+            "mainClass": "master.chapter4.FlowEx28",
+            "projectName": "BackBlaze"
+        },
+        {
+            "type": "java",
+            "name": "FlowEx27",
+            "request": "launch",
+            "mainClass": "master.chapter4.FlowEx27",
+            "projectName": "BackBlaze"
+        },
+        {
+            "type": "java",
             "name": "FlowEx26",
             "request": "launch",
             "mainClass": "master.chapter4.FlowEx26",
