@@ -6,6 +6,20 @@
     "configurations": [
         {
             "type": "java",
+            "name": "FlowEx26",
+            "request": "launch",
+            "mainClass": "master.chapter4.FlowEx26",
+            "projectName": "BackBlaze"
+        },
+        {
+            "type": "java",
+            "name": "FlowEx25",
+            "request": "launch",
+            "mainClass": "master.chapter4.FlowEx25",
+            "projectName": "BackBlaze"
+        },
+        {
+            "type": "java",
             "name": "FlowEx24",
             "request": "launch",
             "mainClass": "master.chapter4.FlowEx24",
