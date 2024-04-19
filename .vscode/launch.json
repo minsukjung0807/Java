@@ -6,6 +6,55 @@
     "configurations": [
         {
             "type": "java",
+            "name": "ArrayEx8",
+            "request": "launch",
+            "mainClass": "master.chapter5.ArrayEx8",
+            "projectName": "BackBlaze"
+        },
+        {
+            "type": "java",
+            "name": "ArrayEx7",
+            "request": "launch",
+            "mainClass": "master.chapter5.ArrayEx7",
+            "projectName": "BackBlaze"
+        },
+        {
+            "type": "java",
+            "name": "ArrayEx6",
+            "request": "launch",
+            "mainClass": "master.chapter5.ArrayEx6",
+            "projectName": "BackBlaze"
+        },
+        {
+            "type": "java",
+            "name": "ArrayEx5",
+            "request": "launch",
+            "mainClass": "master.chapter5.ArrayEx5",
+            "projectName": "BackBlaze"
+        },
+        {
+            "type": "java",
+            "name": "ArrayEx4",
+            "request": "launch",
+            "mainClass": "master.chapter5.ArrayEx4",
+            "projectName": "BackBlaze"
+        },
+        {
+            "type": "java",
+            "name": "ArrayEx3",
+            "request": "launch",
+            "mainClass": "master.chapter5.ArrayEx3",
+            "projectName": "BackBlaze"
+        },
+        {
+            "type": "java",
+            "name": "ArrayEx2",
+            "request": "launch",
+            "mainClass": "master.chapter5.ArrayEx2",
+            "projectName": "BackBlaze"
+        },
+        {
+            "type": "java",
             "name": "ArrayEx1",
             "request": "launch",
             "mainClass": "master.chapter5.ArrayEx1",
