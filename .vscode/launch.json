@@ -6,6 +6,41 @@
     "configurations": [
         {
             "type": "java",
+            "name": "MultiArrEx4",
+            "request": "launch",
+            "mainClass": "master.chapter5.MultiArrEx4",
+            "projectName": "BackBlaze"
+        },
+        {
+            "type": "java",
+            "name": "MultiArrEx3",
+            "request": "launch",
+            "mainClass": "master.chapter5.MultiArrEx3",
+            "projectName": "BackBlaze"
+        },
+        {
+            "type": "java",
+            "name": "MultiArrEx2",
+            "request": "launch",
+            "mainClass": "master.chapter5.MultiArrEx2",
+            "projectName": "BackBlaze"
+        },
+        {
+            "type": "java",
+            "name": "MultiArrEx1",
+            "request": "launch",
+            "mainClass": "master.chapter5.MultiArrEx1",
+            "projectName": "BackBlaze"
+        },
+        {
+            "type": "java",
+            "name": "ArrayEx19",
+            "request": "launch",
+            "mainClass": "master.chapter5.ArrayEx19",
+            "projectName": "BackBlaze"
+        },
+        {
+            "type": "java",
             "name": "ArrayEx18",
             "request": "launch",
             "mainClass": "master.chapter5.ArrayEx18",
