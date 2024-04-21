@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "TvTest",
+            "request": "launch",
+            "mainClass": "master.chapter6.TvTest",
+            "projectName": "BackBlaze"
+        },
+        {
+            "type": "java",
             "name": "MultiArrEx4",
             "request": "launch",
             "mainClass": "master.chapter5.MultiArrEx4",
