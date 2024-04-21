@@ -6,6 +6,20 @@
     "configurations": [
         {
             "type": "java",
+            "name": "ArrayEx11",
+            "request": "launch",
+            "mainClass": "master.chapter5.ArrayEx11",
+            "projectName": "BackBlaze"
+        },
+        {
+            "type": "java",
+            "name": "ArrayEx10",
+            "request": "launch",
+            "mainClass": "master.chapter5.ArrayEx10",
+            "projectName": "BackBlaze"
+        },
+        {
+            "type": "java",
             "name": "ArrayEx9",
             "request": "launch",
             "mainClass": "master.chapter5.ArrayEx9",
