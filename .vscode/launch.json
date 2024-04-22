@@ -6,6 +6,55 @@
     "configurations": [
         {
             "type": "java",
+            "name": "PrimitiveParamEx",
+            "request": "launch",
+            "mainClass": "master.chapter6.PrimitiveParamEx",
+            "projectName": "BackBlaze"
+        },
+        {
+            "type": "java",
+            "name": "CallStackTest2",
+            "request": "launch",
+            "mainClass": "master.chapter6.CallStackTest2",
+            "projectName": "BackBlaze"
+        },
+        {
+            "type": "java",
+            "name": "CallStackTest",
+            "request": "launch",
+            "mainClass": "master.chapter6.CallStackTest",
+            "projectName": "BackBlaze"
+        },
+        {
+            "type": "java",
+            "name": "MyMathTest",
+            "request": "launch",
+            "mainClass": "master.chapter6.MyMathTest",
+            "projectName": "BackBlaze"
+        },
+        {
+            "type": "java",
+            "name": "CardTest",
+            "request": "launch",
+            "mainClass": "master.chapter6.CardTest",
+            "projectName": "BackBlaze"
+        },
+        {
+            "type": "java",
+            "name": "TvTest4",
+            "request": "launch",
+            "mainClass": "master.chapter6.TvTest4",
+            "projectName": "BackBlaze"
+        },
+        {
+            "type": "java",
+            "name": "TvTest2",
+            "request": "launch",
+            "mainClass": "master.chapter6.TvTest2",
+            "projectName": "BackBlaze"
+        },
+        {
+            "type": "java",
             "name": "TvTest",
             "request": "launch",
             "mainClass": "master.chapter6.TvTest",
