@@ -6,6 +6,34 @@
     "configurations": [
         {
             "type": "java",
+            "name": "ReturnTest",
+            "request": "launch",
+            "mainClass": "master.chapter6.ReturnTest",
+            "projectName": "BackBlaze"
+        },
+        {
+            "type": "java",
+            "name": "ReferenceParamEx3",
+            "request": "launch",
+            "mainClass": "master.chapter6.ReferenceParamEx3",
+            "projectName": "BackBlaze"
+        },
+        {
+            "type": "java",
+            "name": "ReferenceParamEx2",
+            "request": "launch",
+            "mainClass": "master.chapter6.ReferenceParamEx2",
+            "projectName": "BackBlaze"
+        },
+        {
+            "type": "java",
+            "name": "ReferenceParamEx",
+            "request": "launch",
+            "mainClass": "master.chapter6.ReferenceParamEx",
+            "projectName": "BackBlaze"
+        },
+        {
+            "type": "java",
             "name": "PrimitiveParamEx",
             "request": "launch",
             "mainClass": "master.chapter6.PrimitiveParamEx",
