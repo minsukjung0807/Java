@@ -6,6 +6,34 @@
     "configurations": [
         {
             "type": "java",
+            "name": "PowerTest",
+            "request": "launch",
+            "mainClass": "master.chapter6.PowerTest",
+            "projectName": "BackBlaze"
+        },
+        {
+            "type": "java",
+            "name": "MainTest",
+            "request": "launch",
+            "mainClass": "master.chapter6.MainTest",
+            "projectName": "BackBlaze"
+        },
+        {
+            "type": "java",
+            "name": "FactorialTest2",
+            "request": "launch",
+            "mainClass": "master.chapter6.FactorialTest2",
+            "projectName": "BackBlaze"
+        },
+        {
+            "type": "java",
+            "name": "FactorialTest",
+            "request": "launch",
+            "mainClass": "master.chapter6.FactorialTest",
+            "projectName": "BackBlaze"
+        },
+        {
+            "type": "java",
             "name": "ReturnTest",
             "request": "launch",
             "mainClass": "master.chapter6.ReturnTest",
