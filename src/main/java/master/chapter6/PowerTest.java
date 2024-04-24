@@ -9,7 +9,6 @@ public class PowerTest {
         for(int i = 1; i <= n; i++) {
             result += power(x, i);
         }
-
         System.out.println(result);
     }
 

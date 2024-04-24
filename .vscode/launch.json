@@ -6,6 +6,55 @@
     "configurations": [
         {
             "type": "java",
+            "name": "BlockTest",
+            "request": "launch",
+            "mainClass": "master.chapter6.BlockTest",
+            "projectName": "BackBlaze"
+        },
+        {
+            "type": "java",
+            "name": "CarTest3",
+            "request": "launch",
+            "mainClass": "master.chapter6.CarTest3",
+            "projectName": "BackBlaze"
+        },
+        {
+            "type": "java",
+            "name": "CarTest2",
+            "request": "launch",
+            "mainClass": "master.chapter6.CarTest2",
+            "projectName": "BackBlaze"
+        },
+        {
+            "type": "java",
+            "name": "CarTest",
+            "request": "launch",
+            "mainClass": "master.chapter6.CarTest",
+            "projectName": "BackBlaze"
+        },
+        {
+            "type": "java",
+            "name": "VarArgsEx",
+            "request": "launch",
+            "mainClass": "master.chapter6.VarArgsEx",
+            "projectName": "BackBlaze"
+        },
+        {
+            "type": "java",
+            "name": "OverloadingTest",
+            "request": "launch",
+            "mainClass": "master.chapter6.OverloadingTest",
+            "projectName": "BackBlaze"
+        },
+        {
+            "type": "java",
+            "name": "MyMathTest2",
+            "request": "launch",
+            "mainClass": "master.chapter6.MyMathTest2",
+            "projectName": "BackBlaze"
+        },
+        {
+            "type": "java",
             "name": "PowerTest",
             "request": "launch",
             "mainClass": "master.chapter6.PowerTest",
