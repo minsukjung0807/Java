@@ -6,6 +6,27 @@
     "configurations": [
         {
             "type": "java",
+            "name": "DocumentTest",
+            "request": "launch",
+            "mainClass": "master.chapter6.DocumentTest",
+            "projectName": "BackBlaze"
+        },
+        {
+            "type": "java",
+            "name": "ProductTest",
+            "request": "launch",
+            "mainClass": "master.chapter6.ProductTest",
+            "projectName": "BackBlaze"
+        },
+        {
+            "type": "java",
+            "name": "StaticBlockTest",
+            "request": "launch",
+            "mainClass": "master.chapter6.StaticBlockTest",
+            "projectName": "BackBlaze"
+        },
+        {
+            "type": "java",
             "name": "BlockTest",
             "request": "launch",
             "mainClass": "master.chapter6.BlockTest",
