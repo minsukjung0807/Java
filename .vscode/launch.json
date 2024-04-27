@@ -6,6 +6,76 @@
     "configurations": [
         {
             "type": "java",
+            "name": "CastingTest2",
+            "request": "launch",
+            "mainClass": "master.chapter7.CastingTest2",
+            "projectName": "BackBlaze"
+        },
+        {
+            "type": "java",
+            "name": "CastingTest1",
+            "request": "launch",
+            "mainClass": "master.chapter7.CastingTest1",
+            "projectName": "BackBlaze"
+        },
+        {
+            "type": "java",
+            "name": "SingletonTest",
+            "request": "launch",
+            "mainClass": "master.chapter7.SingletonTest",
+            "projectName": "BackBlaze"
+        },
+        {
+            "type": "java",
+            "name": "TimeTest",
+            "request": "launch",
+            "mainClass": "master.chapter7.TimeTest",
+            "projectName": "BackBlaze"
+        },
+        {
+            "type": "java",
+            "name": "FinalCardTest",
+            "request": "launch",
+            "mainClass": "master.chapter7.FinalCardTest",
+            "projectName": "BackBlaze"
+        },
+        {
+            "type": "java",
+            "name": "StaticImportEx1",
+            "request": "launch",
+            "mainClass": "master.chapter7.StaticImportEx1",
+            "projectName": "BackBlaze"
+        },
+        {
+            "type": "java",
+            "name": "PointTest",
+            "request": "launch",
+            "mainClass": "master.chapter7.PointTest",
+            "projectName": "BackBlaze"
+        },
+        {
+            "type": "java",
+            "name": "SuperTest2",
+            "request": "launch",
+            "mainClass": "master.chapter7.SuperTest2",
+            "projectName": "BackBlaze"
+        },
+        {
+            "type": "java",
+            "name": "SuperTest",
+            "request": "launch",
+            "mainClass": "master.chapter7.SuperTest",
+            "projectName": "BackBlaze"
+        },
+        {
+            "type": "java",
+            "name": "DeckTest",
+            "request": "launch",
+            "mainClass": "master.chapter7.DeckTest",
+            "projectName": "BackBlaze"
+        },
+        {
+            "type": "java",
             "name": "DrawShape",
             "request": "launch",
             "mainClass": "master.chapter7.DrawShape",
