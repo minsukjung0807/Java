@@ -6,6 +6,20 @@
     "configurations": [
         {
             "type": "java",
+            "name": "DrawShape",
+            "request": "launch",
+            "mainClass": "master.chapter7.DrawShape",
+            "projectName": "BackBlaze"
+        },
+        {
+            "type": "java",
+            "name": "CaptionTvTest",
+            "request": "launch",
+            "mainClass": "master.chapter7.CaptionTvTest",
+            "projectName": "BackBlaze"
+        },
+        {
+            "type": "java",
             "name": "DocumentTest",
             "request": "launch",
             "mainClass": "master.chapter6.DocumentTest",
