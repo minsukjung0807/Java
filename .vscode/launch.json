@@ -6,6 +6,41 @@
     "configurations": [
         {
             "type": "java",
+            "name": "PolyArgumentTest",
+            "request": "launch",
+            "mainClass": "master.chapter7.PolyArgumentTest",
+            "projectName": "BackBlaze"
+        },
+        {
+            "type": "java",
+            "name": "BindingTest3",
+            "request": "launch",
+            "mainClass": "master.chapter7.BindingTest3",
+            "projectName": "BackBlaze"
+        },
+        {
+            "type": "java",
+            "name": "BindingTest2",
+            "request": "launch",
+            "mainClass": "master.chapter7.BindingTest2",
+            "projectName": "BackBlaze"
+        },
+        {
+            "type": "java",
+            "name": "BindingTest",
+            "request": "launch",
+            "mainClass": "master.chapter7.BindingTest",
+            "projectName": "BackBlaze"
+        },
+        {
+            "type": "java",
+            "name": "InstanceofTest",
+            "request": "launch",
+            "mainClass": "master.chapter7.InstanceofTest",
+            "projectName": "BackBlaze"
+        },
+        {
+            "type": "java",
             "name": "CastingTest2",
             "request": "launch",
             "mainClass": "master.chapter7.CastingTest2",

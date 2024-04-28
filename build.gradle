@@ -50,5 +50,5 @@ dependencies {
 
 application {
     // Define the main class for the application
-    mainClassName = 'b2.Main'
+    mainClassName = 'master.chpater7.BindingTest'
 }
