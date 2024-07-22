@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "Main",
+            "request": "launch",
+            "mainClass": "b2.Main",
+            "projectName": "java-url-Java"
+        },
+        {
+            "type": "java",
             "name": "PolyArgumentTest",
             "request": "launch",
             "mainClass": "master.chapter7.PolyArgumentTest",
