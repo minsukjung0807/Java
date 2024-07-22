@@ -2,17 +2,17 @@ package b2.BackBlaze.delete_file;
 
 import org.json.JSONObject;
 
-import b2.BackBlaze.api.httpsRequest.HttpRequest;
-import b2.BackBlaze.api.httpsRequest.HttpRequest.OnHttpsRequestListener;
+import b2.BackBlaze.api.httpsRequest.HttpsRequest;
+import b2.BackBlaze.api.httpsRequest.HttpsRequest.OnHttpsRequestListener;
 import b2.BackBlaze.authorize_account.response.B2AuthResponse;
 
 
 public class B2DeleteSingleFile {
 
- private HttpRequest httpRequest;
+ private HttpsRequest HttpsRequest;
 
     public B2DeleteSingleFile() {
-        httpRequest = new HttpRequest();
+        HttpsRequest = new HttpsRequest();
     }
 
     public interface OnDeleteFileStateListener { 
@@ -29,7 +29,7 @@ public class B2DeleteSingleFile {
     public void startDeletingFile(B2AuthResponse b2AuthResponse, String fileName, String fileId) {
         JSONObject parameters = new JSONObject();
 
-        httpRequest.setOnHttpsRequestListener(new OnHttpsRequestListener() {
+        HttpsRequest.setOnHttpsRequestListener(new OnHttpsRequestListener() {
             @Override
             public void onSuccess(JSONObject response) {
                 onDeleteFileStateListener.onSuccess();
@@ -48,7 +48,7 @@ public class B2DeleteSingleFile {
         parameters.put("fileName", fileName);
         parameters.put("fileId", fileId);
 
-        httpRequest.call(b2AuthResponse.getAPIURL() + "/b2api/v3/", "b2_delete_file_version", b2AuthResponse.getAuthToken(), parameters, "POST");
+        HttpsRequest.call(b2AuthResponse.getAPIURL() + "/b2api/v3/", "b2_delete_file_version", b2AuthResponse.getAuthToken(), parameters, "POST");
     }
 
 }

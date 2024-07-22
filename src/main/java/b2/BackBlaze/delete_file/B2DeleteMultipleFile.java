@@ -1,8 +1,8 @@
 package b2.BackBlaze.delete_file;
 
 import b2.BackBlaze.delete_file.item.DeleteFileItem;
-import b2.BackBlaze.api.httpsRequest.HttpRequest;
-import b2.BackBlaze.api.httpsRequest.HttpRequest.OnHttpsRequestListener;
+import b2.BackBlaze.api.httpsRequest.HttpsRequest;
+import b2.BackBlaze.api.httpsRequest.HttpsRequest.OnHttpsRequestListener;
 import b2.BackBlaze.authorize_account.response.B2AuthResponse;
 
 import java.util.ArrayList;
@@ -37,7 +37,7 @@ public class B2DeleteMultipleFile {
 
     public void startDeletingFiles(B2AuthResponse b2AuthResponse) {
         
-        HttpRequest httpRequest = new HttpRequest();
+        HttpsRequest HttpsRequest = new HttpsRequest();
 
         if(filesToDelete != null && filesToDelete.size() > 0) {
 
@@ -50,7 +50,7 @@ public class B2DeleteMultipleFile {
                 parameters.put("fileName", filesToDelete.get(j).getFileName());
                 parameters.put("fileId", filesToDelete.get(j).getFileId());
     
-                    httpRequest.setOnHttpsRequestListener(new OnHttpsRequestListener() {
+                    HttpsRequest.setOnHttpsRequestListener(new OnHttpsRequestListener() {
                             
                         @Override
                         public void onSuccess(JSONObject response) {
@@ -73,7 +73,7 @@ public class B2DeleteMultipleFile {
                         }
                     });
     
-                httpRequest.call(b2AuthResponse.getAPIURL() + "/b2api/v3/", "b2_delete_file_version", b2AuthResponse.getAuthToken(), parameters, "POST");
+                HttpsRequest.call(b2AuthResponse.getAPIURL() + "/b2api/v3/", "b2_delete_file_version", b2AuthResponse.getAuthToken(), parameters, "POST");
             }
         } else {
             onDeleteMultipleFileStateListener.onFailed(0, "ERROR", "삭제할 파일이 존재하지 않습니다", 0);

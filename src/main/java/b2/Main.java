@@ -55,7 +55,6 @@ public class Main {
         }
       @Override
       public void onFailed(int status, String code, String message) {
-        
         System.out.println("실패 11: " + status);
       }
     });

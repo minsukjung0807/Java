@@ -43,9 +43,7 @@ public class B2Auth {
                 connection.setRequestMethod("GET");
                 connection.setConnectTimeout(5000);   
                 connection.setReadTimeout(1000);
-
                 
-
             if(connection.getResponseCode() < 400){
                 InputStream inputStream =  connection.getInputStream();
                 requestResult = inputToJSON(inputStream);

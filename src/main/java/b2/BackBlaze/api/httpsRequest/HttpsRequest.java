@@ -11,12 +11,12 @@ import org.json.JSONObject;
 
 
     /**
-     * 이 클래스는 B2 API 사용때 공통으로 이용할 HttpsURL 통신 함수를 제공하고 있습니다. 
+     * 이 클래스는 B2 API 사용때 공통으로 이용할 HttpsURL 통신 메서드를 제공하고 있습니다. 
      * 
      * TO-DO: 이 클래스는 USER_AGENT 값을 디바이스에서 가져오는 함수를 추가적으로 제공해야 합니다.
      */
 
-public class HttpRequest {
+public class HttpsRequest {
 
     /**
      * private String USER_AGENT = "Mozilla/5.0 (Linux; Android 8.0.0; SAMSUNG-SM-G950N/KSU3CRJ1 Build/R16NW) AppleWebKit/537.36 (KHTML, like Gecko) SamsungBrowser/8.2 Chrome/63.0.3239.111 Mobile Safari/537.36";
@@ -120,8 +120,8 @@ public class HttpRequest {
     /**
      * parameter들을 받아서 HttpsURLConnection을 생성합니다
      * 
-     * @param URL B2 API와 통신하기 위한 URL 주소입니다
-     * @param method B2 API 통신에 사용될 요청 메서드입니다
+     * @param URL : B2 API와 통신하기 위한 URL 주소입니다
+     * @param method : B2 API 통신에 사용될 요청 방식입니다
      * @return B2 통신으로 전달받은 결과를 JSONObject로 반환합니다 
      * @throws IOException
      */
