@@ -1,6 +1,7 @@
 package b2.BackBlaze.create_bucket.model;
 
 public enum BucketType {
+    
     ALL_PUBLIC("allPublic"),
     ALL_PRIVATE("allPrivate");
 
@@ -26,7 +27,8 @@ public enum BucketType {
 
     public static BucketType getByIdentifier(String name){
         for(BucketType type : BucketType.values()){
-            if(type.getIdentifier().equals(name)) return type;
+            if(type.getIdentifier().equals(name)) 
+                return type;
         }
         return null;
     }

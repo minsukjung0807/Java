@@ -42,7 +42,7 @@ public class HttpsRequest {
     }
 
     /**
-     * parameter들을 이용하여 HTTP 통신을 요청하고 성공/실패 여부를 호출하며, JSONObject를 반환합니다.
+     * parameter들을 이용하여 HTTP 통신을 요청하고 성공 또는 실패 여부와 JSONObject를 반환합니다.
      * 
      * @param URL B2 API와 통신하기 위한 URL 주소입니다
      * @param method B2 API 통신에 사용될 요청 메서드입니다
@@ -75,7 +75,7 @@ public class HttpsRequest {
             }
             
         } catch (Exception e) {
-            onHttpsRequestListener.onError(e);
+                onHttpsRequestListener.onError(e);
             return new JSONObject();
         } finally {
             if(httpsURLConnection != null)
@@ -84,26 +84,27 @@ public class HttpsRequest {
     }
 
     /**
-     * @param inputStream HTTPS 통신 결과로 가져온 InputStream입니다
-     * @return B2 API 통신으로 가져온 결과를 JSONObject로 반환합니다
+     * @param inputStream : HTTPS 통신 결과로 가져온 InputStream입니다
+     * @return JSONObject (B2 API 통신으로 가져온 결과입니다)
      * @throws IOException
      */
     private JSONObject inputToJSON(InputStream inputStream) throws IOException {
-        StringBuilder JSON = new StringBuilder();
-        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-        while(reader.ready()) JSON.append(reader.readLine());
+            StringBuilder JSON = new StringBuilder();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+            while(reader.ready()) 
+                JSON.append(reader.readLine());
         return new JSONObject(JSON.toString().trim());
     }
 
     /**
      * @param httpsURLConnection HTTPS통신을 하기 위한 객체입니다 
-     * @return B2 API 호출을 성공하였을때 전달받은 결과를 JSONObject로 반환합니다 
+     * @return JSONObject (B2 API 호출을 성공하였을때 전달받은 결과입니다) 
      * @throws IOException
      */
     private JSONObject connectionSuccess(HttpsURLConnection httpsURLConnection) throws IOException {
             JSONObject requestResult = inputToJSON(httpsURLConnection.getInputStream());
             onHttpsRequestListener.onSuccess(requestResult);
-            return requestResult;
+        return requestResult;
     }
 
     /**
@@ -114,7 +115,7 @@ public class HttpsRequest {
     private JSONObject connectionFailed(HttpsURLConnection httpsURLConnection) throws IOException {
             JSONObject requestResult = inputToJSON(httpsURLConnection.getErrorStream());
             onHttpsRequestListener.onFailed(requestResult);
-            return requestResult;
+        return requestResult;
     }
 
     /**
@@ -126,10 +127,10 @@ public class HttpsRequest {
      * @throws IOException
      */
     private HttpsURLConnection buildHttpsURLConnection(String URL, String method) throws IOException {
-        URL url = new URL(URL + method);
+            URL url = new URL(URL + method);
 
-        if(url.openConnection() instanceof HttpsURLConnection) 
-            return (HttpsURLConnection) url.openConnection();
+            if(url.openConnection() instanceof HttpsURLConnection) 
+                return (HttpsURLConnection) url.openConnection();
 
         return null;
     }

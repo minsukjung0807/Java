@@ -54,7 +54,6 @@ public class BackBlazeB2 {
                  }
             });
          }
- 
          b2Auth.startAuthenticating();
      }
 
