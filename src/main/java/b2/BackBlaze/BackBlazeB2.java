@@ -21,10 +21,7 @@ import b2.BackBlaze.upload_file.response.B2UploadFileResponse;
 
 public class BackBlazeB2 {
 
-    /* 
-     * 인증시에 사용
-     */
-
+    /* 인증 상태를 설정하는 객체 */
     public OnAuthStateListener onAuthStateListener;
 
     public interface OnAuthStateListener { 
@@ -32,11 +29,21 @@ public class BackBlazeB2 {
         abstract void onFailed(int status, String code, String message);
     }
  
+    /**
+     * 이 메서드는 인증 메서드를 사용하기 위해 인증 상태를 나타낼 수 있는 OnAuthStateListener를 설정합니다
+     * 
+     * @param onAuthStateListener : 인증 상태를 나타낼 수 있는 OnAuthStateListener를 받습니다
+     * 
+     * @return BackBlazeB2 (즉시 authorize() 메서드를 호출할 수 있게 합니다)
+     */
      public BackBlazeB2 setOnAuthStateListener(OnAuthStateListener onAuthStateListener){
         this.onAuthStateListener = onAuthStateListener;
         return this;
      }
  
+     /**
+     * 이 메서드는 인증을 위해 사용하는 메서드입니다.
+     */
      public void authorize() {
          
          B2Auth b2Auth = new B2Auth();
@@ -57,10 +64,8 @@ public class BackBlazeB2 {
          b2Auth.startAuthenticating();
      }
 
-    /* 
-     * 버킷 생성 시에 사용
-     */
 
+     /* 버킷 생성 상태를 나타내는 객체 */
     public OnCreateBucketStateListener onCreateBucketStateListener;
 
     public interface OnCreateBucketStateListener { 
@@ -68,11 +73,21 @@ public class BackBlazeB2 {
         abstract void onFailed(int status, String code, String message);
     }
 
+    /**
+     * 이 메서드는 버킷 생성 메서드를 사용하기 위해 버킷 생성 상태를 나타낼 수 있는 OnCreateBucketStateListener를 설정합니다
+     * 
+     * @param onCreateBucketStateListener : 버킷 생성 상태를 나타낼 수 있는 OnCreateBucketStateListener를 받습니다
+     * 
+     * @return BackBlazeB2 (즉시 createBucket() 메서드를 호출할 수 있게 합니다)
+     */
     public BackBlazeB2 setOnCreateBucketStateListener(OnCreateBucketStateListener onCreateBucketStateListener){
         this.onCreateBucketStateListener = onCreateBucketStateListener;
         return this;
     }
 
+    /**
+     * 이 메서드는 버킷 생성을 위해 사용하는 메서드입니다.
+     */
     public void createBucket(B2AuthResponse b2AuthResponse, String bucketName, BucketType bucketType) {
         
         B2CreateBucket b2CreateBucket = new B2CreateBucket();

@@ -11,7 +11,7 @@ import org.json.JSONObject;
 
 
     /**
-     * 이 클래스는 B2 API 사용때 공통으로 이용할 HttpsURL 통신 메서드를 제공하고 있습니다. 
+     * 이 클래스는 B2 API 사용때 공통으로 이용할 HttpsURL 통신 메서드를 제공하고 있습니다.     
      * 
      * TO-DO: 이 클래스는 USER_AGENT 값을 디바이스에서 가져오는 함수를 추가적으로 제공해야 합니다.
      */

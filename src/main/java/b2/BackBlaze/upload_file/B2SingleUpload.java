@@ -1,9 +1,5 @@
 package b2.BackBlaze.upload_file;
 
-import org.apache.commons.io.FileUtils;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import b2.BackBlaze.get_upload_url.response.B2GetUploadUrlResponse;
 import b2.BackBlaze.upload_file.model.UploadInterface;
 import b2.BackBlaze.upload_file.model.UploadListener;
@@ -13,12 +9,9 @@ import b2.BackBlaze.upload_file.response.B2UploadFileResponse;
 import java.util.concurrent.*;
 
 import okhttp3.OkHttpClient;
-
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -27,12 +20,10 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.time.Duration;
 import java.util.Formatter;
 
 import retrofit2.Call;
 import retrofit2.Callback;
-import retrofit2.HttpException;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;

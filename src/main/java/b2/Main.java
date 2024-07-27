@@ -1,8 +1,6 @@
 package b2;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.nio.file.*;
 import b2.BackBlaze.BackBlazeB2;
 import b2.BackBlaze.authorize_account.response.B2AuthResponse;
 import b2.BackBlaze.delete_file.item.DeleteFileItem;
